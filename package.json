@@ -5,11 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "export": "next build && next export",
     "start": "next start"
   },
   "dependencies": {
     "@deck.gl/core": "^8.4.16",
     "@deck.gl/react": "^8.4.16",
+    "@netlify/plugin-nextjs": "^3.3.0",
     "@reach/menu-button": "^0.15.1",
     "@reach/slider": "^0.15.0",
     "@reach/tabs": "^0.15.0",

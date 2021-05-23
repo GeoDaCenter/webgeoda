@@ -62,7 +62,7 @@ export default function Map() {
                     <MapboxGLMap
                         reuseMaps
                         // ref={mapRef}
-                        mapStyle={'mapbox://styles/dhalpern/ckp07gekw2p2317phroaarzej'} //{globalMap || mapParams.vizType === 'cartogram' ? 'mapbox://styles/lixun910/ckhtcdx4b0xyc19qzlt4b5c0d' : 'mapbox://styles/lixun910/ckhkoo8ix29s119ruodgwfxec'}
+                        mapStyle={'mapbox://styles/dhalpern/ckp07gekw2p2317phroaarzej'}
                         preventStyleDiffing={true}
                         mapboxApiAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
                         >
