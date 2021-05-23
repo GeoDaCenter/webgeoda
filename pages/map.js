@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import styles from '../styles/Map.module.css'
 import MainNav from '../components/MainNav'
-import * as config from '../config/config'
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
@@ -9,6 +8,14 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import DeckGL from '@deck.gl/react';
 import {MapView, FlyToInterpolator} from '@deck.gl/core';
 import MapboxGLMap from 'react-map-gl';
+
+
+import JsGeoDaWorker from '@webgeoda/workers/JsGeoDaWorker';
+// import useLoadData from '@webgeoda/hooks/useLoadData';
+// import useUpdateData from '@webgeoda/hooks/useUpdateData';
+
+const gdaProxy = new JsGeoDaWorker();
+gdaProxy.init()
 
 export default function Map() {
     const [viewState, setViewState] = useState({

@@ -37,17 +37,13 @@ export default function About() {
       <MainNav/>
       <main className={styles.main}>
         <h1 className={styles.title}>
-            About this project
+            About Webgeoda
         </h1>
 
         <Gutter em={5} />
 
-        <h2 className={styles.sectionHead}>
-            Data Sources
-        </h2>
-        
-        <Gutter em={5} />
-
+        <h2 className={styles.sectionHead}>Data Sources</h2>
+        <Gutter em={2} />
         <div className="row rules horizontally-centered">
           <div className="col-xs-12 col-md-4 col-lg-4">
             <h3 className={styles.subSectionHead}>American Community Survey</h3>
@@ -58,7 +54,25 @@ export default function About() {
                 understand the changes taking place in their communities. It is the premier source for detailed population and 
                 housing information about our nation.
             </p>
-            <a className={styles.docsLink}>Read More 📝 </a>
+            <a className={styles.docsLink} href="#">Read More 📝 </a>
+          </div>
+        </div>
+
+        <Gutter em={5} />
+
+        <h2 className={styles.sectionHead}>Contributors</h2>
+        <Gutter em={2} />
+        <div className="row rules horizontally-centered">
+          <div className="col-xs-12 col-md-4 col-lg-4">
+            <h3 className={styles.subSectionHead}>American Community Survey</h3>
+          </div>
+          <div className="col-xs-12 col-md-8 col-lg-8 rules-left">
+            <p>
+                The American Community Survey (ACS) helps local officials, community leaders, and businesses 
+                understand the changes taking place in their communities. It is the premier source for detailed population and 
+                housing information about our nation.
+            </p>
+            <a className={styles.docsLink} href="#">Read More 📝 </a>
           </div>
         </div>
       </main>

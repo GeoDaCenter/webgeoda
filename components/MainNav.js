@@ -2,9 +2,6 @@ import {
     Menu,
     MenuList,
     MenuButton,
-    MenuItem,
-    MenuItems,
-    MenuPopover,
     MenuLink,
 } from "@reach/menu-button";
 import "@reach/menu-button/styles.css"
@@ -13,11 +10,11 @@ import styles from '../styles/MainNav.module.css'
 export default function MainNav(){
     return (
         <div className={styles.masthead}>
-            <h3 className={styles.mastheadTitle}><a href="/">Webgeoda Template</a></h3>
+            <h3 className={styles.mastheadTitle}><a href="/">Webgeoda</a></h3>
             <nav className={styles.mainNav}>
                 <Menu>
                     <MenuButton>
-                        Menu <span aria-hidden className={styles.hambu}>☰</span>
+                        Menu <span aria-hidden className={styles.hamburger}>☰</span>
                     </MenuButton>
                     <MenuList id="menu">
                         <MenuLink as="a" href="/">

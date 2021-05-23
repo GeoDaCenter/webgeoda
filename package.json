@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
     "start": "next start",
-    "export": "next build && next export"
+    "build:next": "next build",
+    "build:worker": "node _webgeoda/build-scripts/build-sw",
+    "export": "npm run build:next && next export && npm run build:worker"
   },
   "dependencies": {
     "@deck.gl/core": "^8.4.16",
     "@deck.gl/react": "^8.4.16",
-    "@netlify/plugin-nextjs": "^3.3.0",
     "@reach/menu-button": "^0.15.1",
     "@reach/slider": "^0.15.0",
     "@reach/tabs": "^0.15.0",
@@ -19,6 +19,12 @@
     "next": "10.2.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-map-gl": "^6.1.15"
+    "react-map-gl": "^6.1.15",
+    "react-redux": "^7.2.4",
+    "redux": "^4.1.0"
+  },
+  "devDependencies": {
+    "@netlify/plugin-nextjs": "^3.3.0",
+    "workbox-build": "^6.1.5"
   }
 }
