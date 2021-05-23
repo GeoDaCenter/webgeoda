@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next build && next export",
-    "start": "next start"
+    "clean": "npm r dotenv",
+    "start": "next start",
+    "export": "npm clean && next build && next export"
   },
   "dependencies": {
     "@deck.gl/core": "^8.4.16",

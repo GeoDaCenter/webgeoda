@@ -11,7 +11,6 @@ import {MapView, FlyToInterpolator} from '@deck.gl/core';
 import MapboxGLMap from 'react-map-gl';
 
 export default function Map() {
-    console.log(process.env)
     const [viewState, setViewState] = useState({
         latitude: 41.8,
         longitude: -87.6,
@@ -64,7 +63,7 @@ export default function Map() {
                         // ref={mapRef}
                         mapStyle={'mapbox://styles/dhalpern/ckp07gekw2p2317phroaarzej'}
                         preventStyleDiffing={true}
-                        mapboxApiAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
+                        mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
                         >
                     </MapboxGLMap >
                 </DeckGL>
