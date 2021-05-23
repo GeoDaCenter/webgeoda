@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/About.module.css'
 import {Gutter} from '../components/layout/'
 import MainNav from '../components/MainNav'

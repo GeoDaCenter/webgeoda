@@ -1,5 +1,4 @@
 import styles from '../styles/Footer.module.css'
-import Image from 'next/image'
 
 export default function Footer(){
     return (
@@ -10,7 +9,7 @@ export default function Footer(){
             rel="noopener noreferrer"
             >
                 <span className={styles.logo}>
-                    <Image src="/geoda-logo.png" alt="Geoda Logo" width={23} height={20} />
+                    <img src="/geoda-logo.png" alt="Geoda Logo" width={23} height={20} />
                 </span>
                 Powered by Geoda
             </a>
