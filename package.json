@@ -7,7 +7,7 @@
     "start": "next start",
     "build:next": "next build",
     "build:worker": "node _webgeoda/build-scripts/build-sw",
-    "export": "npm run build:next && next export && npm run build:worker"
+    "build": "npm run build:next && npm run build:worker"
   },
   "dependencies": {
     "@deck.gl/core": "^8.4.16",

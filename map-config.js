@@ -25,6 +25,12 @@ const variables = [
     },
 ]
 
+const mapModes = {
+    '2D': false,
+    '3D': false,
+    'BubbleCartogram':true
+}
+
 // 🦺 exports below -- you can safely ignore! 🦺 //
 export const dataPresets = {
     data,
