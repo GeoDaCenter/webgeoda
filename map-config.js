@@ -2,33 +2,39 @@ import * as colors from '@webgeoda/utils/colors'
 
 const data = [
     {
-        name: 'USA Facts County', // Plain english name for dataset
-        geojson: 'county_usfacts.geojson', // geospatial data to join to
-        tables: {}
+        name: 'Puerto Rico Block Groups', // Plain english name for dataset
+        geojson: 'pr.geojson', // geospatial data to join to
+        id:'GEOID10', // fid / geoid join column
+        tables: {} // any additional tabular data
     }
 ]
 
 const variables = [
     {
-        variable: "Confirmed Count",
-        numerator: 'cases',
+        variable: "Total Population",
+        numerator: 'Total Population',
         binning: 'natural breaks',
-        numberOfBins:5,
+        colorScale: colors.colorbrewer.Blues[5]
+    },
+    {
+        variable: "Population Density",
+        numerator: 'Total Population',
+        denmoinator: 'ALAND10',
+        binning: 'natural breaks',
         colorScale: colors.colorbrewer.YlGnBu[5]
     },
     {
-        variable: "Confirmed Count",
-        numerator: 'cases',
-        binning: 'natural breaks',
-        numberOfBins:5,
-        colorScale: colors.colorbrewer.YlGnBu[5]
+        variable: "Population Density Hotspot",
+        numerator: 'Total Population',
+        denmoinator: 'ALAND10',
+        binning: 'lisa',
     },
 ]
 
 const mapModes = {
-    '2D': false,
+    '2D': true,
     '3D': false,
-    'BubbleCartogram':true
+    'BubbleCartogram':false
 }
 
 // 🦺 exports below -- you can safely ignore! 🦺 //

@@ -11,6 +11,7 @@ export const INITIAL_STATE = {
       data: [],
       params: []
     },
+    initialViewState:{},
     dataParams: {
         ...dataPresets
     },

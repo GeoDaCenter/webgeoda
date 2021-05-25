@@ -47,12 +47,13 @@ class JsGeoDaWorker {
      * @param {String} url Link to fetch Geojson file
      * @returns {Promise} Resolves with GeoJson Data and adds geojson info to this.geojsonMaps
      */
-    async LoadGeojson(url){
+    async LoadGeojson(url, idCol){
         let id = this.genId()
         this.gdaProxy.postMessage({
             action:"ReadGeojsonMap",
             params:{
                 url,
+                idCol,
                 id
             }
         });

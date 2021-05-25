@@ -9,15 +9,12 @@ import JsGeoDaWorker from '@webgeoda/workers/JsGeoDaWorker'
 
 const gdaProxy = new JsGeoDaWorker()
 
-
 import rootReducer from '@webgeoda/reducers';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-
 const store = createStore(rootReducer);
 
 export default function Map() {
-
     return (
         <div className={styles.container}>
             <Head>
@@ -51,7 +48,7 @@ export default function Map() {
             <MainNav/>
             
             <Provider store={store}>
-                <MainMap/>
+                <MainMap gdaProxy={gdaProxy} />
             </Provider>
         </div>
     )

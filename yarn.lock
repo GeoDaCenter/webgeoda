@@ -1553,6 +1553,16 @@
     mjolnir.js "^2.5.0"
     probe.gl "^3.2.1"
 
+"@deck.gl/layers@^8.4.16":
+  version "8.4.16"
+  resolved "https://registry.yarnpkg.com/@deck.gl/layers/-/layers-8.4.16.tgz#a79eb0a9cbcf14586a934384ac2d02c22e884cce"
+  integrity sha512-IvXrcXqH4z0Co+i5v6TPxyBcuyiJ4na5a7Lgz8bb+k7nG5PpqArBE6qVc4H88oxlJlkGrsou68/40VkZMER9VQ==
+  dependencies:
+    "@loaders.gl/images" "^2.3.13"
+    "@mapbox/tiny-sdf" "^1.1.0"
+    "@math.gl/polygon" "^3.4.2"
+    earcut "^2.0.6"
+
 "@deck.gl/react@^8.4.16":
   version "8.4.16"
   resolved "https://registry.npmjs.org/@deck.gl/react/-/react-8.4.16.tgz"
@@ -1734,7 +1744,7 @@
   resolved "https://registry.npmjs.org/@mapbox/point-geometry/-/point-geometry-0.1.0.tgz"
   integrity sha1-ioP5M1x4YO/6Lu7KJUMyqgru2PI=
 
-"@mapbox/tiny-sdf@^1.2.5":
+"@mapbox/tiny-sdf@^1.1.0", "@mapbox/tiny-sdf@^1.2.5":
   version "1.2.5"
   resolved "https://registry.npmjs.org/@mapbox/tiny-sdf/-/tiny-sdf-1.2.5.tgz"
   integrity sha512-cD8A/zJlm6fdJOk6DqPUV8mcpyJkRz2x2R+/fYcWDYG3oWbG7/L7Yl/WqQ1VZCjnL9OTIMAn6c+BC5Eru4sQEw==
@@ -1763,6 +1773,13 @@
   dependencies:
     "@babel/runtime" "^7.12.0"
     gl-matrix "^3.0.0"
+
+"@math.gl/polygon@^3.4.2":
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/@math.gl/polygon/-/polygon-3.4.2.tgz#36c327257959c8edcc258c4ddeaecf04b125cb90"
+  integrity sha512-ANbZmcrzavzEe0bHbdEYyiudPdGGV/quB3FxUJa3L1QCcZbnrqvnuwqX+8U8ltIDhbACG1x0Uxefwo8p77aMNw==
+  dependencies:
+    "@math.gl/core" "3.4.2"
 
 "@math.gl/web-mercator@^3.2.0", "@math.gl/web-mercator@^3.4.2":
   version "3.4.2"
@@ -2033,6 +2050,26 @@
   dependencies:
     ejs "^2.6.1"
     magic-string "^0.25.0"
+
+"@turf/bbox@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/bbox/-/bbox-6.3.0.tgz#0e1a9b59f32d6a2a40c806f54cbaa73575bead25"
+  integrity sha512-N4ue5Xopu1qieSHP2MA/CJGWHPKaTrVXQJjzHRNcY1vtsO126xbSaJhWUrFc5x5vVkXp0dcucGryO0r5m4o/KA==
+  dependencies:
+    "@turf/helpers" "^6.3.0"
+    "@turf/meta" "^6.3.0"
+
+"@turf/helpers@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-6.3.0.tgz#87f90f806c3f8ad6385ef8d2041d3662bf3c9fb1"
+  integrity sha512-kr6KuD4Z0GZ30tblTEvi90rvvVNlKieXuMC8CTzE/rVQb0/f/Cb29zCXxTD7giQTEQY/P2nRW23wEqqyNHulCg==
+
+"@turf/meta@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/meta/-/meta-6.3.0.tgz#f3e280ab29641f21e4f99310ce77f9c8394ae394"
+  integrity sha512-qBJjaAJS9H3ap0HlGXyF/Bzfl0qkA9suafX/jnDsZvWMfVLt+s+o6twKrXOGk5t7nnNON2NFRC8+czxpu104EQ==
+  dependencies:
+    "@turf/helpers" "^6.3.0"
 
 "@types/estree@0.0.39":
   version "0.0.39"
@@ -2892,7 +2929,7 @@ domain-browser@^1.1.1:
   resolved "https://registry.npmjs.org/domain-browser/-/domain-browser-1.2.0.tgz"
   integrity sha512-jnjyiM6eRyZl2H+W8Q/zLMA481hzi0eszAaBUzIVnmYVDBbnLxVNnfu1HgEBvCbL+71FrxMl3E6lpKH7Ge3OXA==
 
-earcut@^2.2.2:
+earcut@^2.0.6, earcut@^2.2.2:
   version "2.2.2"
   resolved "https://registry.npmjs.org/earcut/-/earcut-2.2.2.tgz"
   integrity sha512-eZoZPPJcUHnfRZ0PjLvx2qBordSiO8ofC3vt+qACLM95u+4DovnbYNpQtJh0DNsWj8RnxrQytD4WA8gj5cRIaQ==

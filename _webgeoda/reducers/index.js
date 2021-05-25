@@ -12,31 +12,31 @@ export default function reducer(state = INITIAL_STATE, action){
         case 'INITIAL_LOAD': {
             const dataParams = {
                 ...state.dataParams,
-                ...action.payload.data.variableParams,
+                ...action.payload.variableParams,
             }
             const mapParams = {
                 ...state.mapParams,
-                ...action.payload.data.mapParams
+                ...action.payload.mapParams
             }
             const storedData = {
                 ...state.storedData,
-                ...action.payload.data.storedData,
+                ...action.payload.storedData,
             }
 
             const storedGeojson = {
                 ...state.storedGeojson,
-                ...action.payload.data.storedGeojson,
+                ...action.payload.storedGeojson,
             }
 
             return {
                 ...state,
-                currentData: action.payload.data.currentData,
+                currentData: action.payload.currentData,
                 storedGeojson,
                 storedData,
                 dataParams,
                 mapParams,
-                currentTable: action.payload.data.currentTable,
-                dates: action.payload.data.dates
+                initialViewState: action.payload.viewState !== null ? action.payload.initialViewState : null,
+                currentId: action.payload.id
             }
         }
         case 'ADD_TABLES': {

@@ -3,21 +3,75 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 // deck GL and helper function import
 import DeckGL from '@deck.gl/react';
-import {MapView, FlyToInterpolator} from '@deck.gl/core';
+import { GeoJsonLayer } from '@deck.gl/layers';
 import MapboxGLMap from 'react-map-gl';
+import { useDispatch, useSelector } from 'react-redux';
 
-export default function MainMap(){
+import useLoadData from '@webgeoda/hooks/useLoadData'
+
+import { dataPresets } from '../map-config.js'
+
+export default function MainMap(props){
+    const initialViewState = useSelector(state => state.initialViewState);
+    const dataParams = useSelector(state => state.dataParams);
+    const mapParams = useSelector(state => state.mapParams);
+    const currentData = useSelector(state => state.currentData);
+    const currentId = useSelector(state => state.currentId);
+    const storedGeojson = useSelector(state => state.storedGeojson);
+    const currentMapGeography = storedGeojson[currentData]?.data||[]
+    const mapData = useSelector(state => state.mapData);
+
+    const dispatch = useDispatch();
+
+    const [loadData] = useLoadData(props.gdaProxy);
+    // const [updateMap] = useUpdateMap();
+
+    useEffect(() => {
+        loadData(dataPresets)
+    },[dataPresets])
+
+    useEffect(() => {
+        dispatch({type: 'UPDATE_MAP'});
+    },[dataParams.variableName, mapParams.bins.breaks])
+
     const [viewState, setViewState] = useState({
-        latitude: 41.8,
-        longitude: -87.6,
+        latitude: 0,
+        longitude: 0,
         zoom: 8,
         bearing:0,
         pitch:0
     })
+
+    useEffect(() => {
+        if (initialViewState.longitude) setViewState({longitude: initialViewState.longitude,latitude: initialViewState.latitude,zoom: initialViewState.zoom})
+    },[initialViewState])
+
+
+    const layers = [
+        new GeoJsonLayer({
+            id: 'choropleth',
+            data: currentMapGeography,
+            getFillColor: d => mapData.data[d.properties[currentId]].color,
+            // getElevation: d => currentMapData[d.properties.GEOID].height,
+            pickable: true,
+            stroked: false,
+            filled: true,
+            // wireframe: mapParams.vizType === '3D',
+            // extruded: mapParams.vizType === '3D',
+            // opacity: mapParams.vizType === 'dotDensity' ? mapParams.dotDensityParams.backgroundTransparency : 0.8,
+            material:false,
+            // onHover: handleMapHover,
+            // onClick: handleMapClick,  
+            updateTriggers: {
+                getFillColor:mapData.params
+            }  
+        }),
+    ]
+
     return (
         <div className={styles.mapContainer}>
             <DeckGL
-                // layers={}
+                layers={layers}
                 // ref={deckRef}
                 initialViewState={viewState}
                 controller={true}

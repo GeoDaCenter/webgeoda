@@ -177,9 +177,9 @@ self.onmessage = function onmessage(event) {
           var indexOrder = {};
           var properties = {};
           for (var i=0; i<jsonData.features.length; i++) {
-              geoidOrder[jsonData.features[i].properties.GEOID] = i;
-              indexOrder[i] = jsonData.features[i].properties.GEOID;
-              properties[jsonData.features[i].properties.GEOID] = jsonData.features[i].properties
+              geoidOrder[jsonData.features[i].properties[data['params'].idCol]] = i;
+              indexOrder[i] = jsonData.features[i].properties[data['params'].idCol];
+              properties[jsonData.features[i].properties[data['params'].idCol]] = jsonData.features[i].properties
           };
           return postMessage({
             success: true,

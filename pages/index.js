@@ -55,12 +55,12 @@ export default function Home() {
             <a className={styles.docsLink}>Read More 🗺️</a>
           </div>
           <div className="col-xs-12 col-md-4 col-lg-4 rules-on">
-            <h2 className={styles.subhead}>Customize Pages</h2>
+            <h2 className={styles.subhead} href="#">Customize Pages</h2>
             <p>
               Describe and cite your data, provide links to related research, contact information, and download links.
               Layout tools help to quickly modify or create new pages.
             </p>
-            <a className={styles.docsLink}>Read More 📝 </a>
+            <a className={styles.docsLink} href="#">Read More 📝 </a>
           </div>
           <div className="col-xs-12 col-md-4 col-lg-4" >
             <h2 className={styles.subhead}>Publish Insights</h2>
@@ -68,7 +68,7 @@ export default function Home() {
               Sharing out insights should be painless. 
               Webgeoda is built to be published on your platform of choice: Github pages, Vercel, Netlify, or any static web hosting provider. 
             </p>
-            <a className={styles.docsLink}>Read More 🌐</a>
+            <a className={styles.docsLink} href="#">Read More 🌐</a>
           </div>
         </div>
       </main>

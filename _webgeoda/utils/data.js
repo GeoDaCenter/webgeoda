@@ -30,11 +30,11 @@ export const dataFn = (numeratorData, denominatorData, dataParams)  => {
           *scale   
         )
       }
-    } else if (dProperty===null&&nRange===null){ // whole count or number -- no range, no normalization
-      return (numeratorData[nProperty]||numeratorData[nIndex])*scale
-    } else if (dProperty===null&&nRange!==null){ // range number, daily or weekly count -- no normalization
-      return (numeratorData[nIndex]-numeratorData[nIndex-nRange])/nRange*scale
-    } else if (dProperty!==null&&nRange===null){ // whole count or number normalized -- no range
+    } else if (!(dProperty)&&!(nRange)){ // whole count or number -- no range, no normalization
+      return (numeratorData[nProperty]||numeratorData[nIndex])*(scale||1)
+    } else if (!(dProperty)&&nRange){ // range number, daily or weekly count -- no normalization
+      return (numeratorData[nIndex]-numeratorData[nIndex-nRange])/nRange*(scale||1)
+    } else if (dProperty&&!(nRange)){ // whole count or number normalized -- no range
       return (numeratorData[nProperty]||numeratorData[nIndex])/(denominatorData[dProperty]||denominatorData[dIndex])*scale
     } else if (dProperty!==null&&nRange!==null&&dRange===null){ // range number, daily or weekly count, normalized to a single value
       return (
@@ -117,3 +117,50 @@ export const shallowEqual = (object1, object2) => { // Thanks @Dmitri Pavlutin
   }
   return true;
 };
+
+// this function loops through the current data set and provides data for GeodaJS to create custom breaks 
+export const getDataForBins = (numeratorData, denominatorData, dataParams, fixedOrder=false) => {
+
+  let { nProperty, nIndex, dType, dIndex, dProperty} = dataParams;
+  let tempDataParams = {...dataParams};
+  
+  if (nProperty === undefined && nIndex === undefined) {
+    nProperty = dataParams.numerator||null
+    tempDataParams.nProperty = dataParams.numerator
+    tempDataParams.numerator = "properties"
+  }
+  if (dProperty === undefined && dIndex === undefined) {
+    dProperty = dataParams.denominator||null
+    tempDataParams.dProperty = dataParams.denominator
+    tempDataParams.denominator = "properties"
+  }
+
+  // declare empty array for return variables
+  let rtn = new Array(fixedOrder ? fixedOrder.length : Object.keys(numeratorData).length);
+
+  // length of data table to loop through
+  const keys = fixedOrder || Object.keys(numeratorData);
+  const n = keys.length;
+
+  // this checks if the bins generated should be dynamic (generating for each date) or fixed (to the most recent date)
+  if (nIndex === null && nProperty === null) {
+      // if fixed, get the most recent date
+      let tempIndex = numeratorData.length-1;
+      // if the denominator is time series data (eg. deaths / cases this week), make the indices the same (most recent)
+      let tempDIndex = dType === 'time-series' ? denominatorData.length-1 : dIndex;
+      // loop through, do appropriate calculation. add returned value to rtn array
+      for (let i=0; i<n; i++){
+          rtn[keys[i]] = dataFn(numeratorData[keys[i]], denominatorData[keys[i]], {...dataParams, nIndex:tempIndex, dIndex: tempDIndex})||0
+      }
+  } else {
+      for (let i=0; i<n; i++){
+        rtn[i] = dataFn(numeratorData[keys[i]], denominatorData[keys[i]], tempDataParams)||0
+      }
+  }
+
+  for (let i=0; i<rtn.length;i++){
+      if (rtn[i] < 0) rtn[i] = 0
+  }
+
+  return rtn;   
+}
