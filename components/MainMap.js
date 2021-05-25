@@ -8,8 +8,12 @@ import MapboxGLMap from 'react-map-gl';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useLoadData from '@webgeoda/hooks/useLoadData'
+import useUpdateBins from '@webgeoda/hooks/useUpdateBins'
 
 import { dataPresets } from '../map-config.js'
+
+import Legend from './Legend'
+import MapControls from './MapControls'
 
 export default function MainMap(props){
     const initialViewState = useSelector(state => state.initialViewState);
@@ -24,19 +28,19 @@ export default function MainMap(props){
     const dispatch = useDispatch();
 
     const [loadData] = useLoadData(props.gdaProxy);
-    // const [updateMap] = useUpdateMap();
-
-    useEffect(() => {
-        console.log(state)
-    },[state])
+    const [updateBins] = useUpdateBins(props.gdaProxy);
         
     useEffect(() => {
         loadData(dataPresets)
     },[dataPresets])
 
     useEffect(() => {
+        updateBins()
+    },[dataParams.variable])
+
+    useEffect(() => {
         dispatch({type: 'UPDATE_MAP'});
-    },[dataParams.variableName, mapParams.bins.breaks])
+    },[mapParams.bins.breaks])
 
     const [viewState, setViewState] = useState({
         latitude: 0,
@@ -45,6 +49,18 @@ export default function MainMap(props){
         bearing:0,
         pitch:0
     })
+
+    const deckRef = useRef({
+        deck: {
+            viewState: {
+                MapView: {
+                    ...viewState
+                }
+            }
+        }
+    });
+
+    const mapRef = useRef()
 
     useEffect(() => {
         if (initialViewState.longitude) setViewState({longitude: initialViewState.longitude,latitude: initialViewState.latitude,zoom: initialViewState.zoom*.9})
@@ -76,89 +92,30 @@ export default function MainMap(props){
         <div className={styles.mapContainer}>
             <DeckGL
                 layers={layers}
-                // ref={deckRef}
+                ref={deckRef}
                 initialViewState={viewState}
                 controller={true}
-                // views={view}
                 pickingRadius={20}
             >
                 <MapboxGLMap
                     reuseMaps
-                    // ref={mapRef}
+                    ref={mapRef}
                     mapStyle={'mapbox://styles/dhalpern/ckp07gekw2p2317phroaarzej'}
                     preventStyleDiffing={true}
                     mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
                     >
                 </MapboxGLMap >
             </DeckGL>
-            {/* <MapButtonContainer 
-                infoPanel={panelState.info}
-            >
-                <NavInlineButtonGroup>
-                    <NavInlineButton
-                        title="Selection Box"
-                        id="boxSelect"
-                        isActive={boxSelect}
-                        onClick={() => handleSelectionBoxStart()}
-                    >
-                        {SVG.selectRect}
-                    </NavInlineButton>
-                </NavInlineButtonGroup>
-                <NavInlineButtonGroup>
-                    <NavInlineButton
-                        title="Geolocate"
-                        id="geolocate"
-                        onClick={() => handleGeolocate()}
-                    >
-                        {SVG.locate}
-                    </NavInlineButton>
-                </NavInlineButtonGroup>
-                
-                <NavInlineButtonGroup>
-                    <NavInlineButton
-                    
-                        title="Zoom In"
-                        id="zoomIn"
-                        onClick={() => handleZoom(0.5)}
-                    >
-                        {SVG.plus}
-                    </NavInlineButton>
-                    <NavInlineButton
-                        title="Zoom Out"
-                        id="zoomOut"
-                        onClick={() => handleZoom(-0.5)}
-                    >
-                        {SVG.minus}
-                    </NavInlineButton>
-                    <NavInlineButton
-                        title="Reset Tilt"
-                        id="resetTilt"
-                        tilted={deckRef.current?.deck.viewState?.MapView?.bearing !== 0 || deckRef.current?.deck.viewState?.MapView?.pitch !== 0}
-                        onClick={() => resetTilt()}
-                    >
-                        {SVG.compass}
-                    </NavInlineButton>
-                </NavInlineButtonGroup>
-                <NavInlineButtonGroup>
-                    <NavInlineButton
-                        title="Share this Map"
-                        id="shareButton"
-                        shareNotification={shared}
-                        onClick={() => handleShare({mapParams, dataParams, currentData, coords: GetMapView(), lastDateIndex: dateIndices[currentData][dataParams.numerator]})}
-                    >
-                        {SVG.share}
-                    </NavInlineButton>
-                </NavInlineButtonGroup>
-                <ShareURL type="text" value="" id="share-url" />
-            </MapButtonContainer>
-            <GeocoderContainer>
-                <Geocoder 
-                    id="Geocoder"
-                    placeholder={"Search by location"}
-                    API_KEY={MAPBOX_ACCESS_TOKEN}
-                    onChange={handleGeocoder}
-                />
-            </GeocoderContainer> */}
+            <Legend 
+                bins={mapParams.bins.breaks}
+                colors={mapParams.colorScale}
+                variableName={dataParams.variable}
+            />
+            <MapControls 
+                deck={deckRef}
+                viewState={viewState}
+                setViewState={setViewState}
+            />
         </div>
     )
 }

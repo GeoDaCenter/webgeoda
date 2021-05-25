@@ -16,6 +16,7 @@ button {
 
 :root {
   --selected-color: #1816cc;
+  --selected-color-light: #acaccc;
   --medium-gray: rgb(156, 156, 156);
   --orange: #e27213;
   --green: #06cd57;
@@ -42,7 +43,6 @@ nav [data-reach-menu-button] {
   font-size:1rem;
   background:none;
   border:none;
-  outline:none;
   cursor: pointer;
   transition:250ms all;
   padding:0 .25em .25em .25em;

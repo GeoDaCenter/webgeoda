@@ -42,7 +42,7 @@ export default function Home() {
         </h1>
         <p className={styles.description}>
           Start mapping by editing{' '}
-          <code className={styles.code}>config.js</code>
+          <code className={styles.code}>map-config.js</code>
         </p>
         <Gutter em={5} />
         <div className="row rules">

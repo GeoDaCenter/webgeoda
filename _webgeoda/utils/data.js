@@ -104,7 +104,7 @@ export function mapFnHinge(val, bins, colors, maptype, table){
 }
 
 export const getVarId = (currentData, dataParams) => {
-    return `${currentData}-${dataParams.numerator}-${dataParams.nIndex}-${dataParams.nRange}-${dataParams.denominator}-${dataParams.dProperty}-${dataParams.dIndex}-${dataParams.dRange}-${dataParams.scale}`
+    return `${dataParams.variable}-${currentData}-${dataParams.numerator}-${dataParams.nIndex}-${dataParams.nRange}-${dataParams.denominator}-${dataParams.dProperty}-${dataParams.dIndex}-${dataParams.dRange}-${dataParams.scale}`
 }
 
 export const shallowEqual = (object1, object2) => { // Thanks @Dmitri Pavlutin
@@ -163,4 +163,8 @@ export const getDataForBins = (numeratorData, denominatorData, dataParams, fixed
   }
 
   return rtn;   
+} 
+
+export const find = (collection, testFunc) => {
+  for (let i=0; i<collection.length;i++) if (testFunc(collection[i])) return collection[i]
 }

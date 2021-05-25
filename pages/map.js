@@ -1,7 +1,9 @@
 import Head from 'next/head'
 import styles from '../styles/Map.module.css'
 import MainNav from '../components/MainNav'
+
 import MainMap from '../components/MainMap'
+import VariablePanel from '../components/VariablePanel'
 
 import JsGeoDaWorker from '@webgeoda/workers/JsGeoDaWorker'
 // import useLoadData from '@webgeoda/hooks/useLoadData'
@@ -49,6 +51,7 @@ export default function Map() {
             
             <Provider store={store}>
                 <MainMap gdaProxy={gdaProxy} />
+                <VariablePanel />
             </Provider>
         </div>
     )

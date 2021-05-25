@@ -98,7 +98,7 @@ export const generateMapData = (state) => {
             data: returnObj
         }
     }
-    console.log(state.mapParams.bins.breaks)
+    
     for (let i=0; i<state.storedGeojson[state.currentData].data.features.length; i++){
         const tempVal = dataFn(getTable(i, 'numerator'), getTable(i, 'denominator'), tempParams)
 

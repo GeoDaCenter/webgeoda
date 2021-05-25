@@ -1,10 +1,10 @@
 import { INITIAL_STATE } from '@webgeoda/constants/defaults';
 
-import { mapFnNb, mapFnHinge, dataFn, getVarId, shallowEqual} from '@webgeoda/utils/data';
+import { mapFnNb, mapFnHinge, dataFn, getVarId, shallowEqual, find} from '@webgeoda/utils/data';
 import { getCartogramCenter, generateMapData } from '@webgeoda/utils/map';
 import { generateReport, parseTooltipData } from '@webgeoda/utils/summarize';
 
-import { dataPresets } from '../../map-config';
+import { dataPresets } from '../../map-config';``
 const [defaultTables, dataPresetsRedux, tooltipTables] = [{},{},[]]
 
 export default function reducer(state = INITIAL_STATE, action){
@@ -37,6 +37,27 @@ export default function reducer(state = INITIAL_STATE, action){
                 mapParams,
                 initialViewState: action.payload.viewState !== null ? action.payload.initialViewState : null,
                 currentId: action.payload.id
+            }
+        }
+        case 'CHANGE_VARIABLE':{
+            const newDataParams = find(dataPresets.variables, o => o.variable === action.payload)
+            const dataParams = {
+                ...state.dataParams,
+                ...newDataParams
+            }
+            return {
+                ...state,
+                dataParams
+            }
+        }
+        case 'UPDATE_BINS':{
+            const mapParams = {
+                ...state.mapParams,
+                ...action.payload
+            }
+            return {
+                ...state,
+                mapParams
             }
         }
         case 'ADD_TABLES': {

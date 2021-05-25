@@ -1,0 +1,11 @@
+.panelContainer {
+    background:red;
+    position:absolute;
+    left:.5rem;
+    top:calc(.5rem + 50px);
+    background:white;
+    min-height: 10px;
+    padding:.75em;
+    border-radius: .25em;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
