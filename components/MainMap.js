@@ -20,12 +20,16 @@ export default function MainMap(props){
     const storedGeojson = useSelector(state => state.storedGeojson);
     const currentMapGeography = storedGeojson[currentData]?.data||[]
     const mapData = useSelector(state => state.mapData);
-
+    const state = useSelector(state => state)
     const dispatch = useDispatch();
 
     const [loadData] = useLoadData(props.gdaProxy);
     // const [updateMap] = useUpdateMap();
 
+    useEffect(() => {
+        console.log(state)
+    },[state])
+        
     useEffect(() => {
         loadData(dataPresets)
     },[dataPresets])
@@ -43,7 +47,7 @@ export default function MainMap(props){
     })
 
     useEffect(() => {
-        if (initialViewState.longitude) setViewState({longitude: initialViewState.longitude,latitude: initialViewState.latitude,zoom: initialViewState.zoom})
+        if (initialViewState.longitude) setViewState({longitude: initialViewState.longitude,latitude: initialViewState.latitude,zoom: initialViewState.zoom*.9})
     },[initialViewState])
 
 

@@ -31,6 +31,8 @@ const variables = [
     },
 ]
 
+
+
 const mapModes = {
     '2D': true,
     '3D': false,
@@ -43,3 +45,23 @@ export const dataPresets = {
     variables,
     mapModes
 }
+
+
+
+// const data = [
+//     {
+//         name: 'Texas Block Groups', // Plain english name for dataset
+//         geojson: 'tx.geojson', // geospatial data to join to
+//         id:'GEOID', // fid / geoid join column
+//         tables: {} // any additional tabular data
+//     }
+// ]
+
+// const variables = [
+//     {
+//         variable: "Median age",
+//         numerator: 'Median age',
+//         binning: 'natural breaks',
+//         colorScale: colors.colorbrewer.PuOr[9]
+//     }
+// ]

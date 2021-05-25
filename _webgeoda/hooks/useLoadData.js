@@ -54,12 +54,11 @@ export default function useLoadData(gdaProxy){
                 nb.bins 
                 : 
                 ['Lower Outlier','< 25%','25-50%','50-75%','>75%','Upper Outlier'],
-            breaks: [-Math.pow(10, 12), ...nb.breaks.slice(1,-1), Math.pow(10, 12)]
+            breaks: nb.breaks.slice(1,-1)
           }
         } else {
           bins = fixedScales[dataPresets.variables[0]?.fixedScale]
         }
-        
         dispatch({
             type: 'INITIAL_LOAD',
             payload: {
