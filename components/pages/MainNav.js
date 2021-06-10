@@ -5,7 +5,7 @@ import {
     MenuLink,
 } from "@reach/menu-button";
 import "@reach/menu-button/styles.css"
-import styles from '../styles/MainNav.module.css'
+import styles from './MainNav.module.css'
 
 export default function MainNav(){
     return (

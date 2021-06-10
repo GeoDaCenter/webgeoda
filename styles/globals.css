@@ -15,7 +15,7 @@ button {
 }
 
 :root {
-  --selected-color: #1816cc;
+  --selected-color: #1816cc77;
   --selected-color-light: #acaccc;
   --medium-gray: rgb(156, 156, 156);
   --orange: #e27213;
@@ -54,6 +54,10 @@ nav [data-reach-menu-button]:hover {
   border-bottom:1px solid var(--medium-gray);
 }
 
+div [data-reach-menu-list], div [data-reach-menu-items] {
+  background:hsla(0,0%,100%,0.6);
+  backdrop-filter: blur(5px) brightness(90%) contrast(100%);
+}
 div [data-reach-menu-list] {
   padding:0;
   border-radius: .25em;
@@ -75,3 +79,4 @@ div [data-reach-menu-item] {
 div [data-reach-menu-item][data-selected] {
   background: var(--selected-color);
 }
+

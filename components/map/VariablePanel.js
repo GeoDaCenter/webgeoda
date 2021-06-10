@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
-import styles from '../styles/VariablePanel.module.css'
-import {dataPresets} from '../map-config'
+import styles from './VariablePanel.module.css'
+import {dataPresets} from '../../map-config'
 
 import {
     Listbox,

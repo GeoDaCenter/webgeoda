@@ -1,4 +1,4 @@
-import styles from '../styles/Map.module.css'
+import styles from './MainMap.module.css'
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 // deck GL and helper function import
@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import useLoadData from '@webgeoda/hooks/useLoadData'
 import useUpdateBins from '@webgeoda/hooks/useUpdateBins'
 
-import { dataPresets } from '../map-config.js'
+import { dataPresets } from '../../map-config.js'
 
 import Legend from './Legend'
 import MapControls from './MapControls'
@@ -27,8 +27,8 @@ export default function MainMap(props){
     const state = useSelector(state => state)
     const dispatch = useDispatch();
 
-    const [loadData] = useLoadData(props.gdaProxy);
-    const [updateBins] = useUpdateBins(props.gdaProxy);
+    const [loadData] = useLoadData(props.geoda);
+    const [updateBins] = useUpdateBins(props.geoda);
         
     useEffect(() => {
         loadData(dataPresets)

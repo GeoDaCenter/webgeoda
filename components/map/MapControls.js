@@ -1,4 +1,4 @@
-import styles from '../styles/Map.module.css'
+import styles from './MainMap.module.css'
 import {FlyToInterpolator} from '@deck.gl/core'
 import Tooltip, { useTooltip, TooltipPopup } from "@reach/tooltip";
 import "@reach/tooltip/styles.css";

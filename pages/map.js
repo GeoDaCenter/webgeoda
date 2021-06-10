@@ -1,22 +1,32 @@
 import Head from 'next/head'
 import styles from '../styles/Map.module.css'
-import MainNav from '../components/MainNav'
+import MainNav from '../components/pages/MainNav'
 
-import MainMap from '../components/MainMap'
-import VariablePanel from '../components/VariablePanel'
+import MainMap from '../components/map/MainMap'
+import VariablePanel from '../components/map/VariablePanel'
 
-import JsGeoDaWorker from '@webgeoda/workers/JsGeoDaWorker'
+
 // import useLoadData from '@webgeoda/hooks/useLoadData'
 // import useUpdateData from '@webgeoda/hooks/useUpdateData'
 
-const gdaProxy = new JsGeoDaWorker()
+import * as Comlink from 'comlink'
 
 import rootReducer from '@webgeoda/reducers';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
+import { useEffect, useState } from 'react'
+
 const store = createStore(rootReducer);
+var geoda;
 
 export default function Map() {
+    const [geodaReady, setGeodaReady] = useState(false);
+
+    useEffect(() => {
+        geoda = Comlink.wrap(new Worker("./workers/worker.jsgeoda.js"))
+        geoda.New().then(() => setGeodaReady(true)).then(() => geoda.listFunctions())
+    },[])
+
     return (
         <div className={styles.container}>
             <Head>
@@ -50,8 +60,11 @@ export default function Map() {
             <MainNav/>
             
             <Provider store={store}>
-                <MainMap gdaProxy={gdaProxy} />
-                <VariablePanel />
+                {geodaReady && 
+                <>
+                    <MainMap geoda={geoda} />
+                    <VariablePanel />
+                </>}
             </Provider>
         </div>
     )

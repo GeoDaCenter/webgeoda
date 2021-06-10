@@ -40,17 +40,14 @@ export default function reducer(state = INITIAL_STATE, action){
             }
         }
         case 'CHANGE_VARIABLE':{
-            const newDataParams = find(dataPresets.variables, o => o.variable === action.payload)
-            const dataParams = {
-                ...state.dataParams,
-                ...newDataParams
-            }
+            const dataParams = find(dataPresets.variables, o => o.variable === action.payload)
             return {
                 ...state,
                 dataParams
             }
         }
         case 'UPDATE_BINS':{
+            
             const mapParams = {
                 ...state.mapParams,
                 ...action.payload
@@ -63,7 +60,7 @@ export default function reducer(state = INITIAL_STATE, action){
         case 'ADD_TABLES': {
             const storedData = {
                 ...state.storedData,
-                ...action.payload.data
+                ...action.payload
             }
 
             return {
@@ -130,6 +127,7 @@ export default function reducer(state = INITIAL_STATE, action){
             }
         }
         case 'SET_VARIABLE_PARAMS':{
+            
             let dataParams = {
                 ...state.dataParams,
                 ...action.payload.params

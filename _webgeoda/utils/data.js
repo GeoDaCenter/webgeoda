@@ -1,49 +1,61 @@
-export const dataFn = (numeratorData, denominatorData, dataParams)  => {
-    const { 
-      nProperty, nIndex,
-      dProperty, dIndex, 
-      nType, dType,
-      scale
-    } = dataParams;
+import {CSVLoader} from '@loaders.gl/csv';
+import {load} from '@loaders.gl/core';
+
+/**
+ * Global data function
+ * @param {Object | Array} numeratorData Object or array with numerator data for a feature
+ * @param {Object | Array} denominatorData Object or array with denominator data for a feature
+ * @param {Object} dataParams Webgeoda parameters for data parsing (eg. Numerator, denominator, nProperty, scale)
+ * @returns {Number} Parsed value based on given 
+ */
+export const dataFn = (numeratorData, denominatorData, dataParams, debug=false)  => {
+  const { 
+    nProperty, nIndex,
+    dProperty, dIndex, 
+    nType, dType
+  } = dataParams;
+
+  const scale = dataParams.scale||1;
+
+  const nRange = nIndex <= dataParams.nRange ? nIndex : dataParams.nRange;
+  const dRange = dIndex <= dataParams.dRange ? dIndex : dataParams.dRange;
   
-    const nRange = nIndex <= dataParams.nRange ? nIndex : dataParams.nRange;
-    const dRange = dIndex <= dataParams.dRange ? dIndex : dataParams.dRange;
-    
-    if (numeratorData === undefined) {
-      return null;
-    } else if ((nProperty !== null && numeratorData[nProperty] === undefined) && (nIndex !== null && numeratorData[nIndex] === undefined)){
-      return null;
-    } else if (nType ==='time-series' && dType === 'time-series') {
-      if (nRange === null & dRange === null) {
-        return (
-          (numeratorData[nIndex])
-          /
-          (denominatorData[dIndex])
-          *scale   
-        )
-  
-      } else {
-        return (
-          ((numeratorData[nIndex]-numeratorData[nIndex-nRange])/nRange)
-          /
-          ((denominatorData[dIndex]-denominatorData[dIndex-dRange])/dRange)
-          *scale   
-        )
-      }
-    } else if (!(dProperty)&&!(nRange)){ // whole count or number -- no range, no normalization
-      return (numeratorData[nProperty]||numeratorData[nIndex])*(scale||1)
-    } else if (!(dProperty)&&nRange){ // range number, daily or weekly count -- no normalization
-      return (numeratorData[nIndex]-numeratorData[nIndex-nRange])/nRange*(scale||1)
-    } else if (dProperty&&!(nRange)){ // whole count or number normalized -- no range
-      return (numeratorData[nProperty]||numeratorData[nIndex])/(denominatorData[dProperty]||denominatorData[dIndex])*scale
-    } else if (dProperty!==null&&nRange!==null&&dRange===null){ // range number, daily or weekly count, normalized to a single value
+  if (numeratorData === undefined) {
+    return null;
+  } else if ((nProperty !== null && numeratorData[nProperty] === undefined) && (nIndex !== null && numeratorData[nIndex] === undefined)){
+    return null;
+  } else if (nType ==='time-series' && dType === 'time-series') {
+    if (nRange === null & dRange === null) {
       return (
-        (numeratorData[nIndex]-numeratorData[nIndex-nRange])/nRange)/(denominatorData[dProperty]||denominatorData[dIndex]
-          )*scale
-    } else {      
-      return 0;
+        (numeratorData[nIndex])
+        /
+        (denominatorData[dIndex])
+        *scale   
+      )
+
+    } else {
+      return (
+        ((numeratorData[nIndex]-numeratorData[nIndex-nRange])/nRange)
+        /
+        ((denominatorData[dIndex]-denominatorData[dIndex-dRange])/dRange)
+        *scale   
+      )
     }
+  } else if (!(dProperty)&&!(nRange)){ // whole count or number -- no range, no normalization
+    return (numeratorData[nProperty]||numeratorData[nIndex])*scale
+  } else if (!(dProperty)&&nRange){ // range number, daily or weekly count -- no normalization
+    return (numeratorData[nIndex]-numeratorData[nIndex-nRange])/nRange*scale
+  } else if (dProperty&&!(nRange)){ // whole count or number normalized -- no range
+    return (numeratorData[nProperty]||numeratorData[nIndex])/(denominatorData[dProperty]||denominatorData[dIndex])*scale
+  } else if (dProperty!==null&&nRange!==null&&dRange===null){ // range number, daily or weekly count, normalized to a single value
+    return (
+      (numeratorData[nIndex]-numeratorData[nIndex-nRange])/nRange)/(denominatorData[dProperty]||denominatorData[dIndex]
+        )*scale
+  } else {      
+    return 0;
+  }
 }
+
 
 export function mapFn(val, bins, colors, maptype, table){
   if (val === null) {
@@ -103,10 +115,22 @@ export function mapFnHinge(val, bins, colors, maptype, table){
   return colors[colors.length-1];
 }
 
+/**
+ * Generates a deterministic ID based on data params and dataset
+ * @param {String} currentData Name of current geodata
+ * @param {Object} dataParams Webgeoda parameters for data parsing (eg. Numerator, denominator, nProperty, scale)
+ * @returns {String} Unique deterministic ID
+ */
 export const getVarId = (currentData, dataParams) => {
     return `${dataParams.variable}-${currentData}-${dataParams.numerator}-${dataParams.nIndex}-${dataParams.nRange}-${dataParams.denominator}-${dataParams.dProperty}-${dataParams.dIndex}-${dataParams.dRange}-${dataParams.scale}`
 }
 
+/**
+ * Shallow compare the values of two objects
+ * @param {Object} object1 Object 1 to compare
+ * @param {Object} object2 Object 2 to compare
+ * @returns {Boolean} True if same, false if different
+ */
 export const shallowEqual = (object1, object2) => { // Thanks @Dmitri Pavlutin
   const keys = Object.keys(object1);
   if (keys.length !== keys.length) return false; 
@@ -117,6 +141,33 @@ export const shallowEqual = (object1, object2) => { // Thanks @Dmitri Pavlutin
   }
   return true;
 };
+
+/**
+ * Assign an array of geo objects (eg. Features of a GeoJSON) into an indexed object
+ * based  on the provided key property
+ * @param {Object} data Geojson-like object to be assigned
+ * @param {String} key Key inside properties to index rows on
+ * @returns {Object} Indexed geodata for faster access
+ */
+export const indexGeoProps = (data, key) => {
+  let geoProperties = {};
+  for (var i=0; i<data.features.length; i++) {
+    geoProperties[data.features[i].properties[key]] = data.features[i].properties
+  }
+  return geoProperties
+} 
+
+/**
+ * Assign a simple array of objects based on the provided key property
+ * @param {Object} data Any array of objects to be assigned
+ * @param {String} key Key in each object to index rows on
+ * @returns {Object} Indexed data for faster access
+ */
+export const indexTable = (data, key) => {
+  let propsObj = {};
+  for (var i=0; i<data.length; i++) propsObj[data[i][key]] = data[i]
+  return propsObj
+}
 
 // this function loops through the current data set and provides data for GeodaJS to create custom breaks 
 export const getDataForBins = (numeratorData, denominatorData, dataParams, fixedOrder=false) => {
@@ -144,18 +195,18 @@ export const getDataForBins = (numeratorData, denominatorData, dataParams, fixed
 
   // this checks if the bins generated should be dynamic (generating for each date) or fixed (to the most recent date)
   if (nIndex === null && nProperty === null) {
-      // if fixed, get the most recent date
-      let tempIndex = numeratorData.length-1;
-      // if the denominator is time series data (eg. deaths / cases this week), make the indices the same (most recent)
-      let tempDIndex = dType === 'time-series' ? denominatorData.length-1 : dIndex;
-      // loop through, do appropriate calculation. add returned value to rtn array
-      for (let i=0; i<n; i++){
-          rtn[keys[i]] = dataFn(numeratorData[keys[i]], denominatorData[keys[i]], {...dataParams, nIndex:tempIndex, dIndex: tempDIndex})||0
-      }
+    // if fixed, get the most recent date
+    let tempIndex = numeratorData.length-1;
+    // if the denominator is time series data (eg. deaths / cases this week), make the indices the same (most recent)
+    let tempDIndex = dType === 'time-series' ? denominatorData.length-1 : dIndex;
+    // loop through, do appropriate calculation. add returned value to rtn array
+    for (let i=0; i<n; i++){
+        rtn[keys[i]] = dataFn(numeratorData[keys[i]], denominatorData[keys[i]], {...dataParams, nIndex:tempIndex, dIndex: tempDIndex})||0
+    }
   } else {
-      for (let i=0; i<n; i++){
-        rtn[i] = dataFn(numeratorData[keys[i]], denominatorData[keys[i]], tempDataParams)||0
-      }
+    for (let i=0; i<n; i++){
+      rtn[i] = dataFn(numeratorData[keys[i]], denominatorData[keys[i]], tempDataParams)||0
+    }
   }
 
   for (let i=0; i<rtn.length;i++){
@@ -165,6 +216,58 @@ export const getDataForBins = (numeratorData, denominatorData, dataParams, fixed
   return rtn;   
 } 
 
+/**
+ * Finds the first object in an array of objects that matches the given condition
+ * @param {Array} collection Any array of objects to be searched
+ * @param {Function} testFunc A function to test each object on, eg:
+ * 
+ * let myFishies = [
+ *  {
+ *    fish:'🐠',
+ *    color:'orange'
+ *  },
+ *  {
+ *    fish:'🐟',
+ *    color:'blue'      
+ *  }
+ * ]
+ *  
+ * find(myFishies, obj => obj.color === 'orange') // returns {fish:'🐠',color:'orange'}
+ * 
+ * @returns {Object} Indexed data for faster access
+ */
 export const find = (collection, testFunc) => {
   for (let i=0; i<collection.length;i++) if (testFunc(collection[i])) return collection[i]
+}
+
+export const fileLoader = {
+  'csv': async (fetchUrl) => {
+    const parsedData = await load(fetchUrl, CSVLoader);
+    return parsedData;
+  },
+  'pbf': async (fetchUrl, schema) => {
+    return true
+  }
+}
+
+export const handleLoadData = async ( info, dateList ) => {
+  const {file, type, join, dates, accumulate, schema} = info
+  const fetchUrl = file.slice(0,4) === 'http' ? file : `/${file.slice(-3,)}/${file}`
+  let data = await fileLoader[file.slice(-3,)](fetchUrl, schema)
+  let dateIndices = []
+  let columns = Object.keys(data[0])
+  if (dates) {
+    if (accumuluate){
+        // todo accumulation logic
+    } else {
+        // todo non-accumulation date assignment logic
+    }
+
+  }
+
+  return {
+    dateIndices,
+    columns,
+    data:indexTable(data, join)
+  };
 }

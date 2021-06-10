@@ -12,9 +12,8 @@ export const INITIAL_STATE = {
       params: []
     },
     initialViewState:{},
-    dataParams: {
-        ...dataPresets
-    },
+    dataParams: dataPresets.variables[0],
+    dataPresets: dataPresets,
     mapParams: {
       mapType: 'natural_breaks',
       bins: {

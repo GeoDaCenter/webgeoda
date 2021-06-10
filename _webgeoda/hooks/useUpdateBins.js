@@ -1,59 +1,65 @@
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getDataForBins } from '@webgeoda/utils/data'; //getVarId
+import { getDataForBins, find } from '@webgeoda/utils/data'; //getVarId
 import * as colors from '@webgeoda/utils/colors';
 
-export default function useLoadData(gdaProxy){
+export default function useLoadData(geoda){
+  const currentData = useSelector(state => state.currentData)
+  const storedGeojson = useSelector(state => state.storedGeojson)
+  const storedData = useSelector(state => state.storedData)
+  const dataParams = useSelector(state => state.dataParams)
+  const mapParams = useSelector(state => state.mapParams)
+  const dataPresets = useSelector(state => state.dataPresets);
 
-    const currentData = useSelector(state => state.currentData)
-    const storedGeojson = useSelector(state => state.storedGeojson)
-    const dataParams = useSelector(state => state.dataParams)
-    const mapParams = useSelector(state => state.mapParams)
-
-    const dispatch = useDispatch();
-
-    const updateBins = async () => {
-        if (!gdaProxy.ready) await gdaProxy.init()
-        if (!(storedGeojson[currentData])) return;
-        let binData = getDataForBins(
-            storedGeojson[currentData].properties,
-            storedGeojson[currentData].properties,
-            dataParams
-        );
+  const dispatch = useDispatch();
+  
+  const updateBins = async () => {
+      if (!(storedGeojson[currentData])) return;
+      const numeratorTable = find(dataPresets.data, o => o.geojson === currentData)?.tables[dataParams.numerator]?.file
+      const denominatorTable = find(dataPresets.data, o => o.geojson === currentData)?.tables[dataParams.denominator]?.file
+      let binData = getDataForBins(
+        storedData[numeratorTable]?.data || storedGeojson[currentData].properties,
+        storedData[denominatorTable]?.data || storedGeojson[currentData].properties,
+        dataParams
+      );
+      
+      let bins;
+      
+      if (!(dataParams.fixedScale)){
+        // calculate breaks
         
-        let bins;
+        const binParams = !dataParams.binning || ['naturalBreaks','quantileBreaks'].includes(dataParams.binning) 
+          ? [dataParams.colorScale?.length || 5, binData]
+          : [binData]
+
+        const nb = await geoda[dataParams.binning || 'naturalBreaks'](...binParams)
         
-        if (!(dataParams.fixedScale)){
-          // calculate breaks
-          let nb = dataParams.binning === "natural breaks" || dataParams.binning === undefined ? 
-            await gdaProxy.Bins.NaturalBreaks(dataParams.colorScale?.length || 5, binData) :
-            await gdaProxy.Bins.Hinge15(6, binData)  
-          bins = {
-            bins: dataParams.binning === "natural breaks" || dataParams.binning === undefined   
-                ?
-                nb.bins 
-                : 
-                ['Lower Outlier','< 25%','25-50%','50-75%','>75%','Upper Outlier'],
-            breaks: nb.breaks.slice(1,-1)
-          }
-        } else {
-          bins = fixedScales[dataParams?.fixedScale]
+        bins = {
+          bins: dataParams.binning === "natural breaks" || dataParams.binning === undefined   
+              ?
+              nb
+              : 
+              ['Lower Outlier','< 25%','25-50%','50-75%','>75%','Upper Outlier'],
+          breaks: nb
         }
-        
-        dispatch({
-            type:'UPDATE_BINS',
-            payload: {
-                bins: {
-                    bins: mapParams.mapType === 'natural_breaks' ? bins.bins : ['Lower Outlier','< 25%','25-50%','50-75%','>75%','Upper Outlier'],
-                    breaks: bins.breaks
-                },
-                    colorScale: dataParams.colorScale
-            }
-        })
-    }
+      } else {
+        bins = fixedScales[dataParams?.fixedScale]
+      }
+      
+      dispatch({
+          type:'UPDATE_BINS',
+          payload: {
+              bins: {
+                  bins: mapParams.mapType === 'natural_breaks' ? bins.bins : ['Lower Outlier','< 25%','25-50%','50-75%','>75%','Upper Outlier'],
+                  breaks: bins.breaks
+              },
+                  colorScale: dataParams.colorScale
+          }
+      })
+  }
 
-    return [
-        updateBins
-    ]
+  return [
+      updateBins
+  ]
 }

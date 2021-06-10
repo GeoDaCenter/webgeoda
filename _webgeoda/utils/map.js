@@ -1,4 +1,4 @@
-import { dataFn, getVarId } from './data';
+import { dataFn, getVarId, find } from './data';
 
 export const getCartogramCenter = (cartogramData) => {
     let x = 0;
@@ -41,14 +41,16 @@ export const generateMapData = (state) => {
     let i = 0;
 
     const getTable = (i, predicate) => {
+        if (!state.dataParams[predicate]) return {};
+
         if (state.dataParams[predicate] === 'properties' || (!(state.dataParams.nIndex)&&!(state.dataParams.nProperty))) {
             return state.storedGeojson[state.currentData].data.features[i].properties 
         } else {
-            try {
-                return state.storedData[dataPresetsRedux[state.currentData].tables[state.dataParams[predicate]].file].data[state.storedGeojson[state.currentData].data.features[i].properties[state.currentId]]
-            } catch {
-                return state.storedData[defaultTables[dataPresetsRedux[state.currentData].geography][state.dataParams[predicate]].file].data[state.storedGeojson[state.currentData].data.features[i].properties[state.currentId]];
-            }
+            // todo fallback table
+            const currentTables = find(state.dataPresets.data, o => o.geojson === state.currentData)?.tables
+            const tableName = currentTables[state.dataParams[predicate]]?.file
+            const id = state.storedGeojson[state.currentData].data.features[i].properties[state.currentId]            
+            return tableName && state.storedData[tableName].data[id]
         }
     }
 

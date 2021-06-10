@@ -1,4 +1,4 @@
-import styles from '../styles/Map.module.css'
+import styles from './MainMap.module.css'
 
 export default function Legend(props){
     return  (
