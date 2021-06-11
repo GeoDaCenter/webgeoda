@@ -52,9 +52,3 @@
 .docsLink:hover {
   border-color:var(--selected-color);
 }
-
-@media (min-width: 61em) {
-  .main {
-    max-width:100rem;
-  }
-}

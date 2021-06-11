@@ -8,6 +8,7 @@ import { dataPresets } from '../../map-config';``
 const [defaultTables, dataPresetsRedux, tooltipTables] = [{},{},[]]
 
 export default function reducer(state = INITIAL_STATE, action){
+    // console.log(action)
     switch(action.type) {
         case 'INITIAL_LOAD': {
             const dataParams = {

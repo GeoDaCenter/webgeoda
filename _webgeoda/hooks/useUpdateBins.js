@@ -1,8 +1,9 @@
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getDataForBins, find } from '@webgeoda/utils/data'; //getVarId
+import { getDataForBins, find, fixedScales, fixedBreakLabels } from '@webgeoda/utils/data'; //getVarId
 import * as colors from '@webgeoda/utils/colors';
+
 
 export default function useLoadData(geoda){
   const currentData = useSelector(state => state.currentData)
@@ -24,37 +25,31 @@ export default function useLoadData(geoda){
         dataParams
       );
       
-      let bins;
+      let bins = fixedScales[dataParams.fixedScale] || dataParams.fixedScale;
       
-      if (!(dataParams.fixedScale)){
+      if (!(dataParams.fixedScale)){  
         // calculate breaks
+        let numberOfBins = Array.isArray(dataParams.colorscale) ? dataParams.colorscale.length : dataParams.numberOfBins-1 || 4;
         
         const binParams = !dataParams.binning || ['naturalBreaks','quantileBreaks'].includes(dataParams.binning) 
-          ? [dataParams.colorScale?.length || 5, binData]
+          ? [numberOfBins, binData]
           : [binData]
 
         const nb = await geoda[dataParams.binning || 'naturalBreaks'](...binParams)
         
         bins = {
-          bins: dataParams.binning === "natural breaks" || dataParams.binning === undefined   
-              ?
-              nb
-              : 
-              ['Lower Outlier','< 25%','25-50%','50-75%','>75%','Upper Outlier'],
+          bins: fixedBreakLabels[dataParams.binning]||nb,
           breaks: nb
         }
-      } else {
-        bins = fixedScales[dataParams?.fixedScale]
-      }
-      
+      } 
+
+      const colorScale = Array.isArray(dataParams.colorscale) ? dataParams.colorScale : dataParams.colorScale[bins.breaks.length+1]
+
       dispatch({
           type:'UPDATE_BINS',
           payload: {
-              bins: {
-                  bins: mapParams.mapType === 'natural_breaks' ? bins.bins : ['Lower Outlier','< 25%','25-50%','50-75%','>75%','Upper Outlier'],
-                  breaks: bins.breaks
-              },
-                  colorScale: dataParams.colorScale
+              bins,
+              colorScale
           }
       })
   }

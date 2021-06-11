@@ -20,20 +20,22 @@ const variables = [
         variable: "Median age",
         numerator: 'Median age',
         binning: 'naturalBreaks',
-        colorScale: colors.colorbrewer.Purples[7]
+        numberOfBins:7,
+        colorScale: colors.colorbrewer.Purples
     },
     {
         variable: "GEOID",
         numerator: 'GEOID',
         binning: 'naturalBreaks',
-        colorScale: colors.colorbrewer.Pastel2[5]
+        colorScale: colors.colorbrewer.Pastel2
     },
     {
         variable: "Total Population",
         numerator: 'acs_data',
         nProperty: 'Total Population',
         binning: 'naturalBreaks',
-        colorScale: colors.colorbrewer.GnBu[6]
+        numberOfBins:8,
+        colorScale: colors.colorbrewer.Greens
     },
     {
         variable: "Population Density",
@@ -41,8 +43,9 @@ const variables = [
         nProperty: 'Total Population',
         denominator: 'acs_data',
         dProperty: 'Area Land',
-        binning: 'naturalBreaks',
-        colorScale: colors.colorbrewer.Oranges[6]
+        binning: 'percentileBreaks',
+        numberOfBins:6,
+        colorScale: colors.colorbrewer.Oranges
     },
     {
         variable: "Pct No Internet Access",
@@ -50,9 +53,10 @@ const variables = [
         nProperty: 'No Internet Access',
         denominator: 'acs_data',
         dProperty: 'Internet Total',
-        binning: 'naturalBreaks',
         scale: 100,
-        colorScale: colors.colorbrewer.Oranges[6]
+        binning: 'stddev_breaks',
+        numberOfBins:6,
+        colorScale: colors.colorbrewer.BrBG
     },
 ]
 

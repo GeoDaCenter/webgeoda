@@ -1,7 +1,7 @@
 import styles from './MainMap.module.css'
 
 export default function Legend(props){
-    return  (
+    return (
         <div className={styles.legendContainer}>
             {props.variableName && <p className={styles.variableName}>{props.variableName}</p>}
             <div className={styles.legendInnerContainer}>

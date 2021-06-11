@@ -163,9 +163,3 @@ p.variableName {
 .mapButton:hover {
   background:var(--selected-color-light);
 }
-
-@media (min-width: 61em) {
-  .main {
-    max-width:100rem;
-  }
-}

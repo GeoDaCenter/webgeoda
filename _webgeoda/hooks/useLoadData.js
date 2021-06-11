@@ -2,7 +2,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useRef, useEffect } from 'react'; 
 
-import { getDataForBins, indexGeoProps, handleLoadData, find } from '@webgeoda/utils/data'; //getVarId
+import { getDataForBins, indexGeoProps, handleLoadData, find, fixedScales, fixedBreakLabels } from '@webgeoda/utils/data'; //getVarId
 import * as colors from '@webgeoda/utils/colors';
 
 import { fitBounds } from '@math.gl/web-mercator';
@@ -42,27 +42,26 @@ export default function useLoadData(geoda, dateLists={}){
         dataPresets.variables[0]
       );
       
-      let bins;
+      let bins = fixedScales[dataPresets.variables[0].fixedScale] || dataPresets.variables[0].fixedScale;
       
-      if (!dataPresets.variables[0].fixedScale){
+      if (!dataPresets.variables[0].fixedScale){  
         // calculate breaks
+        let numberOfBins = Array.isArray(dataPresets.variables[0].colorscale) ? dataPresets.variables[0].colorscale.length : dataPresets.variables[0].numberOfBins || 5;
+        
         const binParams = !dataPresets.variables[0].binning || ['naturalBreaks','quantileBreaks'].includes(dataPresets.variables[0].binning) 
-          ? [dataPresets.variables[0].colorScale?.length || 5, binData]
+          ? [numberOfBins, binData]
           : [binData]
 
         const nb = await geoda[dataPresets.variables[0].binning || 'naturalBreaks'](...binParams)
-
+        
         bins = {
-          bins: dataPresets.variables[0].binning === "natural breaks" || dataPresets.variables[0].binning === undefined   
-              ?
-              nb 
-              : 
-              ['Lower Outlier','< 25%','25-50%','50-75%','>75%','Upper Outlier'],
+          bins: fixedBreakLabels[dataPresets.variables[0].binning]||nb,
           breaks: nb
         }
-      } else {
-        bins = fixedScales[dataPresets.variables[0]?.fixedScale]
-      }
+      } 
+
+      const colorScale = Array.isArray(dataPresets.variables[0].colorscale) ? dataPresets.variables[0].colorScale : dataPresets.variables[0].colorScale[bins.breaks.length]
+
       dispatch({
           type: 'INITIAL_LOAD',
           payload: {
@@ -79,7 +78,7 @@ export default function useLoadData(geoda, dateLists={}){
               },
               mapParams: {
                   bins,
-                  colorScale: dataPresets.variables[0].colorScale || colors.colorbrewer.YlGnBu[5]
+                  colorScale: colorScale || colors.colorbrewer.YlGnBu[5]
               },
               variableParams: dataPresets.variables[0],
               initialViewState,

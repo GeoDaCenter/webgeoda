@@ -1,6 +1,17 @@
 import {CSVLoader} from '@loaders.gl/csv';
 import {load} from '@loaders.gl/core';
 
+export const fixedScales = {
+  // eg. lisa
+}
+
+export const fixedBreakLabels = {
+  percentileBreaks: ['Lowest 1%', '10%', '50%', '90%', 'Highest 99%'],
+  stddev_breaks: ['-2 Std Dev', '-1 Std Dev', 'Median', '+1 Std Dev', '+2 Std Dev'],
+  hinge15Breaks: ['Lower Outlier', '25%', '50%', '75%', 'Upper Outlier'],
+  hinge30Breaks: ['Lower Outlier', '25%', '50%', '75%', 'Upper Outlier'],
+}
+
 /**
  * Global data function
  * @param {Object | Array} numeratorData Object or array with numerator data for a feature

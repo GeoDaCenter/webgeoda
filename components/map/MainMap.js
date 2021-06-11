@@ -107,7 +107,7 @@ export default function MainMap(props){
                 </MapboxGLMap >
             </DeckGL>
             <Legend 
-                bins={mapParams.bins.breaks}
+                bins={mapParams.bins.bins}
                 colors={mapParams.colorScale}
                 variableName={dataParams.variable}
             />

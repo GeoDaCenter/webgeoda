@@ -12,7 +12,10 @@ export const INITIAL_STATE = {
       params: []
     },
     initialViewState:{},
-    dataParams: dataPresets.variables[0],
+    dataParams: {
+      ...dataPresets.variables[0],
+      colorScale: dataPresets.variables[0].colorScale[dataPresets.variables[0].numberOfBins||5]
+    },
     dataPresets: dataPresets,
     mapParams: {
       mapType: 'natural_breaks',

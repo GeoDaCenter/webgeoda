@@ -68,9 +68,3 @@
   height: 1em;
   margin-right: 0.5rem;
 }
-
-@media (min-width: 61em) {
-  .main {
-    max-width:100rem;
-  }
-}
