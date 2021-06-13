@@ -7,6 +7,12 @@ export const INITIAL_STATE = {
     currentMethod: 'natural_breaks',
     currentOverlay: '',
     currentResource: '',
+    currentHoverTarget: {
+      x:null,
+      y:null,
+      id:null,
+      data:null
+    },
     mapData : {
       data: [],
       params: []

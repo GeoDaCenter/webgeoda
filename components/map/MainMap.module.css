@@ -163,3 +163,19 @@ p.variableName {
 .mapButton:hover {
   background:var(--selected-color-light);
 }
+
+.tooltipContainer {
+  position:absolute;
+  z-index:5;
+  background:rgba(255,255,255,0.74);
+  padding: 0.375em 0.25em;
+  backdrop-filter: blur(5px);
+  border-radius:0.125em;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  max-width:50ch;
+}
+
+.tooltipContainer p {
+  margin:0;
+  padding:0;
+}

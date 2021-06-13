@@ -21,10 +21,11 @@ export default function MainMap(props){
     const mapParams = useSelector(state => state.mapParams);
     const currentData = useSelector(state => state.currentData);
     const currentId = useSelector(state => state.currentId);
+    const currentHoverId = useSelector(state => state.currentHoverTarget.id);
     const storedGeojson = useSelector(state => state.storedGeojson);
     const currentMapGeography = storedGeojson[currentData]?.data||[]
     const mapData = useSelector(state => state.mapData);
-    const state = useSelector(state => state)
+    const state = useSelector(state => state);
     const dispatch = useDispatch();
 
     const [loadData] = useLoadData(props.geoda);
@@ -66,6 +67,14 @@ export default function MainMap(props){
         if (initialViewState.longitude) setViewState({longitude: initialViewState.longitude,latitude: initialViewState.latitude,zoom: initialViewState.zoom*.9})
     },[initialViewState])
 
+    const handleMapHover = (e) => dispatch({
+        type:'SET_HOVER_OBJECT', 
+        payload: {
+            id: e.object?.properties[currentId],
+            x: e.x,
+            y: e.y
+        }
+    })
 
     const layers = [
         new GeoJsonLayer({
@@ -80,10 +89,26 @@ export default function MainMap(props){
             // extruded: mapParams.vizType === '3D',
             // opacity: mapParams.vizType === 'dotDensity' ? mapParams.dotDensityParams.backgroundTransparency : 0.8,
             material:false,
-            // onHover: handleMapHover,
+            onHover: handleMapHover,
             // onClick: handleMapClick,  
             updateTriggers: {
                 getFillColor:mapData.params
+            }  
+        }),
+        new GeoJsonLayer({
+            id: 'choropleth-hover',
+            data: currentMapGeography,
+            getFillColor: [255,255,255],
+            getLineColor: d => [0, 0, 0, 255*(d.properties[currentId]===currentHoverId)],
+            lineWidthScale: 1,
+            lineWidthMinPixels: 1,
+            getLineWidth: 5,
+            pickable: false,
+            stroked: true,
+            filled: false,
+            updateTriggers: {
+                getLineColor:[mapData.params, currentHoverId],
+                // opacity: currentHoverTarget
             }  
         }),
     ]

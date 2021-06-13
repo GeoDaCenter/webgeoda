@@ -1,4 +1,4 @@
-
+import {find, dataFn} from './data';
 // Replace Null/NaN with 0 
 const cleanData = (inputData) => inputData.map(d => d >=0 ? d : isNaN(d) || d===null ? 0 : d)
 
@@ -211,26 +211,61 @@ export const generateReport = (geoids, state, dataPresetsRedux, defaultTables) =
     return report
 }
 
-export const parseTooltipData = (geoid, state) => {
-    let tooltipData = {}
-    const properties = state.storedGeojson[state.currentData].properties[geoid];
-    const geography = dataPresetsRedux[state.currentData].geography;
+export const findDataset = (currentData, presets) => find(presets, d => d.geojson === currentData)
 
-    tooltipData = {
-        population: properties.population,
-        name: geography === 'County' ? properties.NAME + ', ' + properties.state_abbr : properties.NAME
-    }
-    
-    const currentTables = {
-        ...defaultTables[geography],
-        ...dataPresetsRedux[state.currentData].tables
-    }
+export const findDatasetTable = (currentData, tableName, presets) => findDataset(currentData, presets)['tables'][tableName]
 
-    for (const table in currentTables){
-        if (state.storedData.hasOwnProperty(currentTables[table].file) && tooltipTables.includes(table) && state.storedData[currentTables[table].file].data.hasOwnProperty(geoid)){
-            tooltipData[table] = state.storedData[currentTables[table].file].data[geoid][state.dataParams.nIndex]
-            if (table === 'cases' || table === 'deaths') tooltipData[`daily_${table}`] = state.storedData[currentTables[table].file].data[geoid][state.dataParams.nIndex]-state.storedData[currentTables[table].file].data[geoid][state.dataParams.nIndex-1]
+export const findAnyTable = (tableName, presets) => {
+    for (let i=0; i<presets.length;i++){
+        try {
+            return findDatasetTable(presets[i].geojson, tableName, presets)
+        } catch {}
+    }
+}
+
+export const findTable = (currentData, tableName, presets) => {
+    try {
+        return findDatasetTable(currentData, tableName, presets)
+    } catch {
+        return findAnyTable(tableName, presets)
+    }
+}
+
+export const getTable = (currentData, storedData, tableName, presets) => storedData[findTable(currentData, tableName, presets)?.file]?.data || {}
+
+export const parseTooltipData = (geoid, state, presets) => {
+    let tooltipData = []
+    const variables = presets.variables;
+    const datasets = presets.data;
+
+    for (let i=0; i<variables.length;i++){
+        let cleanVariable = {
+            ...variables[i]
         }
+        
+        let numeratorData;
+        let denominatorData;
+
+        if (!variables[i].nIndex && !variables[i].nProperty) {
+            numeratorData = state.storedGeojson[state.currentData].properties[geoid]
+            cleanVariable.nProperty = cleanVariable.numerator
+        } else {
+            numeratorData = getTable(state.currentData, state.storedData, variables[i].numerator, datasets)[geoid]
+        }
+
+        if (!variables[i].dIndex && !variables[i].dProperty) {
+            denominatorData = state.storedGeojson[state.currentData].properties[geoid]
+            cleanVariable.dProperty = cleanVariable.denominator
+        } else {
+            denominatorData = getTable(state.currentData, state.storedData, variables[i].denominator, datasets)[geoid]
+        }
+
+        const parsedVariable = dataFn(numeratorData, denominatorData, cleanVariable)
+        tooltipData.push({
+            name:[variables[i].variable],
+            value: parsedVariable
+        })
     }
+
     return tooltipData
 }

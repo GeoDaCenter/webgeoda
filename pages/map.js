@@ -1,20 +1,22 @@
+
 import Head from 'next/head'
+
 import styles from '../styles/Map.module.css'
-import MainNav from '../components/pages/MainNav'
+
+import MainNav from '../components/layout/MainNav'
 
 import MainMap from '../components/map/MainMap'
 import VariablePanel from '../components/map/VariablePanel'
-
+import MapTooltip from '../components/map/MapTooltip'
 
 // import useLoadData from '@webgeoda/hooks/useLoadData'
 // import useUpdateData from '@webgeoda/hooks/useUpdateData'
-
-import * as Comlink from 'comlink'
-
 import rootReducer from '@webgeoda/reducers';
+
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { useEffect, useState } from 'react'
+import * as Comlink from 'comlink'
 
 const store = createStore(rootReducer);
 var geoda;
@@ -64,6 +66,7 @@ export default function Map() {
                 <>
                     <MainMap geoda={geoda} />
                     <VariablePanel />
+                    <MapTooltip/>
                 </>}
             </Provider>
         </div>

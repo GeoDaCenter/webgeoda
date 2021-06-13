@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { Gutter } from '../components/layout/Gutter'
-import MainNav from '../components/pages/MainNav'
-import Footer from '../components/pages/Footer'
+import MainNav from '../components/layout/MainNav'
+import Footer from '../components/layout/Footer'
 
 export default function Home() {
   return (

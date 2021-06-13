@@ -48,15 +48,13 @@ const variables = [
         colorScale: colors.colorbrewer.Oranges
     },
     {
-        variable: "Pct No Internet Access",
+        variable: "Count No Internet Access",
         numerator: 'acs_data',
         nProperty: 'No Internet Access',
-        denominator: 'acs_data',
-        dProperty: 'Internet Total',
         scale: 100,
         binning: 'stddev_breaks',
         numberOfBins:6,
-        colorScale: colors.colorbrewer.BrBG
+        colorScale: colors.colorbrewer.Reds
     },
 ]
 

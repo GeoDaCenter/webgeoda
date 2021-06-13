@@ -4,7 +4,7 @@ import { mapFnNb, mapFnHinge, dataFn, getVarId, shallowEqual, find} from '@webge
 import { getCartogramCenter, generateMapData } from '@webgeoda/utils/map';
 import { generateReport, parseTooltipData } from '@webgeoda/utils/summarize';
 
-import { dataPresets } from '../../map-config';``
+import { dataPresets } from '../../map-config';
 const [defaultTables, dataPresetsRedux, tooltipTables] = [{},{},[]]
 
 export default function reducer(state = INITIAL_STATE, action){
@@ -291,24 +291,28 @@ export default function reducer(state = INITIAL_STATE, action){
                 }
             }
         }
-        case 'SET_TOOLTIP_CONTENT':{
+
+        case 'SET_HOVER_OBJECT': {
             let tooltipData;
-            if (typeof action.payload.data === "number" || typeof action.payload.data === "string"){
-                tooltipData = parseTooltipData(action.payload.data, state)
+            
+            if (typeof action.payload.id === "number" || typeof action.payload.id === "string"){
+                tooltipData = parseTooltipData(+action.payload.id, state, dataPresets)
             } else {
                 tooltipData = action.payload.data
             }
-            const tooltipContent = {
+            
+            const currentHoverTarget = {
                 x: action.payload.x,
                 y: action.payload.y,
                 data: tooltipData,
-                geoid: +action.payload.data
+                id: +action.payload.id
             }
+            
             return {
                 ...state,
-                tooltipContent
+                currentHoverTarget
             } 
-        }            
+        }     
         default:
             return state;
     }
