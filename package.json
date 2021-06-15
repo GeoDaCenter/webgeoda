@@ -22,8 +22,11 @@
     "@reach/tabs": "^0.15.0",
     "@reach/tooltip": "^0.15.0",
     "@turf/bbox": "^6.3.0",
+    "@visx/gradient": "^1.7.0",
+    "@visx/group": "^1.7.0",
     "@visx/legend": "^1.11.1",
     "@visx/scale": "^1.11.1",
+    "@visx/shape": "^1.12.0",
     "colorbrewer": "^1.5.1",
     "comlink": "^4.3.1",
     "d3-array": "^2.12.1",
@@ -34,6 +37,7 @@
     "react-redux": "^7.2.4",
     "recharts": "^2.0.9",
     "redux": "^4.1.0",
+    "victory": "^35.8.6",
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {

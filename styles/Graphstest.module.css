@@ -20,4 +20,7 @@ align-items: center;
     width: 75vw;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: 300px;
+    justify-items: center;
+    justify-content: space-between;
 }
