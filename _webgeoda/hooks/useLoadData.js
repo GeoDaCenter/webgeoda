@@ -61,11 +61,14 @@ export default function useLoadData(geoda, dateLists = {}) {
           })
         : null;
 
-    let binData = getDataForBins(
-      numeratorData || geojsonProperties,
-      denominatorData || geojsonProperties,
-      dataPresets.variables[0]
-    );
+    const binData = dataPresets.variables[0].categorical 
+      ? getUniqueVals(
+        numeratorData || geojsonProperties,
+        dataPresets.variables[0])
+      : getDataForBins(
+        numeratorData || geojsonProperties,
+        denominatorData || geojsonProperties,
+        dataPresets.variables[0]);
 
     let bins =
       fixedScales[dataPresets.variables[0].fixedScale] ||
@@ -95,9 +98,17 @@ export default function useLoadData(geoda, dateLists = {}) {
       };
     }
 
-    const colorScale = Array.isArray(dataPresets.variables[0].colorscale)
+    let colorScaleLength = dataPresets.variables[0].categorical 
+      ? binData.length
+      : bins.breaks.length + 1;
+
+    if (colorScaleLength < 3) colorScaleLength = 3;
+
+    let colorScale = Array.isArray(dataPresets.variables[0].colorscale)
       ? dataPresets.variables[0].colorScale
-      : dataPresets.variables[0].colorScale[bins.breaks.length + 1];
+      : dataPresets.variables[0].colorScale[colorScaleLength];
+    
+    if (dataPresets.variables[0].categorical && colorScaleLength !== binData.length) colorScale = colorScale.slice(0,binData.length);
 
     dispatch({
       type: "INITIAL_LOAD",

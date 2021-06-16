@@ -31,6 +31,9 @@ export const dataFn = (
   dataParams,
   debug = false
 ) => {
+
+  if (dataParams.categorical) return numeratorData[dataParams.nProperty||dataParams.nIndex]
+
   const { nProperty, nIndex, dProperty, dIndex, nType, dType } = dataParams;
 
   const scale = dataParams.scale || 1;
@@ -282,9 +285,10 @@ export const getDataForBins = (
 export const getUniqueVals = (table, dataParams) => {
   let tempArray = [];
   const keys = Object.keys(table);
-  
+
   for (let i=0; i<keys.length; i++){
-    tempArray.push(table[keys[i][dataParams.nProperty||dataParams.nIndex]])
+    const currVal = table[keys[i]][dataParams.nProperty||dataParams.nIndex]
+    if (currVal && tempArray.indexOf(currVal) === -1) tempArray.push(currVal)
   }
 
   return tempArray

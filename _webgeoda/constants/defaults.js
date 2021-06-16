@@ -39,17 +39,7 @@ export const INITIAL_STATE = {
     activeGeoid: "",
     overlay: "",
     resource: "",
-    colorScale: [
-      [240, 240, 240],
-      [255, 255, 204],
-      [255, 237, 160],
-      [254, 217, 118],
-      [254, 178, 76],
-      [253, 141, 60],
-      [252, 78, 42],
-      [227, 26, 28],
-      [177, 0, 38],
-    ],
+    colorScale: [],
   },
   panelState: {
     variables: true,

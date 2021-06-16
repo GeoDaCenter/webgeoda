@@ -120,6 +120,10 @@
   color: rgba(0, 0, 0, 0.5);
 }
 
+.categoricalLegendColors span:after {
+  display:none;
+}
+
 .legendColors span:nth-child(1):after {
   display: none;
 }
@@ -129,6 +133,10 @@
   flex-direction: column-reverse;
   padding: 0.4rem 0 0.4em 0.5rem;
   justify-content: space-evenly;
+}
+
+.categoricalLegendLabels {
+  padding: 0 0 0 0.5rem;
 }
 
 .legendLabels span,

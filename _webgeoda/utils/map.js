@@ -107,8 +107,8 @@ export const generateMapData = (state) => {
       return tableName && state.storedData[tableName].data[id];
     }
   };
-  const colorType = state.dataParams.binning = "LISA" ? 'LISA' : state.dataParams.categorical ? 'categorical' : 'breaks'
-  console.log(colorType)
+  const colorType = state.dataParams.binning === "LISA" ? 'LISA' : state.dataParams.categorical ? 'categorical' : 'breaks'
+  
   const getColor = colorFunctions[colorType]
 
   let tempParams = { ...state.dataParams };
@@ -142,6 +142,7 @@ export const generateMapData = (state) => {
         state.storedGeojson[state.currentData].properties[currGeoid],
         mapFn
       );
+
       if (color === null) {
         returnObj[currGeoid] = { color: [0, 0, 0, 0] };
         continue;
@@ -183,7 +184,7 @@ export const generateMapData = (state) => {
       ],
       mapFn
     );
-
+    
     const height = getHeight(tempVal, tempParams);
 
     if (color === null) {

@@ -145,6 +145,7 @@ export default function MainMap(props) {
         bins={mapParams.bins.bins}
         colors={mapParams.colorScale}
         variableName={dataParams.variable}
+        categorical={dataParams.categorical||dataParams.binning==='LISA'}
       />
       <MapControls
         deck={deckRef}

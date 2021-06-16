@@ -2,11 +2,11 @@ import { useSelector, useDispatch } from "react-redux";
 
 import {
   getDataForBins,
+  getUniqueVals,
   find,
   fixedScales,
   fixedBreakLabels,
 } from "@webgeoda/utils/data"; //getVarId
-import * as colors from "@webgeoda/utils/colors";
 
 export default function useLoadData(geoda) {
   const currentData = useSelector((state) => state.currentData);
@@ -19,6 +19,7 @@ export default function useLoadData(geoda) {
   const dispatch = useDispatch();
 
   const updateBins = async () => {
+    
     if (!storedGeojson[currentData]) return;
 
     const numeratorTable = find(
@@ -39,7 +40,7 @@ export default function useLoadData(geoda) {
           storedData[numeratorTable]?.data || storedGeojson[currentData].properties,
           storedData[denominatorTable]?.data || storedGeojson[currentData].properties,
           dataParams);
-
+    
     let bins = fixedScales[dataParams.fixedScale] || dataParams.fixedScale;
 
     if (!dataParams.fixedScale && !dataParams.categorical) {
@@ -68,12 +69,20 @@ export default function useLoadData(geoda) {
       bins = {
         bins: binData,
         breaks: binData,
-      };
-    }
+      }
+    };
 
-    const colorScale = Array.isArray(dataParams.colorscale)
+    let colorScaleLength = dataParams.categorical 
+      ? binData.length
+      : bins.breaks.length + 1;
+
+    if (colorScaleLength < 3) colorScaleLength = 3;
+
+    let colorScale = Array.isArray(dataParams.colorscale)
       ? dataParams.colorScale
-      : dataParams.colorScale[bins.breaks.length + 1];
+      : dataParams.colorScale[colorScaleLength];
+    
+    if (dataParams.categorical && colorScaleLength !== binData.length) colorScale = colorScale.slice(0,binData.length);
 
     dispatch({
       type: "UPDATE_BINS",
