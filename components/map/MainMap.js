@@ -73,15 +73,25 @@ export default function MainMap(props) {
   }, [initialViewState]);
 
   const handleMapHover = (e) => {
-    e.object?.properties && 
-    dispatch({
-      type: "SET_HOVER_OBJECT",
-      payload: {
-        id: e.object?.properties[currentId],
-        x: e.x,
-        y: e.y,
-      },
-    })
+    if (e.object) {
+      dispatch({
+        type: "SET_HOVER_OBJECT",
+        payload: {
+          id: e.object?.properties[currentId],
+          x: e.x,
+          y: e.y,
+        },
+      })
+    } else {
+      dispatch({
+        type: 'SET_HOVER_OBJECT',
+        payload: {
+          id: null,
+          x: null,
+          y: null
+        }
+      })
+    }
   };
 
   const layers = [
