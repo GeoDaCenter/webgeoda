@@ -1,8 +1,8 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import { Gutter } from '../components/layout/Gutter'
-import MainNav from '../components/layout/MainNav'
-import Footer from '../components/layout/Footer'
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import { Gutter } from "../components/layout/Gutter";
+import MainNav from "../components/layout/MainNav";
+import Footer from "../components/layout/Footer";
 
 export default function Home() {
   return (
@@ -34,14 +34,14 @@ export default function Home() {
           />
         </noscript>
       </Head>
-      <MainNav/>
+      <MainNav />
       <main className={styles.main}>
         <h1 className={styles.title}>
-          More maps. <br/>
+          More maps. <br />
           Fewer platforms.
         </h1>
         <p className={styles.description}>
-          Start mapping by editing{' '}
+          Start mapping by editing{" "}
           <code className={styles.code}>map-config.js</code>
         </p>
         <Gutter em={5} />
@@ -49,30 +49,52 @@ export default function Home() {
           <div className="col-xs-12 col-md-4 col-lg-4">
             <h2 className={styles.subhead}>Add Data</h2>
             <p>
-              Webgeoda enables free-to-host flatfile data storage with powerful WebAssembly-based geoprocessing. 
-              Load in your geospatial data, join tables, derive fields, generate binning and more with a simple JSON spec.
+              Webgeoda enables free-to-host flatfile data storage with powerful
+              WebAssembly-based geoprocessing. Load in your geospatial data,
+              join tables, derive fields, generate binning and more with a
+              simple JSON spec.
             </p>
-            <a className={styles.docsLink} target="_blank" href="https://dhalpern.gitbook.io/webgeoda-templates/data/importing-data">Read More 🗺️</a>
+            <a
+              className={styles.docsLink}
+              target="_blank"
+              href="https://dhalpern.gitbook.io/webgeoda-templates/data/importing-data" rel="noreferrer"
+            >
+              Read More 🗺️
+            </a>
           </div>
           <div className="col-xs-12 col-md-4 col-lg-4 rules-on">
             <h2 className={styles.subhead}>Customize Pages</h2>
             <p>
-              Describe and cite your data, provide links to related research, contact information, and download links.
-              Layout tools help to quickly modify or create new pages.
+              Describe and cite your data, provide links to related research,
+              contact information, and download links. Layout tools help to
+              quickly modify or create new pages.
             </p>
-            <a className={styles.docsLink} target="_blank" href="https://dhalpern.gitbook.io/webgeoda-templates/pages/static-pages">Read More 📝 </a>
+            <a
+              className={styles.docsLink}
+              target="_blank"
+              href="https://dhalpern.gitbook.io/webgeoda-templates/pages/static-pages" rel="noreferrer"
+            >
+              Read More 📝{" "}
+            </a>
           </div>
-          <div className="col-xs-12 col-md-4 col-lg-4" >
+          <div className="col-xs-12 col-md-4 col-lg-4">
             <h2 className={styles.subhead}>Publish Insights</h2>
             <p>
-              Sharing out insights should be painless. 
-              Webgeoda is built to be published on your platform of choice: Github pages, Vercel, Netlify, or any static web hosting provider. 
+              Sharing out insights should be painless. Webgeoda is built to be
+              published on your platform of choice: Github pages, Vercel,
+              Netlify, or any static web hosting provider.
             </p>
-            <a className={styles.docsLink} target="_blank" href="https://dhalpern.gitbook.io/webgeoda-templates/deploy/vercel">Read More 🌐</a>
+            <a
+              className={styles.docsLink}
+              target="_blank"
+              href="https://dhalpern.gitbook.io/webgeoda-templates/deploy/vercel" rel="noreferrer"
+            >
+              Read More 🌐
+            </a>
           </div>
         </div>
       </main>
       <Footer />
     </div>
-  )
+  );
 }

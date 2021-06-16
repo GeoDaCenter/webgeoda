@@ -1,8 +1,8 @@
-import Head from 'next/head'
-import styles from '../styles/About.module.css'
-import {Gutter} from '../components/layout/Gutter'
-import MainNav from '../components/layout/MainNav'
-import Footer from '../components/layout/Footer'
+import Head from "next/head";
+import styles from "../styles/About.module.css";
+import { Gutter } from "../components/layout/Gutter";
+import MainNav from "../components/layout/MainNav";
+import Footer from "../components/layout/Footer";
 
 export default function About() {
   return (
@@ -34,11 +34,9 @@ export default function About() {
           />
         </noscript>
       </Head>
-      <MainNav/>
+      <MainNav />
       <main className={styles.main}>
-        <h1 className={styles.title}>
-            About Webgeoda
-        </h1>
+        <h1 className={styles.title}>About Webgeoda</h1>
 
         <Gutter em={5} />
 
@@ -50,11 +48,14 @@ export default function About() {
           </div>
           <div className="col-xs-12 col-md-8 col-lg-8 rules-left">
             <p>
-                The American Community Survey (ACS) helps local officials, community leaders, and businesses 
-                understand the changes taking place in their communities. It is the premier source for detailed population and 
-                housing information about our nation.
+              The American Community Survey (ACS) helps local officials,
+              community leaders, and businesses understand the changes taking
+              place in their communities. It is the premier source for detailed
+              population and housing information about our nation.
             </p>
-            <a className={styles.docsLink} href="#">Read More 📝 </a>
+            <a className={styles.docsLink} href="#">
+              Read More 📝{" "}
+            </a>
           </div>
         </div>
 
@@ -68,15 +69,18 @@ export default function About() {
           </div>
           <div className="col-xs-12 col-md-8 col-lg-8 rules-left">
             <p>
-                The American Community Survey (ACS) helps local officials, community leaders, and businesses 
-                understand the changes taking place in their communities. It is the premier source for detailed population and 
-                housing information about our nation.
+              The American Community Survey (ACS) helps local officials,
+              community leaders, and businesses understand the changes taking
+              place in their communities. It is the premier source for detailed
+              population and housing information about our nation.
             </p>
-            <a className={styles.docsLink} href="#">Read More 📝 </a>
+            <a className={styles.docsLink} href="#">
+              Read More 📝{" "}
+            </a>
           </div>
         </div>
       </main>
       <Footer />
     </div>
-  )
+  );
 }

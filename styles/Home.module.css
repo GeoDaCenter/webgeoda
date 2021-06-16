@@ -47,8 +47,8 @@
 }
 
 .docsLink {
-  color:var(--selected-color);
+  color: var(--selected-color);
 }
 .docsLink:hover {
-  border-color:var(--selected-color);
+  border-color: var(--selected-color);
 }
