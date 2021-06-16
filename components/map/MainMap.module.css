@@ -184,6 +184,8 @@ p.variableName {
   border-radius: 0.125em;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   max-width: 50ch;
+  pointer-events: none;
+  user-select: none;
 }
 
 .tooltipContainer p {

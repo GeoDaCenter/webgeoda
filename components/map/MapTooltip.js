@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 export default function MapTooltip() {
   const currentHoverTarget = useSelector((state) => state.currentHoverTarget);
   const { x, y, data } = currentHoverTarget;
-
   return (
     <>
       {data && (
@@ -14,7 +13,11 @@ export default function MapTooltip() {
         >
           {data.map((entry) => (
             <p>
-              {entry.name}: {Math.round(entry.value * 100) / 100}
+              <b>{entry.name}</b>: {
+                +entry.value
+                  ? Math.round(entry.value * 100) / 100
+                  : entry.value
+                }
             </p>
           ))}
         </div>

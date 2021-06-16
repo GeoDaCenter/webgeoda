@@ -72,7 +72,8 @@ export default function MainMap(props) {
       });
   }, [initialViewState]);
 
-  const handleMapHover = (e) =>
+  const handleMapHover = (e) => {
+    e.object?.properties && 
     dispatch({
       type: "SET_HOVER_OBJECT",
       payload: {
@@ -80,7 +81,8 @@ export default function MainMap(props) {
         x: e.x,
         y: e.y,
       },
-    });
+    })
+  };
 
   const layers = [
     new GeoJsonLayer({
