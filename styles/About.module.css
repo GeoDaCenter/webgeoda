@@ -32,18 +32,20 @@
   flex-grow: 1;
 }
 
-.title, .sectionHead, .subSectionHead {
+.title,
+.sectionHead,
+.subSectionHead {
   margin: 0;
   line-height: 1.15;
   font-size: 4rem;
 }
 
 .sectionHead {
-  font-size:3rem;
+  font-size: 3rem;
 }
 
 .subSectionHead {
-  font-size:2rem;
+  font-size: 2rem;
 }
 
 .description {
