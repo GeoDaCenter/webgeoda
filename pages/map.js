@@ -7,6 +7,7 @@ import MainNav from "../components/layout/MainNav";
 import MainMap from "../components/map/MainMap";
 import VariablePanel from "../components/map/VariablePanel";
 import MapTooltip from "../components/map/MapTooltip";
+import HookTest from '../components/map/HookTest';
 
 // import useLoadData from '@webgeoda/hooks/useLoadData'
 // import useUpdateData from '@webgeoda/hooks/useUpdateData'
@@ -16,6 +17,8 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { useEffect, useState } from "react";
 import * as Comlink from "comlink";
+
+import { dataPresets } from "../map-config";
 
 const store = createStore(rootReducer);
 var geoda;
@@ -72,6 +75,9 @@ export default function Map() {
             <MainMap geoda={geoda} />
             <VariablePanel />
             <MapTooltip />
+            <HookTest 
+              variableSpec={dataPresets.variables[0]}
+            />
           </>
         )}
       </Provider>
