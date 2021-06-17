@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import styles from './Widgets.module.css';
 
-import HistogramWidget from "./HistogramWidget";
+import HistogramWidget from './HistogramWidget';
+import ScatterWidget from './ScatterWidget';
 
 function Widget(props) {
   // TEMP: Replace with data stored in redux state
@@ -18,6 +19,9 @@ function Widget(props) {
   switch(props.type){
     case 'histogram':
       component = HistogramWidget;
+      break;
+    case 'scatter':
+      component = ScatterWidget;
       break;
     default:
       return (
@@ -56,7 +60,7 @@ async function fetchData(fileURL){
 }
 
 Widget.propTypes = {
-  type: PropTypes.oneOf("histogram", "line", "scatter", "scatter3d", "cluster").isRequired,
+  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d", "cluster"]).isRequired,
   options: PropTypes.object.isRequired,
   dataConfig: PropTypes.object.isRequired
 };

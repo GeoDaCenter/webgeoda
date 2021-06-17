@@ -10,7 +10,7 @@ function HistogramWidget(props) {
   const formattedData = binned.map((i, idx) => {
     return {
       name: `${i.x0}-${i.x1}`,
-      [props.options.yAxisVariable]: i.length,
+      val: i.length,
       label: i.length
     };
   });
@@ -22,7 +22,7 @@ function HistogramWidget(props) {
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
-        <Bar dataKey={props.options.yAxisVariable} fill={props.options.foregroundColor} />
+        <Bar dataKey="val" name={props.options.yAxisVariable} fill={props.options.foregroundColor} />
       </BarChart>
     </ResponsiveContainer>
   );

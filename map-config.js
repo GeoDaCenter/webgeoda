@@ -89,6 +89,19 @@ const widgets = [
       foregroundColor: "#FF00FF",
       yAxisVariable: "Median age"
     }
+  },
+  {
+    position: "middle right",
+    type: "scatter",
+    data: {
+      file: "/temp-widget-data/additional_data.json"
+    },
+    options: {
+      header: "Pct No Internet vs. Population Density",
+      foregroundColor: "#0011FF",
+      yAxisVariable: "Population Density",
+      xAxisVariable: "Pct No Internet"
+    }
   }
 ];
 
