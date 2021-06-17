@@ -85,7 +85,9 @@ const widgets = [
       file: "/temp-widget-data/properties.json"
     },
     options: {
-      foregroundColor: "#FF00FF"
+      header: "A cool histogram of median age",
+      foregroundColor: "#FF00FF",
+      yAxisVariable: "Median age"
     }
   }
 ];
