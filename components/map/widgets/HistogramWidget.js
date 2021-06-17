@@ -6,14 +6,20 @@ import { bin } from "d3-array";
 
 function HistogramWidget(props) {
   const d3bin = bin();
-  const binned = d3bin(Object.values(props.data).map(i => i[props.options.yAxisVariable]));
-  const formattedData = binned.map((i, idx) => {
-    return {
-      name: `${i.x0}-${i.x1}`,
-      val: i.length,
-      label: i.length
-    };
-  });
+  const binned = React.useMemo(() => {
+    return d3bin(Object.values(props.data).map(i => i[props.options.yAxisVariable]));
+  }, [props.data, props.options]);
+
+  const formattedData = React.useMemo(() => {
+    return binned.map((i, idx) => {
+      return {
+        name: `${i.x0}-${i.x1}`,
+        val: i.length,
+        label: i.length
+      };
+    });
+  }, [binned]);
+  
   return (
     <ResponsiveContainer height="90%">
       <BarChart data={formattedData}>

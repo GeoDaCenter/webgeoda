@@ -27,6 +27,7 @@ function ScatterWidgetUnwrapped(props) {
 
   const options = {
     maintainAspectRatio: false,
+    animation: false,
     elements: {
       point: {
         radius: 1
