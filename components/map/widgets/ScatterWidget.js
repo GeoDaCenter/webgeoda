@@ -1,29 +1,65 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Widgets.module.css';
-import {ScatterChart, Scatter, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts';
+import {Scatter} from 'react-chartjs-2';
 
-function ScatterWidget(props) {
+function ScatterWidgetUnwrapped(props) {
+  const dataKeys = React.useMemo(() => Object.keys(props.data), [props.data]);
+  const dataValues = React.useMemo(() => Object.values(props.data), [props.data]);
+  const formattedData = React.useMemo(() => {
+    return dataValues.map(i => {
+      return {
+        x: parseFloat(i[props.options.xAxisVariable]),
+        y: parseFloat(i[props.options.yAxisVariable])
+      };
+    });
+  }, [props.data, props.options]);
+  
+  const dataProp = {
+    datasets: [
+      {
+        label: props.options.header,
+        data: formattedData,
+        backgroundColor: props.options.foregroundColor
+      }
+    ]
+  };
 
-  // WORKAROUND: Delete the .slice below, find a way to ensure performance for large datasets
-  const formattedData = Object.values(props.data).slice(0, 1000);
+  const options = {
+    maintainAspectRatio: false,
+    elements: {
+      point: {
+        radius: 1
+      }
+    },
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: (tooltipItem, data) => {
+            const id = dataKeys[tooltipItem.dataIndex];
+            const point = formattedData[tooltipItem.dataIndex];
+            return `${id} (${point.x}, ${point.y})`;
+          }
+        }
+      }
+    }
+  };
 
   return (
-    <ResponsiveContainer height="90%">
-      <ScatterChart>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey={props.options.xAxisVariable} />
-        <YAxis dataKey={props.options.yAxisVariable} />
-        <Tooltip />
-        <Scatter data={formattedData} fill={props.options.foregroundColor} />
-      </ScatterChart>
-    </ResponsiveContainer>
+    <div style={{height: "90%"}}>
+      <Scatter data={dataProp} options={options} />
+    </div>
   );
 }
 
-ScatterWidget.propTypes = {
+ScatterWidgetUnwrapped.propTypes = {
   options: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
 };
+
+const ScatterWidget = React.memo(ScatterWidgetUnwrapped);
 
 export default ScatterWidget;

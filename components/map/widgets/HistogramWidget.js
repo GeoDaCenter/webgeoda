@@ -14,7 +14,6 @@ function HistogramWidget(props) {
       label: i.length
     };
   });
-  console.log(formattedData)
   return (
     <ResponsiveContainer height="90%">
       <BarChart data={formattedData}>
