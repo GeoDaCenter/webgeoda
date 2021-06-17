@@ -77,9 +77,23 @@ const mapModes = {
   BubbleCartogram: false,
 };
 
+const widgets = [
+  {
+    position: "top right",
+    type: "histogram",
+    data: {
+      file: "/temp-widget-data/properties.json"
+    },
+    options: {
+      foregroundColor: "#FF00FF"
+    }
+  }
+];
+
 // 🦺 exports below -- you can safely ignore! 🦺 //
 export const dataPresets = {
   data,
   variables,
   mapModes,
+  widgets
 };

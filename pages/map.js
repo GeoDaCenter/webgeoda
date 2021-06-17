@@ -1,9 +1,11 @@
+import React from 'react';
 import Head from "next/head";
 
 import styles from "../styles/Map.module.css";
 
 import MainNav from "../components/layout/MainNav";
 
+import WidgetLayer from "../components/map/widgets/WidgetLayer";
 import MainMap from "../components/map/MainMap";
 import VariablePanel from "../components/map/VariablePanel";
 import MapTooltip from "../components/map/MapTooltip";
@@ -69,6 +71,7 @@ export default function Map() {
       <Provider store={store}>
         {geodaReady && (
           <>
+            <WidgetLayer />
             <MainMap geoda={geoda} />
             <VariablePanel />
             <MapTooltip />
