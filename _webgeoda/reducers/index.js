@@ -8,6 +8,11 @@ import {
   shallowEqual,
   find,
 } from "@webgeoda/utils/data";
+
+import {
+  formatWidgetData
+} from '@webgeoda/utils/widgets';
+
 import { getCartogramCenter, generateMapData } from "@webgeoda/utils/map";
 import { generateReport, parseTooltipData } from "@webgeoda/utils/summarize";
 
@@ -401,6 +406,21 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         currentHoverTarget,
       };
+    }
+    case "FORMAT_WIDGET_DATA": {
+      //eg 
+      // let widgetData = {
+      //   ...state.widgetData
+      // }
+
+      // for (let i=0; i<action.payload.widgetSpecs; i++){
+      //   widgetData[widgetSpecs[i].id] = formatWidgetData(widgetSpecs[i].variable, state, widgetSpecs[i].type)  
+      // }
+
+      // return {
+      //   ...state,
+      //   widgetData
+      // }
     }
     default:
       return state;

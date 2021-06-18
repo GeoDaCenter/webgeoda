@@ -4,6 +4,12 @@ import {dataPresets} from '../../../map-config';
 import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
+const mapWidgets = ({widgets, widgetLocations, side}) => widgets
+  .map((elem, index) => ({elem, index}))
+  .filter(i => widgetLocations[i.index].side == side)
+  .sort((a, b) => widgetLocations[a.index].index - widgetLocations[b.index].index)
+  .map(i => i.elem);
+
 export default function WidgetLayer(props){
   const renderWidget = (widget, trueIndex, columnIndex) => {
     if(widget == undefined) return <div />;
@@ -27,17 +33,9 @@ export default function WidgetLayer(props){
   });
 
   console.log(widgetLocations)
-  const widgetElementsLeft = widgets
-    .map((elem, index) => ({elem, index}))
-    .filter(i => widgetLocations[i.index].side == "left")
-    .sort((a, b) => widgetLocations[a.index].index - widgetLocations[b.index].index)
-    .map(i => i.elem);
-  const widgetElementsRight = widgets
-    .map((elem, index) => ({elem, index}))
-    .filter(i => widgetLocations[i.index].side == "right")
-    .sort((a, b) => widgetLocations[a.index].index - widgetLocations[b.index].index)
-    .map(i => i.elem);
-  
+  const widgetElementsLeft = mapWidgets({widgets, widgetLocations, side:"left"})
+  const widgetElementsRight = mapWidgets({widgets, widgetLocations, side:"right"})
+
   const onDragEnd = (result) => {
     if(!result.destination) return;
     console.log(result.destination)
@@ -46,11 +44,12 @@ export default function WidgetLayer(props){
     const previousSide = widgetLocations[widgetIndex].side;
     const previousIndex = widgetLocations[widgetIndex].index;
     widgetLocations[widgetIndex].index = result.destination.index;
-    if(result.destination.droppableId == "widgets-left"){
-      newWidgetLocations[widgetIndex].side = "left";
-    }else if(result.destination.droppableId == "widgets-right"){
-      newWidgetLocations[widgetIndex].side = "right";
-    }
+
+    newWidgetLocations[widgetIndex].side = 
+      result.destination.droppableId == "widgets-left"
+      ? "left"
+      : "right"
+    
     for(let i = 0; i < newWidgetLocations.length; i++) {
       const widget = newWidgetLocations[i];
       if(widget == newWidgetLocations[widgetIndex]) continue;

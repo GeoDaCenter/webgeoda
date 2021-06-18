@@ -5,9 +5,11 @@ import { Draggable } from 'react-beautiful-dnd';
 
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';
+// import { useSelector } from 'react-redux';
 
 function Widget(props) {
   // TEMP: Replace with data stored in redux state
+  // const data = useSelector(state => state.widgetData[props.id])
   const [data, setData] = useState(null);
   if(data == null){
     fetchData(props.dataConfig.file).then(res => {

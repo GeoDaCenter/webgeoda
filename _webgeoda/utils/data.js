@@ -32,7 +32,7 @@ export const dataFn = (
   debug = false
 ) => {
 
-  if (dataParams.categorical) return numeratorData[dataParams.nProperty||dataParams.nIndex]
+  if (dataParams.categorical && numeratorData) return numeratorData[dataParams.nProperty||dataParams.nIndex]
 
   const { nProperty, nIndex, dProperty, dIndex, nType, dType } = dataParams;
 
