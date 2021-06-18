@@ -26,7 +26,6 @@ export default function WidgetLayer(props){
     return renderWidget(widget, trueIndex, widgetLocations[trueIndex].index);
   });
 
-  console.log(widgetLocations)
   const widgetElementsLeft = widgets
     .map((elem, index) => ({elem, index}))
     .filter(i => widgetLocations[i.index].side == "left")
@@ -56,19 +55,10 @@ export default function WidgetLayer(props){
       if(widget == newWidgetLocations[widgetIndex]) continue;
       const thisWidgetPrevIndex = widget.index;
       if(widget.side == previousSide){
-        console.log("Prev index: " + previousIndex + ", widget index: " + widget.index);
-        if(widget.index > previousIndex){
-          console.log("DECREMENTING WIDGET " + widget.index);
-          widget.index--;
-        }
+        if(widget.index > previousIndex) widget.index--;
       }
-      // get old widget index not new one!
       if(widget.side == newWidgetLocations[widgetIndex].side){
-        console.log("dragged card index: " + result.destination.index + ", widget index: " + widget.index);
-        if(widget.index >= result.destination.index){
-          console.log("INCREMENTING WIDGET " + widget.index)
-          widget.index++;
-        }
+        if(widget.index >= result.destination.index) widget.index++;
       }
       if(thisWidgetPrevIndex !== widget.index){
         widgets[i] = renderWidget(dataPresets.widgets[i], i, widget.index);
