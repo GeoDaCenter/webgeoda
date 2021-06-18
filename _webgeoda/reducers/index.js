@@ -454,6 +454,13 @@ export default function reducer(state = INITIAL_STATE, action) {
         currentHoverTarget,
       };
     }
+    case "FORMAT_WIDGET_DATA": {
+      const widgetData = {...state.widgetData};
+      for(const i of action.payload.widgetSpecs){
+        widgetData[i.id] = formatWidgetData(i.variable, state, i.type);
+      }
+      return {...state, widgetData};
+    }
     default:
       return state;
   }
