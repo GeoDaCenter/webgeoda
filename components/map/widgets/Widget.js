@@ -1,19 +1,20 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import styles from './Widgets.module.css';
 import { Draggable } from 'react-beautiful-dnd';
 
+import Loader from '../../layout/Loader';
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';
 
 function Widget(props) {
-  // TEMP: Replace with data stored in redux state
-  const [data, setData] = useState(null);
+  const data = useSelector(state => state.widgetData[props.id]);
+
   if(data == null){
-    fetchData(props.dataConfig.file).then(res => {
-      setData(res)
-    });
-    return <div className={styles.widget} />;
+    return (
+      <div className={styles.widget}><Loader /></div>
+    );
   }
 
   let component;
@@ -52,17 +53,6 @@ function Widget(props) {
     </Draggable>
     
   );
-}
-
-async function fetchData(fileURL){
-  let res;
-  try {
-    res = await fetch(fileURL);
-  } catch(e){
-    console.error(e);
-    return null;
-  }
-  return await res.json();
 }
 
 Widget.propTypes = {

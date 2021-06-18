@@ -135,6 +135,7 @@ export default function useLoadData(geoda, dateLists = {}) {
       },
     });
     loadTables(dataPresets, dateLists);
+    loadWidgets(dataPresets);
   };
 
   const loadTables = async (dataPresets, dateLists) => {
@@ -156,6 +157,26 @@ export default function useLoadData(geoda, dateLists = {}) {
     dispatch({
       type: "ADD_TABLES",
       payload: dataCollection,
+    });
+  };
+
+  const loadWidgets = async (dataPresets) => {
+    const widgetSpecs = dataPresets.widgets.map((widget, i) => {
+      let variable;
+      if(widget.type == 'scatter' || widget.type == 'scatter3d'){
+        variable = [widget.xVariable, widget.yVariable];
+      } else {
+        variable = widget.variable;
+      }
+      return {
+        id: i,
+        type: widget.type,
+        variable
+      };
+    });
+    dispatch({
+      type: "FORMAT_WIDGET_DATA",
+      payload: {widgetSpecs}
     });
   };
 

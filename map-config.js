@@ -81,38 +81,33 @@ const widgets = [
   {
     position: "left",
     type: "histogram",
-    data: {
-      file: "/temp-widget-data/properties.json"
-    },
+    variable: "Median age",
     options: {
-      header: "Histo 1",
+      header: "Median Age",
       foregroundColor: "#FF00FF",
-      yAxisVariable: "Median age"
+      yAxisLabel: "Median Age"
     }
   },
   {
     position: "right",
     type: "histogram",
-    data: {
-      file: "/temp-widget-data/properties.json"
-    },
+    variable: "Median age",
     options: {
-      header: "Histo #2!",
+      header: "Median age",
       foregroundColor: "#00FF11",
-      yAxisVariable: "Median age"
+      yAxisLabel: "Median age"
     }
   },
   {
     position: "right",
     type: "scatter",
-    data: {
-      file: "/temp-widget-data/additional_data.json"
-    },
+    xVariable: "Median age",
+    yVariable: "Median age",
     options: {
-      header: "Pct No Internet vs. Population Density",
+      header: "Median Age vs Median Age",
       foregroundColor: "#0011FF",
-      yAxisVariable: "Population Density",
-      xAxisVariable: "Pct No Internet"
+      xAxisLabel: "Median Age",
+      yAxisLabel: "Median Age"
     }
   }
 ];

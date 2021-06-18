@@ -8,6 +8,11 @@ import {
   shallowEqual,
   find,
 } from "@webgeoda/utils/data";
+
+import {
+  formatWidgetData
+} from '@webgeoda/utils/widgets';
+
 import { getCartogramCenter, generateMapData } from "@webgeoda/utils/map";
 import { generateReport, parseTooltipData } from "@webgeoda/utils/summarize";
 
@@ -401,6 +406,13 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         currentHoverTarget,
       };
+    }
+    case "FORMAT_WIDGET_DATA": {
+      const widgetData = {...state.widgetData};
+      for(const i of action.payload.widgetSpecs){
+        widgetData[i.id] = formatWidgetData(i.variable, state, i.type);
+      }
+      return {...state, widgetData};
     }
     default:
       return state;
