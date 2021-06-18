@@ -26,6 +26,7 @@ export default function useLoadData(geoda, dateLists = {}) {
   const dispatch = useDispatch();
 
   const loadData = async (dataPresets) => {
+    if (geoda === undefined) location.reload();
     const numeratorTable =
       dataPresets.tables?.hasOwnProperty(dataPresets.variables[0].numerator) &&
       dataPresets.tables[dataPresets.variables[0].numerator];
@@ -33,7 +34,7 @@ export default function useLoadData(geoda, dateLists = {}) {
       dataPresets.tables?.hasOwnProperty(
         dataPresets.variables[0].denominator
       ) && dataPresets.tables[dataPresets.variables[0].denominator];
-
+    
     const firstLoadPromises = [
       geoda.loadGeoJSON(`/geojson/${dataPresets.data[0].geojson}`),
       numeratorTable && handleLoadData(numeratorTable),
