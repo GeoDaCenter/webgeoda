@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import styles from './Widgets.module.css';
+import { Draggable } from 'react-beautiful-dnd';
 
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';
@@ -32,19 +33,24 @@ function Widget(props) {
   }
 
   return (
-    <div className={styles.widget}>
-      {
-        props.options.header == null ? null : (
-          <h3 className={styles.widgetHeader}>{props.options.header}</h3>
-        )
-      }
-      {
-        React.createElement(component, {
-          options: props.options,
-          data: data
-        })
-      }
-    </div>
+    <Draggable draggableId={props.id} index={props.index}>
+      {provided => (
+        <div className={styles.widget} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+          {
+            props.options.header == null ? null : (
+              <h3 className={styles.widgetHeader}>{props.options.header}</h3>
+            )
+          }
+          {
+            React.createElement(component, {
+              options: props.options,
+              data: data
+            })
+          }
+        </div>
+      )}
+    </Draggable>
+    
   );
 }
 
@@ -62,7 +68,9 @@ async function fetchData(fileURL){
 Widget.propTypes = {
   type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d", "cluster"]).isRequired,
   options: PropTypes.object.isRequired,
-  dataConfig: PropTypes.object.isRequired
+  dataConfig: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired
 };
 
 export default Widget;

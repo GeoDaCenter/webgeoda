@@ -27,7 +27,7 @@ function HistogramWidget(props) {
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
-        <Bar dataKey="val" name={props.options.yAxisVariable} fill={props.options.foregroundColor} />
+        <Bar dataKey="val" name={props.options.yAxisVariable} fill={props.options.foregroundColor} isAnimationActive={false} />
       </BarChart>
     </ResponsiveContainer>
   );

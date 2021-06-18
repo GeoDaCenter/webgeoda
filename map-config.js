@@ -79,19 +79,31 @@ const mapModes = {
 
 const widgets = [
   {
-    position: "top right",
+    position: "left",
     type: "histogram",
     data: {
       file: "/temp-widget-data/properties.json"
     },
     options: {
-      header: "A cool histogram of median age",
+      header: "Histo 1",
       foregroundColor: "#FF00FF",
       yAxisVariable: "Median age"
     }
   },
   {
-    position: "middle right",
+    position: "right",
+    type: "histogram",
+    data: {
+      file: "/temp-widget-data/properties.json"
+    },
+    options: {
+      header: "Histo #2!",
+      foregroundColor: "#00FF11",
+      yAxisVariable: "Median age"
+    }
+  },
+  {
+    position: "right",
     type: "scatter",
     data: {
       file: "/temp-widget-data/additional_data.json"
