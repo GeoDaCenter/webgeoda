@@ -97,15 +97,13 @@ export const formatWidgetData = (variableName, state, widgetType) => {
         let xData;
         let yData;
         let idKeys;
-
         for (let i=0;i<2;i++){
             const variableSpec = find(
                 dataPresets.variables,
-                (o) => o.variable === variableName
+                (o) => o.variable === variableName[i]
             )
-
             if (!variableSpec) return []
-            const [data, keys] = getColumnData(variableSpec, storedData, dataPresets, true)
+            const [data, keys] = getColumnData(variableSpec, state, true)
             if (!data) return []
             if (i===0) {
                 idKeys = keys;
@@ -114,7 +112,6 @@ export const formatWidgetData = (variableName, state, widgetType) => {
                 yData = data
             }
         }
-        
         let formattedData = []
 
         for (let i=0; i<xData.length; i++){

@@ -83,7 +83,7 @@ const widgets = [
     type: "histogram",
     variable: "Median age",
     options: {
-      header: "Histo 1",
+      header: "Median Age",
       foregroundColor: "#FF00FF",
       yAxisLabel: "Median Age"
     }
@@ -93,21 +93,21 @@ const widgets = [
     type: "histogram",
     variable: "Median age",
     options: {
-      header: "Histo #2!",
+      header: "Median age",
       foregroundColor: "#00FF11",
-      yAxisLabel: "Median Age"
+      yAxisLabel: "Median age"
     }
   },
   {
     position: "right",
     type: "scatter",
-    xVariable: "Total Population",
+    xVariable: "Median age",
     yVariable: "Median age",
     options: {
-      header: "Pct No Internet vs. Population Density",
+      header: "Median Age vs Median Age",
       foregroundColor: "#0011FF",
-      xAxisLabel: "Percent No Internet",
-      yAxisLabel: "Population Density"
+      xAxisLabel: "Median Age",
+      yAxisLabel: "Median Age"
     }
   }
 ];
