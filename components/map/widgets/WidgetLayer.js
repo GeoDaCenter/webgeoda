@@ -5,11 +5,10 @@ import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 export default function WidgetLayer(props){
-  const renderWidget = (widget, i) => {
+  const renderWidget = (widget, trueIndex, columnIndex) => {
     if(widget == undefined) return <div />;
-    return <Widget type={widget.type} options={widget.options} dataConfig={widget.data} key={`widget-${i}`} id={i.toString()} index={i} />
+    return <Widget type={widget.type} options={widget.options} dataConfig={widget.data} key={`widget-${trueIndex}`} id={trueIndex.toString()} index={columnIndex} />
   };
-  const widgets = dataPresets.widgets.map(renderWidget);
 
   const defaultWidgetLocations = [];
   let leftIndex = 0;
@@ -22,8 +21,11 @@ export default function WidgetLayer(props){
     if(i.position == "left") { leftIndex++; }
     else { rightIndex++; }
   }
-
   const [widgetLocations, setWidgetLocations] = useState(defaultWidgetLocations);
+  const widgets = dataPresets.widgets.map((widget, trueIndex) => {
+    return renderWidget(widget, trueIndex, widgetLocations[trueIndex].index);
+  });
+
   console.log(widgetLocations)
   const widgetElementsLeft = widgets
     .map((elem, index) => ({elem, index}))
@@ -49,8 +51,10 @@ export default function WidgetLayer(props){
     }else if(result.destination.droppableId == "widgets-right"){
       newWidgetLocations[widgetIndex].side = "right";
     }
-    for(const widget of newWidgetLocations){
+    for(let i = 0; i < newWidgetLocations.length; i++) {
+      const widget = newWidgetLocations[i];
       if(widget == newWidgetLocations[widgetIndex]) continue;
+      const thisWidgetPrevIndex = widget.index;
       if(widget.side == previousSide){
         console.log("Prev index: " + previousIndex + ", widget index: " + widget.index);
         if(widget.index > previousIndex){
@@ -65,6 +69,9 @@ export default function WidgetLayer(props){
           console.log("INCREMENTING WIDGET " + widget.index)
           widget.index++;
         }
+      }
+      if(thisWidgetPrevIndex !== widget.index){
+        widgets[i] = renderWidget(dataPresets.widgets[i], i, widget.index);
       }
     }
     setWidgetLocations(newWidgetLocations);
