@@ -408,19 +408,11 @@ export default function reducer(state = INITIAL_STATE, action) {
       };
     }
     case "FORMAT_WIDGET_DATA": {
-      //eg 
-      // let widgetData = {
-      //   ...state.widgetData
-      // }
-
-      // for (let i=0; i<action.payload.widgetSpecs; i++){
-      //   widgetData[widgetSpecs[i].id] = formatWidgetData(widgetSpecs[i].variable, state, widgetSpecs[i].type)  
-      // }
-
-      // return {
-      //   ...state,
-      //   widgetData
-      // }
+      const widgetData = {...state.widgetData};
+      for(const i of action.payload.widgetSpecs){
+        widgetData[i.id] = formatWidgetData(i.variable, state, i.type);
+      }
+      return {...state, widgetData};
     }
     default:
       return state;
