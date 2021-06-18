@@ -17,7 +17,17 @@ import { Provider } from "react-redux";
 import { useEffect, useState } from "react";
 import * as Comlink from "comlink";
 
-const store = createStore(rootReducer);
+const store = createStore(
+  rootReducer,
+  (
+    typeof window === 'object' 
+    && window.__REDUX_DEVTOOLS_EXTENSION__ 
+    && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  ) && window.__REDUX_DEVTOOLS_EXTENSION__({
+    stateSanitizer: (state) => state.storedGeojson ? { ...state, storedData: '<<EXCLUDED>>', storedGeojson: '<<EXCLUDED>>' } : state
+  })
+);
+
 var geoda;
 
 export default function Map() {
