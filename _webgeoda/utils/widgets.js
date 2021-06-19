@@ -124,4 +124,52 @@ export const formatWidgetData = (variableName, state, widgetType) => {
         
         return formattedData
     }
+
+    if (widgetType === "scatter3d"){
+        let xData;
+        let yData;
+        let zData;
+        let idKeys;
+        for (let i=0;i<3;i++){
+            const variableSpec = find(
+                dataPresets.variables,
+                (o) => o.variable === variableName[i]
+            )
+            if (!variableSpec) return []
+            const [data, keys] = getColumnData(variableSpec, state, true)
+            if (!data) return []
+            if (i===0) {
+                idKeys = keys;
+                xData = data;
+            } else if(i === 1) {
+                yData = data;
+            } else if(i === 2) {
+                zData = data;
+            }
+        }
+        
+        const targetRange = 100;
+        const scaleAxis = (data) => {
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min;
+            return data.map(i => {
+                i -= min;
+                i *= targetRange / range;
+                return i;
+            })
+        }
+        const scaledX = scaleAxis(xData);
+        const scaledY = scaleAxis(yData);
+        const scaledZ = scaleAxis(zData);
+
+        const formattedData = idKeys.map((id, i) => {
+            return {
+                position: [
+                    scaledX[i], scaledY[i], scaledZ[i]
+                ]
+            };
+        })
+        return formattedData;
+    }
 }

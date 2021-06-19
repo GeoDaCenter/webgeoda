@@ -163,8 +163,10 @@ export default function useLoadData(geoda, dateLists = {}) {
   const loadWidgets = async (dataPresets) => {
     const widgetSpecs = dataPresets.widgets.map((widget, i) => {
       let variable;
-      if(widget.type == 'scatter' || widget.type == 'scatter3d'){
+      if(widget.type == 'scatter'){
         variable = [widget.xVariable, widget.yVariable];
+      } else if(widget.type == 'scatter3d') {
+        variable = [widget.xVariable, widget.yVariable, widget.zVariable];
       } else {
         variable = widget.variable;
       }

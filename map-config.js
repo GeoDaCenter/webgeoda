@@ -109,6 +109,20 @@ const widgets = [
       xAxisLabel: "Median Age",
       yAxisLabel: "Count No Internet Acccess"
     }
+  },
+  {
+    position: "right",
+    type: "scatter3d",
+    xVariable: "Median age",
+    yVariable: "Count No Internet Access",
+    zVariable: "Population Density",
+    options: {
+      header: "3D SCATTERPLOT!!",
+      foregroundColor: "#00AAFF",
+      xAxisLabel: "Median Age",
+      yAxisLabel: "Count No Internet Acccess",
+      zAxisLabel: "Population Density"
+    }
   }
 ];
 

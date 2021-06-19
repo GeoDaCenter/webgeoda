@@ -7,6 +7,10 @@ import { Draggable } from 'react-beautiful-dnd';
 import Loader from '../../layout/Loader';
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';
+import Scatter3DWidget from './Scatter3DWidget';
+
+// As defined in CSS
+export const WIDGET_WIDTH = 400;
 
 function Widget(props) {
   const data = useSelector(state => state.widgetData[props.id]);
@@ -25,6 +29,9 @@ function Widget(props) {
     case 'scatter':
       component = ScatterWidget;
       break;
+    case 'scatter3d':
+      component = Scatter3DWidget;
+      break;
     default:
       return (
         <div className={styles.widget}>
@@ -36,10 +43,12 @@ function Widget(props) {
   return (
     <Draggable draggableId={props.id} index={props.index}>
       {provided => (
-        <div className={styles.widget} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+        <div className={styles.widget} ref={provided.innerRef} {...provided.draggableProps}>
           {
             props.options.header == null ? null : (
-              <h3 className={styles.widgetHeader}>{props.options.header}</h3>
+              <h3 className={styles.widgetHeader} {...provided.dragHandleProps}>
+                {props.options.header}
+              </h3>
             )
           }
           {
