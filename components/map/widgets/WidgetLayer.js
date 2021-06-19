@@ -37,7 +37,6 @@ export default function WidgetLayer(props){
 
   const onDragEnd = (result) => {
     if(!result.destination) return;
-    console.log(result.destination)
     const newWidgetLocations = [...widgetLocations];
     const widgetIndex = parseInt(result.draggableId);
     const previousSide = widgetLocations[widgetIndex].side;
