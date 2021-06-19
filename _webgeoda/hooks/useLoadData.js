@@ -34,7 +34,7 @@ export default function useLoadData(geoda, dateLists = {}) {
       dataPresets.tables?.hasOwnProperty(
         dataPresets.variables[0].denominator
       ) && dataPresets.tables[dataPresets.variables[0].denominator];
-    
+
     const firstLoadPromises = [
       geoda.loadGeoJSON(`/geojson/${dataPresets.data[0].geojson}`),
       numeratorTable && handleLoadData(numeratorTable),
@@ -134,7 +134,7 @@ export default function useLoadData(geoda, dateLists = {}) {
         id: dataPresets.data[0].id,
       },
     });
-    loadTables(dataPresets, dateLists);
+    await loadTables(dataPresets, dateLists);
     loadWidgets(dataPresets);
   };
 

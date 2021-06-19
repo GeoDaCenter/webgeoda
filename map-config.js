@@ -91,23 +91,23 @@ const widgets = [
   {
     position: "right",
     type: "histogram",
-    variable: "Median age",
+    variable: "Count No Internet Access",
     options: {
-      header: "Median age",
-      foregroundColor: "#00FF11",
-      yAxisLabel: "Median age"
+      header: "No Internet Access",
+      foregroundColor: "#00FFAA",
+      yAxisLabel: "Count No Internet Access"
     }
   },
   {
     position: "right",
     type: "scatter",
     xVariable: "Median age",
-    yVariable: "Median age",
+    yVariable: "Count No Internet Access",
     options: {
-      header: "Median Age vs Median Age",
-      foregroundColor: "#0011FF",
+      header: "Count No Internet Access vs. Median Age",
+      foregroundColor: "#00AAFF",
       xAxisLabel: "Median Age",
-      yAxisLabel: "Median Age"
+      yAxisLabel: "Count No Internet Acccess"
     }
   }
 ];
