@@ -54,21 +54,21 @@ const variables = [
     colorScale: colors.colorbrewer.Oranges,
   },
   {
-    variable: "Population Density Hotspot",
-    numerator: "acs_data",
-    nProperty: "Total Population",
-    denominator: "acs_data",
-    dProperty: "Area Land",
-    lisa: true
-  },
-  {
     variable: "Count No Internet Access",
     numerator: "acs_data",
     nProperty: "No Internet Access",
-    scale: 100,
     binning: "stddev_breaks",
     numberOfBins: 6,
     colorScale: colors.colorbrewer.Reds,
+  },
+  {
+    variable: "Hotspot: Pct No Internet",
+    numerator: "acs_data",
+    nProperty: "No Internet Access",
+    denominator: "acs_data",
+    dProperty: "Internet Total",
+    scale: 100,    
+    lisa: true
   },
   {
     variable: "Most Common Heating Fuel",
