@@ -15,7 +15,7 @@ export default function useLoadData(geoda) {
   const dataParams = useSelector((state) => state.dataParams);
   const mapParams = useSelector((state) => state.mapParams);
   const dataPresets = useSelector((state) => state.dataPresets);
-
+  
   const dispatch = useDispatch();
 
   const updateBins = async () => {

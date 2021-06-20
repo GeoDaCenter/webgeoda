@@ -16,10 +16,13 @@ import { fitBounds } from "@math.gl/web-mercator";
 // Main data loader
 // This functions asynchronously accesses the Geojson data and CSVs
 //   then performs a join and loads the data into the store
-
-// import { initialDataLoad, updateMap } from '@webgeoda/actions';
-
-// import { colorScales, fixedScales, dataPresets, defaultTables, dataPresetsRedux, variablePresets, colors } from '../config';
+const getIdOrder = (features, idProp) => {
+  let returnArray = [];
+  for (let i=0; i<features.length; i++) {
+    returnArray.push(features[i].properties[idProp])
+  }
+  return returnArray
+};
 
 export default function useLoadData(geoda, dateLists = {}) {
   const currentData = useSelector((state) => state.currentData);
@@ -43,8 +46,14 @@ export default function useLoadData(geoda, dateLists = {}) {
 
     const [[mapId, geojsonData], numeratorData, denominatorData] =
       await Promise.all(firstLoadPromises);
+    
     const geojsonProperties = indexGeoProps(
       geojsonData,
+      dataPresets.data[0].id
+    );
+
+    const geojsonOrder = getIdOrder(
+      geojsonData.features,
       dataPresets.data[0].id
     );
 
@@ -123,6 +132,9 @@ export default function useLoadData(geoda, dateLists = {}) {
           [dataPresets.data[0].geojson]: {
             data: geojsonData,
             properties: geojsonProperties,
+            order: geojsonOrder,
+            id: mapId,
+            weights: {}
           },
         },
         mapParams: {

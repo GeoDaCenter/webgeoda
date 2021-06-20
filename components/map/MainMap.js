@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateBins from "@webgeoda/hooks/useUpdateBins";
+import useUpdateLisa from "@webgeoda/hooks/useUpdateLisa";
 
 import { dataPresets } from "../../map-config.js";
 
@@ -30,18 +31,19 @@ export default function MainMap(props) {
 
   const [loadData] = useLoadData(props.geoda);
   const [updateBins] = useUpdateBins(props.geoda);
-
+  const [updateLisa] = useUpdateLisa(props.geoda);
+  
   useEffect(() => {
     loadData(dataPresets);
   }, [dataPresets]);
 
   useEffect(() => {
-    updateBins();
+    if (dataParams.lisa){
+      updateLisa()
+    } else {
+      updateBins();
+    }
   }, [dataParams.variable]);
-
-  useEffect(() => {
-    dispatch({ type: "UPDATE_MAP" });
-  }, [mapParams.bins.breaks]);
 
   const [viewState, setViewState] = useState({
     latitude: 0,
@@ -157,7 +159,7 @@ export default function MainMap(props) {
         bins={mapParams.bins.bins}
         colors={mapParams.colorScale}
         variableName={dataParams.variable}
-        categorical={dataParams.categorical||dataParams.binning==='LISA'}
+        ordinal={dataParams.categorical||dataParams.lisa}
       />
       <MapControls
         deck={deckRef}

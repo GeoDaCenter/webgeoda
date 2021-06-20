@@ -54,6 +54,14 @@ const variables = [
     colorScale: colors.colorbrewer.Oranges,
   },
   {
+    variable: "Population Density Hotspot",
+    numerator: "acs_data",
+    nProperty: "Total Population",
+    denominator: "acs_data",
+    dProperty: "Area Land",
+    lisa: true
+  },
+  {
     variable: "Count No Internet Access",
     numerator: "acs_data",
     nProperty: "No Internet Access",
