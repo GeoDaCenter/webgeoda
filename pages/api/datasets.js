@@ -8,7 +8,7 @@
 import axios from "axios"
 
 export default async (req, res) => {
-  const url = `http://localhost:3000/geojson/tx.geojson`
+  const url = `https://webgeoda.vercel.app/geojson/tx.geojson`
     await axios
         .get(url)
         .then(({ data }) => {
