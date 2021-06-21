@@ -2,6 +2,7 @@ import {
   getDataForBins,
   find,
 } from "./data";
+import {TARGET_RANGE} from "../../components/map/widgets/Scatter3DWidget";
 
 import { bin as d3bin } from "d3-array";
 
@@ -148,16 +149,16 @@ export const formatWidgetData = (variableName, state, widgetType) => {
             }
         }
         
-        const targetRange = 100;
         const scaleAxis = (data) => {
             const min = Math.min(...data);
             const max = Math.max(...data);
             const range = max - min;
-            return data.map(i => {
+            const scaled = data.map(i => {
                 i -= min;
-                i *= targetRange / range;
+                i *= TARGET_RANGE / range;
                 return i;
             })
+            return {data: scaled, min, max, scalar: TARGET_RANGE / range};
         }
         const scaledX = scaleAxis(xData);
         const scaledY = scaleAxis(yData);
@@ -166,10 +167,13 @@ export const formatWidgetData = (variableName, state, widgetType) => {
         const formattedData = idKeys.map((id, i) => {
             return {
                 position: [
-                    scaledX[i], scaledY[i], scaledZ[i]
+                    scaledX.data[i], scaledY.data[i], scaledZ.data[i]
                 ]
             };
         })
-        return formattedData;
+        return {
+            data: formattedData,
+            axesInfo: [scaledX, scaledY, scaledZ]
+        };
     }
 }

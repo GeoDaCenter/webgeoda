@@ -121,7 +121,8 @@ const widgets = [
       foregroundColor: "#00AAFF",
       xAxisLabel: "Median Age",
       yAxisLabel: "Count No Internet Acccess",
-      zAxisLabel: "Population Density"
+      zAxisLabel: "Population Density",
+      gridlinesInterval: [50, 100000, 10000]
     }
   }
 ];

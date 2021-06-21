@@ -12,6 +12,7 @@
   "dependencies": {
     "@deck.gl/core": "^8.4.16",
     "@deck.gl/layers": "^8.4.16",
+    "@deck.gl/mesh-layers": "^8.4.17",
     "@deck.gl/react": "^8.4.16",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
