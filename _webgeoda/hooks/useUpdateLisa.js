@@ -40,15 +40,15 @@ export default function useLoadData(geoda) {
         storedGeojson[currentData].order
     );
     
-    const weights = storedGeojson[currentData].weights[dataParams.weightMethod||'getQueenWeights']
-      ? storedGeojson[currentData].weights[dataParams.weightMethod||'getQueenWeights']
-      : (dataParams.weightParams && dataParams.weightMethod)
-      ? await geoda[dataParams.weightMethod](storedGeojson[currentData].id, ...dataParams.weightParams)
-      : await geoda[dataParams.weightMethod||'getQueenWeights'](storedGeojson[currentData].id)
+    const weights = storedGeojson[currentData].weights[dataParams.weightsFunction||'getQueenWeights']
+      ? storedGeojson[currentData].weights[dataParams.weightsFunction||'getQueenWeights']
+      : (dataParams.weightsParams && dataParams.weightsFunction)
+      ? await geoda[dataParams.weightsFunction](storedGeojson[currentData].id, ...dataParams.weightsParams)
+      : await geoda[dataParams.weightsFunction||'getQueenWeights'](storedGeojson[currentData].id)
 
-    const lisaResults = (dataParams.lisaParams && dataParams.lisaMethod)
-      ? await geoda[dataParams.lisaMethod](weights, lisaData, ...dataParams.lisaParams)
-      : await geoda[dataParams.lisaMethod||'localMoran'](weights, lisaData)
+    const lisaResults = (dataParams.lisaParams && dataParams.lisaFunction)
+      ? await geoda[dataParams.lisaFunction](weights, lisaData, ...dataParams.lisaParams)
+      : await geoda[dataParams.lisaFunction||'localMoran'](weights, lisaData)
     
     dispatch({
       type: "UPDATE_LISA",
