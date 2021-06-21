@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './Widgets.module.css';
 import DeckGL from '@deck.gl/react';
 import {COORDINATE_SYSTEM, OrbitView} from '@deck.gl/core';
-import {PointCloudLayer} from '@deck.gl/layers';
+import {PointCloudLayer, TextLayer} from '@deck.gl/layers';
 import {SimpleMeshLayer} from '@deck.gl/mesh-layers';
 import {WIDGET_WIDTH} from './Widget';
 
@@ -49,17 +49,29 @@ function Scatter3DWidgetUnwrapped(props) {
     getNormal: [0, 1, 0],
     getColor: [0, 0, 0], // TODO: parse and use foregroundColor
     opacity: 0.5,
-    pointSize: 0.5
+    pointSize: props.options.pointSize
   });
   const gridlinesData = [];
   for(let x = 0; x <= TARGET_RANGE; x += xTick){
     for(let y = 0; y <= TARGET_RANGE; y += yTick){
       for(let z = 0; z <= TARGET_RANGE; z += zTick){
         gridlinesData.push({
-          position: [x - props.data.axesInfo[0].min, y - props.data.axesInfo[1].min, z - props.data.axesInfo[2].min],
+          position: [x, y, z],
           angle: 0
         });
       }
+    }
+  }
+  const textData = [];
+  for(let axis = 0; axis <= 2; axis++){
+    const tick = [xTick, yTick, zTick][axis];
+    for(let i = 0; i <= TARGET_RANGE; i += tick){
+      const position = [0, 0, 0];
+      position[axis] = i;
+      textData.push({
+        position,
+        text: parseFloat(i / props.data.axesInfo[axis].scalar + props.data.axesInfo[axis].min).toFixed(2)
+      });
     }
   }
 
@@ -71,6 +83,12 @@ function Scatter3DWidgetUnwrapped(props) {
     wireframe: true
   });
 
+  const textLayer = new TextLayer({
+    id: "axis-text",
+    data: textData,
+    getSize: 7
+  })
+
   return (
     <div style={{height: "90%", position: "relative"}}>
       <DeckGL
@@ -78,7 +96,7 @@ function Scatter3DWidgetUnwrapped(props) {
         viewState={viewState}
         controller={true}
         onViewStateChange={newViewState => setViewState(newViewState.viewState)}
-        layers={[pointCloudLayer, gridlinesLayer]}
+        layers={[pointCloudLayer, gridlinesLayer, textLayer]}
       />
     </div>
   )

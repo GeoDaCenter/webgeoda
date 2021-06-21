@@ -78,38 +78,38 @@ const mapModes = {
 };
 
 const widgets = [
-  {
-    position: "left",
-    type: "histogram",
-    variable: "Median age",
-    options: {
-      header: "Median Age",
-      foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Age"
-    }
-  },
-  {
-    position: "right",
-    type: "histogram",
-    variable: "Count No Internet Access",
-    options: {
-      header: "No Internet Access",
-      foregroundColor: "#00FFAA",
-      yAxisLabel: "Count No Internet Access"
-    }
-  },
-  {
-    position: "right",
-    type: "scatter",
-    xVariable: "Median age",
-    yVariable: "Count No Internet Access",
-    options: {
-      header: "Count No Internet Access vs. Median Age",
-      foregroundColor: "#00AAFF",
-      xAxisLabel: "Median Age",
-      yAxisLabel: "Count No Internet Acccess"
-    }
-  },
+  // {
+  //   position: "left",
+  //   type: "histogram",
+  //   variable: "Median age",
+  //   options: {
+  //     header: "Median Age",
+  //     foregroundColor: "#FF00FF",
+  //     yAxisLabel: "Median Age"
+  //   }
+  // },
+  // {
+  //   position: "right",
+  //   type: "histogram",
+  //   variable: "Count No Internet Access",
+  //   options: {
+  //     header: "No Internet Access",
+  //     foregroundColor: "#00FFAA",
+  //     yAxisLabel: "Count No Internet Access"
+  //   }
+  // },
+  // {
+  //   position: "right",
+  //   type: "scatter",
+  //   xVariable: "Median age",
+  //   yVariable: "Count No Internet Access",
+  //   options: {
+  //     header: "Count No Internet Access vs. Median Age",
+  //     foregroundColor: "#00AAFF",
+  //     xAxisLabel: "Median Age",
+  //     yAxisLabel: "Count No Internet Acccess"
+  //   }
+  // },
   {
     position: "right",
     type: "scatter3d",
@@ -119,6 +119,7 @@ const widgets = [
     options: {
       header: "3D SCATTERPLOT!!",
       foregroundColor: "#00AAFF",
+      pointSize: .5,
       xAxisLabel: "Median Age",
       yAxisLabel: "Count No Internet Acccess",
       zAxisLabel: "Population Density",

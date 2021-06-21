@@ -148,7 +148,6 @@ export const formatWidgetData = (variableName, state, widgetType) => {
                 zData = data;
             }
         }
-        
         const scaleAxis = (data) => {
             const min = Math.min(...data);
             const max = Math.max(...data);
