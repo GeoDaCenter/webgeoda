@@ -10,7 +10,8 @@ WebGeoDa Scaffolding is a set of easy-to-use frontend JavaScript toolkits to get
 
 **What is this thing?**
 
-WebGeoDa is a set of tools, templates, and scaffolding to quickly and easily develop geospatial data dashboards. WebGeoDa builds on the GeoDa suite of geospatial software and extends jsGeoDa through accessible and ready-to-go examples.
+WebGeoDa is a set of tools, templates, and scaffolding to quickly and easily develop geospatial data dashboards. WebGeoDa builds on the GeoDa suite of geospatial software and extends jsGeoDa through accessible and ready-to-go examples. WebGeoDa uses  [jsGeoDa](https://jsgeoda.libgeoda.org/) (Xun Li & Luc Anselin) as the core of it's geospatial engine, alongside a collection of modern, high-performance analytic, data, and UI modules.
+
 WebGeoDa capabilities have four areas of complexity. It's easy to learn, but with a high ceiling for customization:
 
 ‍💻 Add your geospatial data (GeoJSON), join it to your tabular data (CSV) right in the browser. Specify your variables with a simple JSON specification, and your map is ready to be published!
