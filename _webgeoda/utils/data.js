@@ -332,7 +332,7 @@ export const fileLoader = {
 export const handleLoadData = async (info, dateList) => {
   const { file, type, join, dates, accumulate, schema } = info;
   const fetchUrl =
-    file.slice(0, 4) === "http" ? file : `/${file.slice(-3)}/${file}`;
+    file.slice(0, 4) === "http" ? file : `${window && window.location.origin}/${file.slice(-3)}/${file}`;
   let data = await fileLoader[file.slice(-3)](fetchUrl, schema);
   let dateIndices = [];
   let columns = Object.keys(data[0]);

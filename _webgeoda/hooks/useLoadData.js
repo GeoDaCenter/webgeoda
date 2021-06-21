@@ -39,7 +39,7 @@ export default function useLoadData(geoda, dateLists = {}) {
       ) && dataPresets.tables[dataPresets.variables[0].denominator];
     
     const firstLoadPromises = [
-      geoda.loadGeoJSON(`/geojson/${dataPresets.data[0].geojson}`),
+      geoda.loadGeoJSON(`${window && window.location.origin}/geojson/${dataPresets.data[0].geojson}`),
       numeratorTable && handleLoadData(numeratorTable),
       denominatorTable && handleLoadData(denominatorTable),
     ];
