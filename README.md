@@ -4,7 +4,7 @@
 
 WebGeoDa Scaffolding is a set of easy-to-use frontend JavaScript toolkits to get started building and exploring client-side geospatial analytics.
 
-⚠️ Heads up! This repository is an _unstable_ work in progress. This means a whole lot will change in future releases. ⚠️
+⚠️ Heads up! This repository is an _unstable_ work in progress. This means a lot will change in future releases. ⚠️
 
 ## About Webgeoda Scaffolding
 
