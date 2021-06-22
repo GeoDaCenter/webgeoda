@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import styles from './Widgets.module.css';
+import {hexToRgb} from '../../../utility';
 import DeckGL from '@deck.gl/react';
 import {COORDINATE_SYSTEM, OrbitView} from '@deck.gl/core';
 import {PointCloudLayer, TextLayer} from '@deck.gl/layers';
@@ -47,7 +48,7 @@ function Scatter3DWidgetUnwrapped(props) {
     data: props.data.data,
     coordinateSystem: COORDINATE_SYSTEM.CARTESIAN,
     getNormal: [0, 1, 0],
-    getColor: [0, 0, 0], // TODO: parse and use foregroundColor
+    getColor: hexToRgb(props.options.foregroundColor),
     opacity: 0.5,
     pointSize: props.options.pointSize
   });

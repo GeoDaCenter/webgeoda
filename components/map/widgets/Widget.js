@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import styles from './Widgets.module.css';
 import { Draggable } from 'react-beautiful-dnd';
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGripLines } from "@fortawesome/free-solid-svg-icons";
 import Loader from '../../layout/Loader';
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';
@@ -45,11 +46,13 @@ function Widget(props) {
       {provided => (
         <div className={styles.widget} ref={provided.innerRef} {...provided.draggableProps}>
           {
-            props.options.header == null ? null : (
-              <h3 className={styles.widgetHeader} {...provided.dragHandleProps}>
-                {props.options.header}
-              </h3>
-            )
+            <h3 className={styles.widgetHeader} {...provided.dragHandleProps}>
+              {
+                props.options.header == null ? 
+                  <FontAwesomeIcon icon={faGripLines} style={{color: "#00000055"}} /> :
+                  props.options.header
+              }
+            </h3>
           }
           {
             React.createElement(component, {

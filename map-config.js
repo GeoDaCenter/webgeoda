@@ -106,6 +106,7 @@ const widgets = [
     options: {
       header: "Count No Internet Access vs. Median Age",
       foregroundColor: "#00AAFF",
+      pointSize: .2,
       xAxisLabel: "Median Age",
       yAxisLabel: "Count No Internet Acccess"
     }
@@ -117,13 +118,12 @@ const widgets = [
     yVariable: "Count No Internet Access",
     zVariable: "Population Density",
     options: {
-      header: "3D SCATTERPLOT!!",
       foregroundColor: "#00AAFF",
       pointSize: .5,
       xAxisLabel: "Median Age",
       yAxisLabel: "Count No Internet Acccess",
       zAxisLabel: "Population Density",
-      gridlinesInterval: [50, 100000, 10000]
+      gridlinesInterval: [10, 20000, 10000]
     }
   }
 ];

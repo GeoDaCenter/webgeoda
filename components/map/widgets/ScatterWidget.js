@@ -19,7 +19,7 @@ function ScatterWidgetUnwrapped(props) {
     animation: false,
     elements: {
       point: {
-        radius: 1
+        radius: props.options.pointSize
       }
     },
     plugins: {
