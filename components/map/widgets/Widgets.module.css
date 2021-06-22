@@ -10,7 +10,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 10px 50px 10px 10px;
+  padding: 10px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -18,13 +18,23 @@
 
 .widgetColumn {
   display: flex;
+  min-width: 400px; /* Ensure there is always an area to drop */
   flex-direction: column;
   justify-content: flex-start;
+  overflow: auto;
+}
+
+#columnLeft {
+  margin-top: 60px;
+}
+
+#columnRight {
+  margin-right: 40px;
 }
 
 .widget {
   width: 400px;
-  height: 250px;
+  min-height: 250px;
   background-color: #FFFFFF;
   padding: 0.75em;
   margin-bottom: 15px;

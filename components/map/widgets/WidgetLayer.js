@@ -71,14 +71,14 @@ export default function WidgetLayer(props){
         <div className={styles.widgetsContainer}>
           <Droppable droppableId="widgets-left">
             {provided => (
-              <div {...provided.droppableProps} ref={provided.innerRef} className={styles.widgetColumn}>
+              <div {...provided.droppableProps} ref={provided.innerRef} className={styles.widgetColumn} id={styles.columnLeft}>
                 {widgetElementsLeft}
               </div>
             )}
           </Droppable>
           <Droppable droppableId="widgets-right">
             {provided => (
-              <div {...provided.droppableProps} ref={provided.innerRef} className={styles.widgetColumn}>
+              <div {...provided.droppableProps} ref={provided.innerRef} className={styles.widgetColumn} id={styles.columnRight}>
                 {widgetElementsRight}
               </div>
             )}
