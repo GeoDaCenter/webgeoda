@@ -28,14 +28,28 @@ function Scatter3DWidgetUnwrapped(props) {
   const xTick = props.data.axesInfo[0].scalar * props.options.gridlinesInterval[0];
   const yTick = props.data.axesInfo[1].scalar * props.options.gridlinesInterval[1];
   const zTick = props.data.axesInfo[2].scalar * props.options.gridlinesInterval[2];
-  const boxMesh = {
+  const xyBoxMesh = {
     positions: new Float32Array([
       0, 0, 0,
       xTick, 0, 0,
       xTick, yTick, 0,
       0, yTick, 0,
+      0, 0, 0
+    ])
+  };
+  const yzBoxMesh = {
+    positions: new Float32Array([
+      0, 0, 0,
+      0, 0, zTick,
       0, yTick, zTick,
-      xTick, yTick, zTick,
+      0, yTick, 0,
+      0, 0, 0
+    ])
+  };
+  const xzBoxMesh = {
+    positions: new Float32Array([
+      0, 0, 0,
+      xTick, 0, 0,
       xTick, 0, zTick,
       0, 0, zTick,
       0, 0, 0
@@ -52,17 +66,19 @@ function Scatter3DWidgetUnwrapped(props) {
     opacity: 0.5,
     pointSize: props.options.pointSize
   });
-  const gridlinesData = [];
-  for(let x = 0; x <= TARGET_RANGE; x += xTick){
-    for(let y = 0; y <= TARGET_RANGE; y += yTick){
-      for(let z = 0; z <= TARGET_RANGE; z += zTick){
-        gridlinesData.push({
-          position: [x, y, z],
-          angle: 0
-        });
-      }
-    }
-  }
+  const xyGridlinesData = [];
+  const yzGridlinesData = [];
+  const xzGridlinesData = [];
+  for(let i = 0; i <= TARGET_RANGE; i += xTick)
+    for(let j = 0; j <= TARGET_RANGE; j += yTick)
+      xyGridlinesData.push({position: [i, j, 0]});
+  for(let i = 0; i <= TARGET_RANGE; i += yTick)
+    for(let j = 0; j <= TARGET_RANGE; j += zTick)
+      yzGridlinesData.push({position: [0, i, j]});
+  for(let i = 0; i <= TARGET_RANGE; i += xTick)
+    for(let j = 0; j <= TARGET_RANGE; j += zTick)
+      xzGridlinesData.push({position: [i, 0, j]});
+  
   const textData = [];
   for(let axis = 0; axis <= 2; axis++){
     const tick = [xTick, yTick, zTick][axis];
@@ -75,20 +91,66 @@ function Scatter3DWidgetUnwrapped(props) {
       });
     }
   }
+  const axisLabels = [
+    {
+      position: [50, -15, 0],
+      color: [255, 0, 0],
+      text: props.options.xAxisLabel,
+      angle: 0
+    },
+    {
+      position: [-15, 50, 0],
+      color: [0, 255, 0],
+      text: props.options.yAxisLabel,
+      angle: 90
+    },
+    {
+      position: [0, -15, 50],
+      color: [0, 0, 255],
+      text: props.options.zAxisLabel,
+      angle: 0
+    }
+  ];
 
-  const gridlinesLayer = new SimpleMeshLayer({
-    id: "gridlines",
-    data: gridlinesData,
-    mesh: boxMesh,
-    getColor: [0, 0, 0, 10],
-    wireframe: true
-  });
+  const gridlinesColor = [0, 0, 0, 15];
+  const gridlinesLayers = [
+    new SimpleMeshLayer({
+      id: "gridlines-xy",
+      data: xyGridlinesData,
+      mesh: xyBoxMesh,
+      getColor: gridlinesColor,
+      wireframe: true
+    }),
+    new SimpleMeshLayer({
+      id: "gridlines-yz",
+      data: yzGridlinesData,
+      mesh: yzBoxMesh,
+      getColor: gridlinesColor,
+      wireframe: true
+    }),
+    new SimpleMeshLayer({
+      id: "gridlines-xz",
+      data: xzGridlinesData,
+      mesh: xzBoxMesh,
+      getColor: gridlinesColor,
+      wireframe: true
+    })
+  ];
+  
 
   const textLayer = new TextLayer({
     id: "axis-text",
     data: textData,
     getSize: 7
-  })
+  });
+  const labelsLayer = new TextLayer({
+    id: "axis-labels",
+    data: axisLabels,
+    getSize: 12,
+    getColor: i => i.color,
+    getAngle: i => i.angle,
+    billboard: true
+  });
 
   return (
     <div style={{height: "90%", position: "relative"}}>
@@ -97,7 +159,7 @@ function Scatter3DWidgetUnwrapped(props) {
         viewState={viewState}
         controller={true}
         onViewStateChange={newViewState => setViewState(newViewState.viewState)}
-        layers={[pointCloudLayer, gridlinesLayer, textLayer]}
+        layers={[pointCloudLayer, ...gridlinesLayers, textLayer, labelsLayer]}
       />
     </div>
   )
