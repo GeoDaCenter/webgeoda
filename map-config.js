@@ -16,6 +16,11 @@ const data = [
         file: 'texas_heating.csv',
         type:'characteristic',
         join: 'FIPS'
+      },
+      income_data: {
+        file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
+        type:'characteristic',
+        join: 'FIPS'
       }
     },
   },
@@ -28,6 +33,22 @@ const variables = [
     binning: "naturalBreaks",
     numberOfBins: 7,
     colorScale: colors.colorbrewer.Purples,
+  },
+  {
+    variable: "Median Household Income",
+    numerator: "income_data",
+    nProperty: "Median Household Income",
+    binning: "naturalBreaks",
+    numberOfBins: 5,
+    colorScale: colors.colorbrewer.YlGn,
+  },
+  {
+    variable: "Median Gross Rent",
+    numerator: "income_data",
+    nProperty: "Median Gross Rent",
+    binning: "hinge15Breaks",
+    numberOfBins: 5,
+    colorScale: colors.colorbrewer.YlOrRd,
   },
   {
     variable: "GEOID",
@@ -101,14 +122,14 @@ const widgets = [
   {
     position: "right",
     type: "scatter",
-    xVariable: "Median age",
-    yVariable: "Count No Internet Access",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
     options: {
-      header: "Count No Internet Access vs. Median Age",
+      header: "Median HH Income vs Median Gross Rent",
       foregroundColor: "#00AAFF",
       pointSize: .2,
-      xAxisLabel: "Median Age",
-      yAxisLabel: "Count No Internet Acccess"
+      xAxisLabel: "Median HH Income",
+      yAxisLabel: "Median Gross Rent"
     }
   },
   {
