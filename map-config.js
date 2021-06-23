@@ -78,10 +78,18 @@ const variables = [
     variable: "Count No Internet Access",
     numerator: "acs_data",
     nProperty: "No Internet Access",
-    scale: 100,
     binning: "stddev_breaks",
     numberOfBins: 6,
     colorScale: colors.colorbrewer.Reds,
+  },
+  {
+    variable: "Hotspot: Pct No Internet",
+    numerator: "acs_data",
+    nProperty: "No Internet Access",
+    denominator: "acs_data",
+    dProperty: "Internet Total",
+    scale: 100,    
+    lisa: true
   },
   {
     variable: "Most Common Heating Fuel",

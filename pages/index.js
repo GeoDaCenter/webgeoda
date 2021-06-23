@@ -72,7 +72,7 @@ export default function Home() {
             <a
               className={styles.docsLink}
               target="_blank"
-              href="https://dhalpern.gitbook.io/webgeoda-templates/pages/static-pages" rel="noreferrer"
+              href="https://dhalpern.gitbook.io/webgeoda-templates/pages/adding-and-customizing-pages" rel="noreferrer"
             >
               Read More 📝{" "}
             </a>

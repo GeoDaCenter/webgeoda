@@ -53,6 +53,20 @@ export default function reducer(state = INITIAL_STATE, action) {
             ? action.payload.initialViewState
             : null,
         currentId: action.payload.id,
+        isLoading: false,
+        mapData: generateMapData({
+          ...state,
+          currentData: action.payload.currentData,
+          storedGeojson,
+          storedData,
+          dataParams,
+          mapParams,
+          initialViewState:
+            action.payload.viewState !== null
+              ? action.payload.initialViewState
+              : null,
+          currentId: action.payload.id
+        })
       };
     }
     case "CHANGE_VARIABLE": {
@@ -73,7 +87,46 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         mapParams,
+        mapData: generateMapData({
+          ...state,
+          mapParams
+        }),
       };
+    }
+    case "UPDATE_LISA": {
+      console.log(action.payload)
+      let data = {};
+      for (let i=0; i < state.storedGeojson[state.currentData].order.length; i++){
+        data[state.storedGeojson[state.currentData].order[i]] = {
+          color: action.payload.colorScale[action.payload.lisaResults.clusters[i]]
+        }
+      }
+
+      return {
+        ...state,
+        mapData: {
+          params: getVarId(state.currentData, state.dataParams, state.mapParams),
+          data
+        },
+        storedGeojson:{
+          ...state.storedGeojson,
+          [state.currentData]: {
+            ...state.storedGeojson[state.currentData],
+            weights: {
+              ...state.storedGeojson[state.currentData].weights,
+              [state.dataParams.weightMethod||"getQueenWeights"]: action.payload.weights
+            }
+          }
+        },
+        mapParams: {
+          ...state.mapParams,
+          colorScale: action.payload.colorScale,
+          bins: {
+            breaks: action.payload.lisaResults.labels,
+            bins: action.payload.lisaResults.labels
+          }
+        }
+      }
     }
     case "ADD_TABLES": {
       const storedData = {

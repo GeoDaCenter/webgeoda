@@ -7,7 +7,7 @@ export default function Legend(props) {
         <p className={styles.variableName}>{props.variableName}</p>
       )}
       <div className={styles.legendInnerContainer}>
-        <div className={`${styles.legendColors} ${props.categorical && styles.categoricalLegendColors}`}>
+        <div className={`${styles.legendColors} ${props.ordinal && styles.categoricalLegendColors}`}>
           {props.colors?.map((color, i) => (
             <span
               key={`legend-color-${i}`}
@@ -15,7 +15,7 @@ export default function Legend(props) {
             ></span>
           ))}
         </div>
-        <div className={`${styles.legendLabels} ${props.categorical && styles.categoricalLegendLabels}`}>
+        <div className={`${styles.legendLabels} ${props.ordinal && styles.categoricalLegendLabels}`}>
           {props.bins?.map((bin, i) => (
             <span key={`legend-label-${i}`}>{bin?.toLocaleString("en")}</span>
           ))}

@@ -7,8 +7,12 @@ import { GeoJsonLayer } from "@deck.gl/layers";
 import MapboxGLMap from "react-map-gl";
 import { useDispatch, useSelector } from "react-redux";
 
+
+import Loader from "../layout/Loader";
+
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateBins from "@webgeoda/hooks/useUpdateBins";
+import useUpdateLisa from "@webgeoda/hooks/useUpdateLisa";
 
 import { dataPresets } from "../../map-config.js";
 
@@ -26,22 +30,24 @@ export default function MainMap(props) {
   const currentMapGeography = storedGeojson[currentData]?.data || [];
   const mapData = useSelector((state) => state.mapData);
   const state = useSelector((state) => state);
+  const isLoading = useSelector((state) => state.isLoading);
   const dispatch = useDispatch();
 
   const [loadData] = useLoadData(props.geoda);
   const [updateBins] = useUpdateBins(props.geoda);
-
+  const [updateLisa] = useUpdateLisa(props.geoda);
+  
   useEffect(() => {
     loadData(dataPresets);
   }, [dataPresets]);
 
   useEffect(() => {
-    updateBins();
+    if (dataParams.lisa){
+      updateLisa()
+    } else {
+      updateBins();
+    }
   }, [dataParams.variable]);
-
-  useEffect(() => {
-    dispatch({ type: "UPDATE_MAP" });
-  }, [mapParams.bins.breaks]);
 
   const [viewState, setViewState] = useState({
     latitude: 0,
@@ -138,6 +144,8 @@ export default function MainMap(props) {
 
   return (
     <div className={styles.mapContainer}>
+      
+      {isLoading && <div className={styles.preLoader}><Loader globe={true} /></div>}
       <DeckGL
         layers={layers}
         ref={deckRef}
@@ -157,7 +165,7 @@ export default function MainMap(props) {
         bins={mapParams.bins.bins}
         colors={mapParams.colorScale}
         variableName={dataParams.variable}
-        categorical={dataParams.categorical||dataParams.binning==='LISA'}
+        ordinal={dataParams.categorical||dataParams.lisa}
       />
       <MapControls
         deck={deckRef}

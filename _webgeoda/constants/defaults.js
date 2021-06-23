@@ -61,5 +61,6 @@ export const INITIAL_STATE = {
     y: 0,
     data: null,
   },
-  widgetData: {}
+  widgetData: {},
+  isLoading: true
 };
