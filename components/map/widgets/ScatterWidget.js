@@ -7,9 +7,16 @@ function ScatterWidgetUnwrapped(props) {
   const dataProp = {
     datasets: [
       {
+        type: "scatter",
         label: props.options.header,
-        data: props.data,
+        data: props.data.data,
         backgroundColor: props.options.foregroundColor
+      },
+      {
+        type: "line",
+        label: "Best fit: " + props.data.fittedLineEquation,
+        data: props.data.fittedLine,
+        borderColor: "#000000"
       }
     ]
   };
@@ -24,12 +31,15 @@ function ScatterWidgetUnwrapped(props) {
     },
     plugins: {
       legend: {
-        display: false
+        display: true,
+        labels: {
+          filter: (legend, data) => legend.datasetIndex != 0 // hide scatter label
+        }
       },
       tooltip: {
         callbacks: {
           label: (tooltipItem, data) => {
-            const point = props.data[tooltipItem.dataIndex];
+            const point = props.data.data[tooltipItem.dataIndex];
             return `${point.id} (${point.x}, ${point.y})`;
           }
         }

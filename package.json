@@ -41,6 +41,7 @@
     "react-redux": "^7.2.4",
     "recharts": "^2.0.9",
     "redux": "^4.1.0",
+    "simple-statistics": "^7.7.0",
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {

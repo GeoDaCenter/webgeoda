@@ -1,10 +1,11 @@
 import {
-  getDataForBins,
-  find,
+    getDataForBins,
+    find,
 } from "./data";
 import {TARGET_RANGE} from "../../components/map/widgets/Scatter3DWidget";
 
 import { bin as d3bin } from "d3-array";
+import {linearRegression, linearRegressionLine} from "simple-statistics";
 
 const findFirstTable = (tableName, storedData, dataPresets) => {
     for (let i=0; i<dataPresets.length; i++){
@@ -98,32 +99,51 @@ export const formatWidgetData = (variableName, state, widgetType) => {
         let xData;
         let yData;
         let idKeys;
-        for (let i=0;i<2;i++){
+        for (let i = 0; i < 2; i++){
             const variableSpec = find(
                 dataPresets.variables,
                 (o) => o.variable === variableName[i]
-            )
-            if (!variableSpec) return []
-            const [data, keys] = getColumnData(variableSpec, state, true)
-            if (!data) return []
+            );
+            if (!variableSpec) return [];
+            const [data, keys] = getColumnData(variableSpec, state, true);
+            if (!data) return [];
             if (i===0) {
                 idKeys = keys;
-                xData = data
+                xData = data;
             } else {
-                yData = data
+                yData = data;
             }
         }
-        let formattedData = []
-
-        for (let i=0; i<xData.length; i++){
+        if(xData.length == 0) return [];
+        let min = xData[0];
+        let max = xData[0];
+        const formattedData = [];
+        const regressionFormattedData = [];
+        for(let i = 0; i < idKeys.length; i++){
+            if(xData[i] < min) min = xData[i];
+            if(xData[i] > max) max = xData[i];
             formattedData.push({
                 x: xData[i],
                 y: yData[i],
                 id: idKeys[i]
-            })
+            });
+            if(xData[i] !== 0 && yData[i] !== 0){
+                // TODO: Find a smarter way to remove zero values
+                regressionFormattedData.push([
+                    xData[i], yData[i]
+                ])
+            }
         }
-        
-        return formattedData
+        const bestFitInfo = linearRegression(regressionFormattedData);
+        const bestFit = linearRegressionLine(bestFitInfo);
+        return {
+            data: formattedData,
+            fittedLine: [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
+                {x: min, y: bestFit(min)},
+                {x: max, y: bestFit(max)}
+            ],
+            fittedLineEquation: `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
+        };
     }
 
     if (widgetType === "scatter3d"){

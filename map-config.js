@@ -135,16 +135,16 @@ const widgets = [
   {
     position: "right",
     type: "scatter3d",
-    xVariable: "Median age",
-    yVariable: "Count No Internet Access",
-    zVariable: "Population Density",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
+    zVariable: "Median age",
     options: {
       foregroundColor: "#00AAFF",
       pointSize: .5,
-      xAxisLabel: "Median Age",
-      yAxisLabel: "Count No Internet Acccess",
-      zAxisLabel: "Population Density",
-      gridlinesInterval: [10, 20000, 10000]
+      xAxisLabel: "Median Household Income",
+      yAxisLabel: "Median Gross Rent",
+      zAxisLabel: "Median Age",
+      gridlinesInterval: [50000, 500, 5]
     }
   }
 ];
