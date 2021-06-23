@@ -48,6 +48,7 @@ export default function reducer(state = INITIAL_STATE, action) {
             ? action.payload.initialViewState
             : null,
         currentId: action.payload.id,
+        isLoading: false,
         mapData: generateMapData({
           ...state,
           currentData: action.payload.currentData,
@@ -60,7 +61,7 @@ export default function reducer(state = INITIAL_STATE, action) {
               ? action.payload.initialViewState
               : null,
           currentId: action.payload.id
-        }),
+        })
       };
     }
     case "CHANGE_VARIABLE": {

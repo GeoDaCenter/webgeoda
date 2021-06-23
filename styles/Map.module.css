@@ -165,3 +165,13 @@ p.variableName {
 .mapButton:hover {
   background: var(--selected-color-light);
 }
+
+/* Preloader */
+.preLoader {
+  position:fixed;
+  width:100%;
+  height:100%;
+  background: hsla(0, 0%, 100%, 0.8);
+  backdrop-filter: blur(5px) brightness(90%) contrast(100%);
+  z-index:5;
+}

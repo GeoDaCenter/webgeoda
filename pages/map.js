@@ -3,6 +3,7 @@ import Head from "next/head";
 import styles from "../styles/Map.module.css";
 
 import MainNav from "../components/layout/MainNav";
+import Loader from "../components/layout/Loader";
 
 import MainMap from "../components/map/MainMap";
 import VariablePanel from "../components/map/VariablePanel";
@@ -75,7 +76,7 @@ export default function Map() {
         </noscript>
       </Head>
       <MainNav />
-
+      {!geodaReady && <div className={styles.preLoader}><Loader globe={true} /></div>}
       <Provider store={store}>
         {geodaReady && (
           <>

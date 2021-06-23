@@ -147,7 +147,7 @@ export default function useLoadData(geoda, dateLists = {}) {
       },
     });
     loadTables(dataPresets, dateLists);
-    loadWidgets(dataPresets);
+    // loadWidgets(dataPresets);
   };
 
   const loadTables = async (dataPresets, dateLists) => {

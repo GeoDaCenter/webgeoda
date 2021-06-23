@@ -7,6 +7,9 @@ import { GeoJsonLayer } from "@deck.gl/layers";
 import MapboxGLMap from "react-map-gl";
 import { useDispatch, useSelector } from "react-redux";
 
+
+import Loader from "../layout/Loader";
+
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateBins from "@webgeoda/hooks/useUpdateBins";
 import useUpdateLisa from "@webgeoda/hooks/useUpdateLisa";
@@ -27,6 +30,7 @@ export default function MainMap(props) {
   const currentMapGeography = storedGeojson[currentData]?.data || [];
   const mapData = useSelector((state) => state.mapData);
   const state = useSelector((state) => state);
+  const isLoading = useSelector((state) => state.isLoading);
   const dispatch = useDispatch();
 
   const [loadData] = useLoadData(props.geoda);
@@ -140,6 +144,8 @@ export default function MainMap(props) {
 
   return (
     <div className={styles.mapContainer}>
+      
+      {isLoading && <div className={styles.preLoader}><Loader globe={true} /></div>}
       <DeckGL
         layers={layers}
         ref={deckRef}

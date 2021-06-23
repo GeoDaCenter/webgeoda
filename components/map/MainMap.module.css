@@ -192,3 +192,14 @@ p.variableName {
   margin: 0;
   padding: 0;
 }
+
+
+/* Preloader */
+.preLoader {
+  position:fixed;
+  width:100%;
+  height:100%;
+  background: hsla(0, 0%, 100%, 0.8);
+  backdrop-filter: blur(5px) brightness(90%) contrast(100%);
+  z-index:5;
+}

@@ -61,4 +61,5 @@ export const INITIAL_STATE = {
     y: 0,
     data: null,
   },
+  isLoading: true
 };
