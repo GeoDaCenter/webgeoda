@@ -6,13 +6,13 @@ import DeckGL from "@deck.gl/react";
 import { GeoJsonLayer } from "@deck.gl/layers";
 import MapboxGLMap from "react-map-gl";
 import { useDispatch, useSelector } from "react-redux";
-import { GeodaContext } from "../../pages/map";
 
 import Loader from "../layout/Loader";
 
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateBins from "@webgeoda/hooks/useUpdateBins";
 import useLisa from "@webgeoda/hooks/useLisa";
+import { GeodaContext } from "@webgeoda/contexts";
 
 import { dataPresets } from "../../map-config.js";
 

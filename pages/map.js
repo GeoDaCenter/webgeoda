@@ -1,5 +1,4 @@
 import Head from "next/head";
-import React from 'react';
 import styles from "../styles/Map.module.css";
 
 import MainNav from "../components/layout/MainNav";
@@ -12,6 +11,7 @@ import MapTooltip from "../components/map/MapTooltip";
 // import useLoadData from '@webgeoda/hooks/useLoadData'
 // import useUpdateData from '@webgeoda/hooks/useUpdateData'
 import rootReducer from "@webgeoda/reducers";
+import {GeodaContext} from "@webgeoda/contexts";
 
 import { createStore } from "redux";
 import { Provider } from "react-redux";
@@ -30,7 +30,6 @@ const store = createStore(
 );
 
 var geoda;
-export const GeodaContext = React.createContext({});
 
 export default function Map() {
   const [geodaReady, setGeodaReady] = useState(false);

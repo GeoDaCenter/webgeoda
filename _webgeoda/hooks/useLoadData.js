@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useContext } from 'react';
-import { GeodaContext } from "../../pages/map";
+import { GeodaContext } from "../contexts";
 
 import {
   getColumnData,

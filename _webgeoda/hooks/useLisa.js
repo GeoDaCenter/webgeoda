@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useContext } from "react";
-import { GeodaContext } from "../../pages/map";
+import { GeodaContext } from "../contexts";
 
 import {
   getColumnData,
@@ -61,7 +61,7 @@ export default function useLisa() {
 
         if (getScatterPlot) {
             let scatterPlotData = [];
-            for (let i=0; i<storedGeojson[geographyName].order; i++){
+            for (let i=0; i<lisaData.length; i++){
                 scatterPlotData.push({
                     x: lisaData[i],
                     y: lisaResults.lisaValues[i],
