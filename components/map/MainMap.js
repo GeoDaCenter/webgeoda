@@ -12,14 +12,13 @@ import Loader from "../layout/Loader";
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateBins from "@webgeoda/hooks/useUpdateBins";
 import useLisa from "@webgeoda/hooks/useLisa";
-import { GeodaContext } from "@webgeoda/contexts";
 
 import { dataPresets } from "../../map-config.js";
 
 import Legend from "./Legend";
 import MapControls from "./MapControls";
 
-export default function MainMap(props) {
+export default function MainMap() {
   const initialViewState = useSelector((state) => state.initialViewState);
   const dataParams = useSelector((state) => state.dataParams);
   const mapParams = useSelector((state) => state.mapParams);
@@ -34,7 +33,7 @@ export default function MainMap(props) {
 
   const [loadData] = useLoadData();
   const [updateBins] = useUpdateBins();
-  const [getLisa, updateLisa] = useLisa();
+  const [, updateLisa] = useLisa();
   
   useEffect(() => {
     loadData(dataPresets);
