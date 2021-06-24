@@ -1,9 +1,11 @@
 // tsconfig.json or jsconfig.json
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "@webgeoda/*": ["_webgeoda/*"]
+      "@webgeoda/*": ["_webgeoda/*"],
+      "@components/*": ["components/*"],
+      "@styles/*": ["styles/*"]
     }
   }
 }
