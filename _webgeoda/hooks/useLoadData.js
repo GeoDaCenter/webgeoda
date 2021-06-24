@@ -34,15 +34,15 @@ export default function useLoadData(geoda, dateLists = {}) {
   const loadData = async (dataPresets) => {
 
     if (geoda === undefined) location.reload();
+    const currentDataPreset = find(dataPresets.data, f => f.geojson === currentData);
 
     const numeratorTable =
-      dataPresets.tables?.hasOwnProperty(dataPresets.variables[0].numerator) &&
-      dataPresets.tables[dataPresets.variables[0].numerator];
+      currentDataPreset.tables?.hasOwnProperty(dataPresets.variables[0].numerator) 
+      && currentDataPreset.tables[dataPresets.variables[0].numerator];
       
     const denominatorTable =
-      dataPresets.tables?.hasOwnProperty(
-        dataPresets.variables[0].denominator
-      ) && dataPresets.tables[dataPresets.variables[0].denominator];
+      currentDataPreset.tables?.hasOwnProperty(dataPresets.variables[0].denominator) 
+      && currentDataPreset.tables[dataPresets.variables[0].denominator];
     
     const firstLoadPromises = [
       geoda.loadGeoJSON(`${window && window.location.origin}/geojson/${dataPresets.data[0].geojson}`),
@@ -50,9 +50,12 @@ export default function useLoadData(geoda, dateLists = {}) {
       denominatorTable && handleLoadData(denominatorTable),
     ];
 
-    const [[mapId, geojsonData], numeratorData, denominatorData] =
-      await Promise.all(firstLoadPromises);
-    
+    const [
+      [mapId, geojsonData], 
+      numeratorData, 
+      denominatorData
+    ] = await Promise.all(firstLoadPromises);
+
     const geojsonProperties = indexGeoProps(
       geojsonData,
       dataPresets.data[0].id
@@ -82,8 +85,8 @@ export default function useLoadData(geoda, dateLists = {}) {
         numeratorData || geojsonProperties,
         dataPresets.variables[0])
       : getColumnData({
-        numeratorData: numeratorData || geojsonProperties,
-        denominatorData: denominatorData || geojsonProperties,
+        numeratorData: numeratorData.data || geojsonProperties,
+        denominatorData: denominatorData.data || geojsonProperties,
         dataParams: dataPresets.variables[0]
     });
 
@@ -91,7 +94,7 @@ export default function useLoadData(geoda, dateLists = {}) {
       geoda,
       dataParams: dataPresets.variables[0],
       binData
-    })
+    })    
       
     const colorScale = getColorScale({
       dataParams: dataPresets.variables[0],
@@ -115,6 +118,10 @@ export default function useLoadData(geoda, dateLists = {}) {
             id: mapId,
             weights: {}
           },
+        },
+        storedData: {
+          [numeratorTable?.file] : numeratorData,
+          [denominatorTable?.file] : denominatorData 
         },
         mapParams: {
           bins,
