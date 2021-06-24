@@ -1,5 +1,5 @@
 import styles from "./MainMap.module.css";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // deck GL and helper function import
 import DeckGL from "@deck.gl/react";
@@ -29,7 +29,6 @@ export default function MainMap(props) {
   const storedGeojson = useSelector((state) => state.storedGeojson);
   const currentMapGeography = storedGeojson[currentData]?.data || [];
   const mapData = useSelector((state) => state.mapData);
-  const state = useSelector((state) => state);
   const isLoading = useSelector((state) => state.isLoading);
   const dispatch = useDispatch();
 
@@ -158,6 +157,7 @@ export default function MainMap(props) {
           ref={mapRef}
           mapStyle={"mapbox://styles/dhalpern/ckp07gekw2p2317phroaarzej"}
           preventStyleDiffing={true}
+          // eslint-disable-next-line no-undef
           mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         ></MapboxGLMap>
       </DeckGL>

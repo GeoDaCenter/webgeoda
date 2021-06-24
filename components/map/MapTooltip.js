@@ -11,8 +11,8 @@ export default function MapTooltip() {
           className={styles.tooltipContainer}
           style={{ left: x, top: y + 50 }}
         >
-          {data.map((entry) => (
-            <p>
+          {data.map((entry, idx) => (
+            <p key={`tooltip-entry-${idx}`}>
               <b>{entry.name}</b>: {
                 +entry.value
                   ? Math.round(entry.value * 100) / 100

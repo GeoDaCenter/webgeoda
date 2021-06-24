@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "start": "next start",
     "build": "next build",
-    "build:worker": "node _webgeoda/build-scripts/build-sw",
-    "export": "npm run build:next && next export"
+    "export": "next export",
+    "build:worker": "node _webgeoda/build-scripts/build-sw"
   },
   "dependencies": {
     "@deck.gl/core": "^8.4.16",
@@ -26,7 +25,7 @@
     "@reach/tooltip": "^0.15.0",
     "axios": "^0.21.1",
     "comlink": "^4.3.1",
-    "next": "10.2.2",
+    "next": "^11.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-map-gl": "^6.1.15",
@@ -35,6 +34,7 @@
   },
   "devDependencies": {
     "eslint": "^7.28.0",
+    "eslint-config-next": "^11.0.1",
     "eslint-plugin-react": "^7.24.0",
     "prettier": "2.3.1",
     "workbox-build": "^6.1.5"

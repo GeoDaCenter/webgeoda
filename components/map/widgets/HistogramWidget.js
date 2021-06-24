@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './Widgets.module.css';
-import {BarChart, ResponsiveContainer, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
-import { bin } from "d3-array";
+// import styles from './Widgets.module.css';
+import {BarChart, ResponsiveContainer, Bar, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts'; // Cell, Legend
+// import { bin } from "d3-array";
 
 function HistogramWidget(props) {
   
