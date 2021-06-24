@@ -13,7 +13,7 @@ import {
   getLisaResults
 } from "../utils/geoda-helpers";
 
-export default function useLoadData(geoda) {
+export default function useUpdateLisa(geoda) {
   const currentData = useSelector((state) => state.currentData);
   const storedGeojson = useSelector((state) => state.storedGeojson);
   const storedData = useSelector((state) => state.storedData);
