@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { GeodaContext } from "../contexts";
 
 import {
@@ -32,12 +32,24 @@ const getIdOrder = (features, idProp) => {
 export default function useLoadData(dateLists = {}) {
   const geoda = useContext(GeodaContext);
   const currentData = useSelector((state) => state.currentData);
+  const datasetToLoad = useSelector((state) => state.datasetToLoad);
+  const dataPresets = useSelector((state) => state.dataPresets);
   const dispatch = useDispatch();
 
-  const loadData = async (dataPresets) => {
+  useEffect(() => {
+    if (datasetToLoad) {
+      loadData(dataPresets, datasetToLoad)
+    }
+  },[datasetToLoad])
 
+
+  useEffect(() => {
+    loadData(dataPresets, dataPresets.data[0].geojson)
+  },[])
+
+  const loadData = async (dataPresets, datasetToLoad) => {
     if (geoda === undefined) location.reload();
-    const currentDataPreset = find(dataPresets.data, f => f.geojson === currentData);
+    const currentDataPreset = find(dataPresets.data, f => f.geojson === datasetToLoad);
 
     const numeratorTable =
       currentDataPreset.tables?.hasOwnProperty(dataPresets.variables[0].numerator) 
@@ -48,7 +60,7 @@ export default function useLoadData(dateLists = {}) {
       && currentDataPreset.tables[dataPresets.variables[0].denominator];
     
     const firstLoadPromises = [
-      geoda.loadGeoJSON(`${window && window.location.origin}/geojson/${dataPresets.data[0].geojson}`),
+      geoda.loadGeoJSON(`${window && window.location.origin}/geojson/${currentDataPreset.geojson}`),
       numeratorTable && handleLoadData(numeratorTable),
       denominatorTable && handleLoadData(denominatorTable),
     ];
@@ -61,12 +73,12 @@ export default function useLoadData(dateLists = {}) {
 
     const geojsonProperties = indexGeoProps(
       geojsonData,
-      dataPresets.data[0].id
+      currentDataPreset.id
     );
 
     const geojsonOrder = getIdOrder(
       geojsonData.features,
-      dataPresets.data[0].id
+      currentDataPreset.id
     );
 
     const bounds = await geoda.getBounds(mapId);
@@ -108,13 +120,13 @@ export default function useLoadData(dateLists = {}) {
     dispatch({
       type: "INITIAL_LOAD",
       payload: {
-        currentData: dataPresets.data[0].geojson,
+        currentData: datasetToLoad,
         currentTable: {
           numerator: "properties",
           denominator: "properties",
         },
         storedGeojson: {
-          [dataPresets.data[0].geojson]: {
+          [datasetToLoad]: {
             data: geojsonData,
             properties: geojsonProperties,
             order: geojsonOrder,
@@ -132,18 +144,19 @@ export default function useLoadData(dateLists = {}) {
         },
         variableParams: dataPresets.variables[0],
         initialViewState,
-        id: dataPresets.data[0].id,
+        id: currentDataPreset.id,
       },
     });
-    loadTables(dataPresets, dateLists);
+    loadTables(dataPresets, datasetToLoad, dateLists);
     // loadWidgets(dataPresets);
   };
 
-  const loadTables = async (dataPresets, dateLists) => {
+  const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
     const tablesToFetch = find(
       dataPresets.data,
-      (o) => o.geojson === currentData
+      (o) => o.geojson === datasetToLoad
     ).tables;
+
     const tableNames = Object.keys(tablesToFetch);
     const tableDetails = Object.values(tablesToFetch);
     const tablePromises = tableDetails.map((table) =>

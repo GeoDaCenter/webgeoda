@@ -34,10 +34,6 @@ export default function MainMap() {
   const [loadData] = useLoadData();
   const [updateBins] = useUpdateBins();
   const [, updateLisa] = useLisa();
-  
-  useEffect(() => {
-    loadData(dataPresets);
-  }, [dataPresets]);
 
   useEffect(() => {
     if (dataParams.lisa){

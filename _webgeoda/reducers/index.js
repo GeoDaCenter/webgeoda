@@ -34,8 +34,6 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state.storedGeojson,
         ...action.payload.storedGeojson,
       };
-      console.log(storedData)
-      console.log(action.payload.storedData)
       return {
         ...state,
         currentData: action.payload.currentData,
@@ -73,6 +71,19 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         dataParams,
       };
+    }
+    case "CHANGE_DATASET": {
+      if (state.storedGeojson.hasOwnProperty(action.payload)){
+        return {
+          ...state,
+          currentData: action.payload,
+        };
+      } else {
+        return {
+          ...state,
+          datasetToLoad: action.payload
+        };
+      }
     }
     case "UPDATE_BINS": {
       const mapParams = {
