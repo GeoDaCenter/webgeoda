@@ -31,7 +31,6 @@ export default function MainMap(props) {
   const mapData = useSelector((state) => state.mapData);
   const isLoading = useSelector((state) => state.isLoading);
   const dispatch = useDispatch();
-  const geoda = React.useContext(GeodaContext);
 
   const [loadData] = useLoadData();
   const [updateBins] = useUpdateBins();

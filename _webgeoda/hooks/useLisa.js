@@ -65,7 +65,8 @@ export default function useLisa() {
                 scatterPlotData.push({
                     x: lisaData[i],
                     y: lisaResults.lisaValues[i],
-                    cluster: lisaResults.clusters[i]
+                    cluster: lisaResults.clusters[i],
+                    id: storedGeojson[geographyName].order[i]
                 })
             }
             return { weights, lisaResults, scatterPlotData};
