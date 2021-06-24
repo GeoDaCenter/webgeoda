@@ -20,6 +20,7 @@
   position: relative;
   width: 100%;
   height: calc(100vh - 50px);
+  overflow:hidden;
 }
 
 .footer {
@@ -186,6 +187,8 @@ p.variableName {
   max-width: 50ch;
   pointer-events: none;
   user-select: none;
+  transition:250ms transform;
+  transition-timing-function: ease-in;
 }
 
 .tooltipContainer p {

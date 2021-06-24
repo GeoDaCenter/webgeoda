@@ -3,25 +3,38 @@ import { useSelector } from "react-redux";
 
 export default function MapTooltip() {
   const currentHoverTarget = useSelector((state) => state.currentHoverTarget);
-  const { x, y, data } = currentHoverTarget;
+  
+  if (!(typeof window) || !currentHoverTarget.data) return null;
+
+  const rightSide = currentHoverTarget.x > window.innerWidth / 2
+  const bottomSide = currentHoverTarget.y > window.innerHeight / 2
+  
+  const [ 
+    xProp, 
+    x,
+    yProp,
+    y
+  ] = [
+    rightSide ? 'right' : 'left',
+    rightSide ? window.innerWidth - currentHoverTarget.x : currentHoverTarget.x,
+    bottomSide ? 'bottom' : 'top',
+    bottomSide ? window.innerHeight - currentHoverTarget.y - 50: currentHoverTarget.y + 50,
+  ]
+
   return (
-    <>
-      {data && (
-        <div
-          className={styles.tooltipContainer}
-          style={{ left: x, top: y + 50 }}
-        >
-          {data.map((entry) => (
-            <p>
-              <b>{entry.name}</b>: {
-                +entry.value
-                  ? Math.round(entry.value * 100) / 100
-                  : entry.value
-                }
-            </p>
-          ))}
-        </div>
-      )}
-    </>
+    <div
+      className={styles.tooltipContainer}
+      style={{ [xProp]: x, [yProp]: y}}
+    >
+      {currentHoverTarget.data.map((entry, idx) => (
+        <p key={`tooltip-entry-${idx}`}>
+          <b>{entry.name}</b>: {
+            +entry.value
+              ? Math.round(entry.value * 100) / 100
+              : entry.value
+            }
+        </p>
+      ))}
+    </div>
   );
 }

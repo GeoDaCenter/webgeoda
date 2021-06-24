@@ -24,9 +24,29 @@ const data = [
       }
     },
   },
+  // {
+  //   name: 'US States', // Plain english name for dataset
+  //   geojson: 'states.geojson', // geospatial data to join to
+  //   id: 'GEOID', // fid / geoid join column
+  //   tables: {
+  //     acs_data: {
+  //       file: 'state_acs.csv',
+  //       type: 'characteristic',
+  //       join: 'FIPS',
+  //     }
+  //   },
+  // },
 ];
 
 const variables = [
+  {
+    variable: "Total Population",
+    numerator: "acs_data",
+    nProperty: "Total Population",
+    binning: "naturalBreaks",
+    numberOfBins: 8,
+    colorScale: colors.colorbrewer.Greens,
+  },
   {
     variable: "Median age",
     numerator: "Median age",
@@ -55,14 +75,6 @@ const variables = [
     numerator: "GEOID",
     binning: "naturalBreaks",
     colorScale: colors.colorbrewer.Pastel2,
-  },
-  {
-    variable: "Total Population",
-    numerator: "acs_data",
-    nProperty: "Total Population",
-    binning: "naturalBreaks",
-    numberOfBins: 8,
-    colorScale: colors.colorbrewer.Greens,
   },
   {
     variable: "Population Density",

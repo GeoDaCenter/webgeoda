@@ -1,6 +1,6 @@
 import styles from "./MainMap.module.css";
 import { FlyToInterpolator } from "@deck.gl/core";
-import Tooltip, { useTooltip, TooltipPopup } from "@reach/tooltip";
+import Tooltip from "@reach/tooltip";
 import "@reach/tooltip/styles.css";
 const GetMapView = (props) => {
   try {
@@ -11,17 +11,17 @@ const GetMapView = (props) => {
   }
 };
 
-const handleGeolocate = async (callback) => {
-  navigator.geolocation.getCurrentPosition((position) => {
-    callback({
-      longitude: position.coords.longitude,
-      latitude: position.coords.latitude,
-      zoom: 7,
-      transitionDuration: 1000,
-      transitionInterpolator: new FlyToInterpolator(),
-    });
-  });
-};
+// const handleGeolocate = async (callback) => {
+//   navigator.geolocation.getCurrentPosition((position) => {
+//     callback({
+//       longitude: position.coords.longitude,
+//       latitude: position.coords.latitude,
+//       zoom: 7,
+//       transitionDuration: 1000,
+//       transitionInterpolator: new FlyToInterpolator(),
+//     });
+//   });
+// };
 
 const handleZoom = (zoom, props, callback) => {
   const currMapView = GetMapView(props);

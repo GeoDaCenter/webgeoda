@@ -107,6 +107,7 @@ export const generateMapData = (state) => {
       return tableName && state.storedData[tableName].data[id];
     }
   };
+  
   const colorType = state.dataParams.binning === "LISA" ? 'LISA' : state.dataParams.categorical ? 'categorical' : 'breaks'
   
   const getColor = colorFunctions[colorType]

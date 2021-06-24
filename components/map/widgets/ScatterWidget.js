@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './Widgets.module.css';
+// import styles from './Widgets.module.css';
 import {Scatter} from 'react-chartjs-2';
 
 function ScatterWidgetUnwrapped(props) {

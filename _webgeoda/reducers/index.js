@@ -20,7 +20,6 @@ import { dataPresets } from "../../map-config";
 const [defaultTables, dataPresetsRedux, tooltipTables] = [{}, {}, []];
 
 export default function reducer(state = INITIAL_STATE, action) {
-  // console.log(action)
   switch (action.type) {
     case "INITIAL_LOAD": {
       const dataParams = {
@@ -40,7 +39,8 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state.storedGeojson,
         ...action.payload.storedGeojson,
       };
-
+      console.log(storedData)
+      console.log(action.payload.storedData)
       return {
         ...state,
         currentData: action.payload.currentData,
@@ -94,7 +94,6 @@ export default function reducer(state = INITIAL_STATE, action) {
       };
     }
     case "UPDATE_LISA": {
-      console.log(action.payload)
       let data = {};
       for (let i=0; i < state.storedGeojson[state.currentData].order.length; i++){
         data[state.storedGeojson[state.currentData].order[i]] = {

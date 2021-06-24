@@ -1,15 +1,18 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useRef, useEffect } from "react";
 
 import {
-  getDataForBins,
+  getColumnData,
   indexGeoProps,
   handleLoadData,
-  find,
-  fixedScales,
-  fixedBreakLabels,
-} from "@webgeoda/utils/data"; //getVarId
-import * as colors from "@webgeoda/utils/colors";
+  find
+} from "../utils/data"; //getVarId
+
+import {
+  getColorScale,
+  getBins
+} from "../utils/geoda-helpers";
+
+import * as colors from "../utils/colors";
 
 import { fitBounds } from "@math.gl/web-mercator";
 
@@ -29,24 +32,30 @@ export default function useLoadData(geoda, dateLists = {}) {
   const dispatch = useDispatch();
 
   const loadData = async (dataPresets) => {
-    if (geoda === undefined) location.reload();
-    const numeratorTable =
-      dataPresets.tables?.hasOwnProperty(dataPresets.variables[0].numerator) &&
-      dataPresets.tables[dataPresets.variables[0].numerator];
-    const denominatorTable =
-      dataPresets.tables?.hasOwnProperty(
-        dataPresets.variables[0].denominator
-      ) && dataPresets.tables[dataPresets.variables[0].denominator];
 
+    if (geoda === undefined) location.reload();
+    const currentDataPreset = find(dataPresets.data, f => f.geojson === currentData);
+
+    const numeratorTable =
+      currentDataPreset.tables?.hasOwnProperty(dataPresets.variables[0].numerator) 
+      && currentDataPreset.tables[dataPresets.variables[0].numerator];
+      
+    const denominatorTable =
+      currentDataPreset.tables?.hasOwnProperty(dataPresets.variables[0].denominator) 
+      && currentDataPreset.tables[dataPresets.variables[0].denominator];
+    
     const firstLoadPromises = [
       geoda.loadGeoJSON(`${window && window.location.origin}/geojson/${dataPresets.data[0].geojson}`),
       numeratorTable && handleLoadData(numeratorTable),
       denominatorTable && handleLoadData(denominatorTable),
     ];
 
-    const [[mapId, geojsonData], numeratorData, denominatorData] =
-      await Promise.all(firstLoadPromises);
-    
+    const [
+      [mapId, geojsonData], 
+      numeratorData, 
+      denominatorData
+    ] = await Promise.all(firstLoadPromises);
+
     const geojsonProperties = indexGeoProps(
       geojsonData,
       dataPresets.data[0].id
@@ -75,50 +84,23 @@ export default function useLoadData(geoda, dateLists = {}) {
       ? getUniqueVals(
         numeratorData || geojsonProperties,
         dataPresets.variables[0])
-      : getDataForBins(
-        numeratorData || geojsonProperties,
-        denominatorData || geojsonProperties,
-        dataPresets.variables[0]);
+      : getColumnData({
+        numeratorData: numeratorData.data || geojsonProperties,
+        denominatorData: denominatorData.data || geojsonProperties,
+        dataParams: dataPresets.variables[0]
+    });
 
-    let bins =
-      fixedScales[dataPresets.variables[0].fixedScale] ||
-      dataPresets.variables[0].fixedScale;
-
-    if (!dataPresets.variables[0].fixedScale) {
-      // calculate breaks
-      let numberOfBins = Array.isArray(dataPresets.variables[0].colorscale)
-        ? dataPresets.variables[0].colorscale.length
-        : dataPresets.variables[0].numberOfBins || 5;
-
-      const binParams =
-        !dataPresets.variables[0].binning ||
-        ["naturalBreaks", "quantileBreaks"].includes(
-          dataPresets.variables[0].binning
-        )
-          ? [numberOfBins, binData]
-          : [binData];
-
-      const nb = await geoda[
-        dataPresets.variables[0].binning || "naturalBreaks"
-      ](...binParams);
-
-      bins = {
-        bins: fixedBreakLabels[dataPresets.variables[0].binning] || nb,
-        breaks: nb,
-      };
-    }
-
-    let colorScaleLength = dataPresets.variables[0].categorical 
-      ? binData.length
-      : bins.breaks.length + 1;
-
-    if (colorScaleLength < 3) colorScaleLength = 3;
-
-    let colorScale = Array.isArray(dataPresets.variables[0].colorscale)
-      ? dataPresets.variables[0].colorScale
-      : dataPresets.variables[0].colorScale[colorScaleLength];
-    
-    if (dataPresets.variables[0].categorical && colorScaleLength !== binData.length) colorScale = colorScale.slice(0,binData.length);
+    const bins = await getBins({
+      geoda,
+      dataParams: dataPresets.variables[0],
+      binData
+    })    
+      
+    const colorScale = getColorScale({
+      dataParams: dataPresets.variables[0],
+      binData,
+      bins
+    })
 
     dispatch({
       type: "INITIAL_LOAD",
@@ -136,6 +118,10 @@ export default function useLoadData(geoda, dateLists = {}) {
             id: mapId,
             weights: {}
           },
+        },
+        storedData: {
+          [numeratorTable?.file] : numeratorData,
+          [denominatorTable?.file] : denominatorData 
         },
         mapParams: {
           bins,
