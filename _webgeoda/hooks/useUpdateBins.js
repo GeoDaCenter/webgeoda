@@ -2,9 +2,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import {
   generateBins
-} from "@webgeoda/utils/geoda-helpers";
+} from "../utils/geoda-helpers";
 
-export default function useLoadData(geoda) {
+export default function useUpdateBins(geoda) {
+
   const currentData = useSelector((state) => state.currentData);
   const storedGeojson = useSelector((state) => state.storedGeojson);
   const storedData = useSelector((state) => state.storedData);

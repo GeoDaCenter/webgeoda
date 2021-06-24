@@ -1,19 +1,18 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useRef, useEffect } from "react";
 
 import {
   getColumnData,
   indexGeoProps,
   handleLoadData,
   find
-} from "@webgeoda/utils/data"; //getVarId
+} from "../utils/data"; //getVarId
 
 import {
   getColorScale,
   getBins
-} from "@webgeoda/utils/geoda-helpers";
+} from "../utils/geoda-helpers";
 
-import * as colors from "@webgeoda/utils/colors";
+import * as colors from "../utils/colors";
 
 import { fitBounds } from "@math.gl/web-mercator";
 
