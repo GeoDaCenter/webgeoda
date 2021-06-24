@@ -1,5 +1,5 @@
 import Head from "next/head";
-
+import React from 'react';
 import styles from "../styles/Map.module.css";
 
 import MainNav from "../components/layout/MainNav";
@@ -30,6 +30,7 @@ const store = createStore(
 );
 
 var geoda;
+export const GeodaContext = React.createContext({});
 
 export default function Map() {
   const [geodaReady, setGeodaReady] = useState(false);
@@ -77,13 +78,14 @@ export default function Map() {
       </Head>
       <MainNav />
       {!geodaReady && <div className={styles.preLoader}><Loader globe={true} /></div>}
+      
       <Provider store={store}>
         {geodaReady && (
-          <>
+          <GeodaContext.Provider value={geoda}>
             <MainMap geoda={geoda} />
             <VariablePanel />
             <MapTooltip />
-          </>
+          </GeodaContext.Provider>
         )}
       </Provider>
     </div>

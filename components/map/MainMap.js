@@ -6,13 +6,13 @@ import DeckGL from "@deck.gl/react";
 import { GeoJsonLayer } from "@deck.gl/layers";
 import MapboxGLMap from "react-map-gl";
 import { useDispatch, useSelector } from "react-redux";
-
+import { GeodaContext } from "../../pages/map";
 
 import Loader from "../layout/Loader";
 
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateBins from "@webgeoda/hooks/useUpdateBins";
-import useUpdateLisa from "@webgeoda/hooks/useUpdateLisa";
+import useLisa from "@webgeoda/hooks/useLisa";
 
 import { dataPresets } from "../../map-config.js";
 
@@ -31,10 +31,11 @@ export default function MainMap(props) {
   const mapData = useSelector((state) => state.mapData);
   const isLoading = useSelector((state) => state.isLoading);
   const dispatch = useDispatch();
+  const geoda = React.useContext(GeodaContext);
 
-  const [loadData] = useLoadData(props.geoda);
-  const [updateBins] = useUpdateBins(props.geoda);
-  const [updateLisa] = useUpdateLisa(props.geoda);
+  const [loadData] = useLoadData();
+  const [updateBins] = useUpdateBins();
+  const [getLisa, updateLisa] = useLisa();
   
   useEffect(() => {
     loadData(dataPresets);
@@ -117,6 +118,9 @@ export default function MainMap(props) {
       updateTriggers: {
         getFillColor: mapData.params,
       },
+      transitions: {
+        getFillColor: dataParams.nIndex === undefined ? 250 : 0
+      }
     }),
     new GeoJsonLayer({
       id: "choropleth-hover",

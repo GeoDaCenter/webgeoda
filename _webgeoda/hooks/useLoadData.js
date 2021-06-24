@@ -1,4 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
+import { useContext } from 'react';
+import { GeodaContext } from "../../pages/map";
 
 import {
   getColumnData,
@@ -27,7 +29,8 @@ const getIdOrder = (features, idProp) => {
   return returnArray
 };
 
-export default function useLoadData(geoda, dateLists = {}) {
+export default function useLoadData(dateLists = {}) {
+  const geoda = useContext(GeodaContext);
   const currentData = useSelector((state) => state.currentData);
   const dispatch = useDispatch();
 
