@@ -1,13 +1,17 @@
 import { useSelector, useDispatch } from "react-redux";
 
 import {
-  getDataForBins,
-  find,
+  getColumnData,
+  findTable
 } from "@webgeoda/utils/data";
 
 import {
   hexToRgb
 } from "@webgeoda/utils/map";
+
+import {
+  getLisaResults
+} from "@webgeoda/utils/geoda-helpers";
 
 export default function useLoadData(geoda) {
   const currentData = useSelector((state) => state.currentData);
@@ -23,33 +27,33 @@ export default function useLoadData(geoda) {
     
     if (!storedGeojson[currentData]) return;
 
-    const numeratorTable = find(
+    const numeratorTable = findTable(
       dataPresets.data,
-      (o) => o.geojson === currentData
-    )?.tables[dataParams.numerator]?.file;
-
-    const denominatorTable = find(
+      currentData,
+      dataParams.numerator
+    )
+    
+    const denominatorTable = findTable(
       dataPresets.data,
-      (o) => o.geojson === currentData
-    )?.tables[dataParams.denominator]?.file;
+      currentData,
+      dataParams.denominator
+    )
 
-    const lisaData = getDataForBins(
-        storedData[numeratorTable]?.data || storedGeojson[currentData].properties,
-        storedData[denominatorTable]?.data || storedGeojson[currentData].properties,
+    const lisaData = getColumnData({
+        numeratorData: storedData[numeratorTable]?.data || storedGeojson[currentData].properties,
+        denominatorData: storedData[denominatorTable]?.data || storedGeojson[currentData].properties,
+        dataParams: dataParams,
+        fixedOrder: storedGeojson[currentData].order
+    });
+
+    const { weights, lisaResults} = await getLisaResults({
+        geoda,
+        storedGeojson,
+        currentData,
         dataParams,
-        storedGeojson[currentData].order
-    );
-    
-    const weights = storedGeojson[currentData].weights[dataParams.weightsFunction||'getQueenWeights']
-      ? storedGeojson[currentData].weights[dataParams.weightsFunction||'getQueenWeights']
-      : (dataParams.weightsParams && dataParams.weightsFunction)
-      ? await geoda[dataParams.weightsFunction](storedGeojson[currentData].id, ...dataParams.weightsParams)
-      : await geoda[dataParams.weightsFunction||'getQueenWeights'](storedGeojson[currentData].id)
+        lisaData
+    })
 
-    const lisaResults = (dataParams.lisaParams && dataParams.lisaFunction)
-      ? await geoda[dataParams.lisaFunction](weights, lisaData, ...dataParams.lisaParams)
-      : await geoda[dataParams.lisaFunction||'localMoran'](weights, lisaData)
-    
     dispatch({
       type: "UPDATE_LISA",
       payload: {

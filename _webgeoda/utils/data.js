@@ -215,12 +215,12 @@ export const indexTable = (data, key) => {
  * @param  {Array} fixedOrder A fixed ID column order for use with LISA. Default is false / not used.
  * @returns {Array} An array of parsed data according to the dataParams variable spec.
 */
-export const getDataForBins = (
+export const getColumnData = ({
   numeratorData,
   denominatorData,
   dataParams,
   fixedOrder = false
-) => {
+}) => {
   let { nProperty, nIndex, dType, dIndex, dProperty } = dataParams;
   let tempDataParams = { ...dataParams };
 
@@ -318,6 +318,16 @@ export const find = (collection, testFunc) => {
   for (let i = 0; i < collection.length; i++)
     if (testFunc(collection[i])) return collection[i];
 };
+
+export const findTable = (
+  dataPresets, 
+  currentData, 
+  table
+) => find(
+      dataPresets,
+      (o) => o.geojson === currentData
+  )?.tables[table]?.file;
+
 
 export const fileLoader = {
   csv: async (fetchUrl) => {
