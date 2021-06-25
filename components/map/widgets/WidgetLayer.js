@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './Widgets.module.css';
-import {dataPresets} from '../../../map-config';
 import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { useDispatch, useSelector  } from 'react-redux';
 
 const mapWidgets = ({widgets, widgetLocations, side}) => widgets
   .map((elem, index) => ({elem, index}))
@@ -10,24 +10,36 @@ const mapWidgets = ({widgets, widgetLocations, side}) => widgets
   .sort((a, b) => widgetLocations[a.index].index - widgetLocations[b.index].index)
   .map(i => i.elem);
 
-export default function WidgetLayer(props){
-  const renderWidget = (widget, trueIndex, columnIndex) => {
-    if(widget == undefined) return <div />;
-    return <Widget type={widget.type} options={widget.options} fullWidgetConfig={widget} key={`widget-${trueIndex}`} id={trueIndex.toString()} index={columnIndex} />
-  };
+const renderWidget = (widget, trueIndex, columnIndex) => {
+  if(widget == undefined) return <div />;
+  return <Widget type={widget.type} options={widget.options} fullWidgetConfig={widget} key={`widget-${trueIndex}`} id={trueIndex.toString()} index={columnIndex} />
+};
 
-  const defaultWidgetLocations = [];
-  let leftIndex = 0;
-  let rightIndex = 0;
-  for(const i of dataPresets.widgets){
-    defaultWidgetLocations.push({
-      side: i.position,
-      index: i.position == "left" ? leftIndex : rightIndex
-    });
-    if(i.position == "left") { leftIndex++; }
-    else { rightIndex++; }
-  }
-  const [widgetLocations, setWidgetLocations] = useState(defaultWidgetLocations);
+export default function WidgetLayer(props){
+  const dispatch = useDispatch();
+  const widgetLocations = useSelector((state) => state.widgetLocations);
+  const dataPresets = useSelector((state) => state.dataPresets);
+
+  useEffect(() => {
+    const defaultWidgetLocations = [];
+    let leftIndex = 0;
+    let rightIndex = 0;
+    for(const i of dataPresets.widgets){
+      defaultWidgetLocations.push({
+        side: i.position,
+        index: i.position == "left" ? leftIndex : rightIndex
+      });
+      if(i.position == "left") { leftIndex++; }
+      else { rightIndex++; }
+    }
+    dispatch({
+      type: 'SET_WIDGET_LOCATIONS',
+      payload:defaultWidgetLocations
+    })
+  },[])
+
+  if (!widgetLocations.length) return null;
+
   const widgets = dataPresets.widgets.map((widget, trueIndex) => {
     return renderWidget(widget, trueIndex, widgetLocations[trueIndex].index);
   });
@@ -62,7 +74,10 @@ export default function WidgetLayer(props){
         widgets[i] = renderWidget(dataPresets.widgets[i], i, widget.index);
       }
     }
-    setWidgetLocations(newWidgetLocations);
+    dispatch({
+      type: 'SET_WIDGET_LOCATIONS',
+      payload:newWidgetLocations
+    })
   }
 
   return (

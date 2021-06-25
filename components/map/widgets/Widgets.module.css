@@ -16,6 +16,7 @@
   justify-content: space-between;
 }
 
+
 .widgetColumn {
   display: flex;
   min-width: 400px; /* Ensure there is always an area to drop */
@@ -29,7 +30,7 @@
 }
 
 #columnRight {
-  margin-right: 40px;
+  margin-right: 0px;
 }
 
 .widget {
@@ -50,4 +51,9 @@
   font-size: 13px;
   text-align: center;
   text-transform: uppercase;
+}
+
+
+.widgetDockRight {
+  background:white;
 }

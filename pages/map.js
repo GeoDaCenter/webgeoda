@@ -84,7 +84,7 @@ export default function Map() {
         {geodaReady && (
           <GeodaContext.Provider value={geoda}>
             <WidgetLayer />
-            <MainMap geoda={geoda} />
+            <MainMap />
             <VariablePanel />
             <MapTooltip />
           </GeodaContext.Provider>

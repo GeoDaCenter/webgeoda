@@ -508,6 +508,12 @@ export default function reducer(state = INITIAL_STATE, action) {
       }
       return {...state, widgetData};
     }
+    case "SET_WIDGET_LOCATIONS": {
+      return {
+        ...state,
+        widgetLocations: action.payload
+      }
+    }
     default:
       return state;
   }
