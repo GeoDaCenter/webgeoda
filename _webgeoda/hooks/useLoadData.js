@@ -216,7 +216,7 @@ export default function useLoadData(dateLists = {}) {
         id: currentDataPreset.id,
       },
     });
-    await loadTables(dataPresets, dateLists);
+    await loadTables(dataPresets, datasetToLoad, dateLists);
     loadWidgets(dataPresets);
   };
 

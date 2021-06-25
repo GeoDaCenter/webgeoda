@@ -221,6 +221,7 @@ export const parseColumnData = ({
   dataParams,
   fixedOrder = false
 }) => {
+  console.log(numeratorData)
   const tempDenominatorData = denominatorData === undefined ? {} : denominatorData;
   let { nProperty, nIndex, dType, dIndex, dProperty } = dataParams;
   let tempDataParams = { ...dataParams };

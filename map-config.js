@@ -50,7 +50,8 @@ const variables = [
   },
   {
     variable: "Median age",
-    numerator: "Median age",
+    numerator: "properties",
+    nProperty: "Median age",
     binning: "naturalBreaks",
     numberOfBins: 7,
     colorScale: colors.colorbrewer.Purples,

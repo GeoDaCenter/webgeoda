@@ -1,5 +1,5 @@
 import {
-    getColumnData as getRawColumnData,
+    parseColumnData,
     find,
 } from "./data";
 import {TARGET_RANGE} from "../../components/map/widgets/Scatter3DWidget";
@@ -23,7 +23,7 @@ const findFirstTable = (tableName, storedData, dataPresets) => {
 const getTables = (variableSpec, state) => {
     const {storedGeojson, storedData, dataPresets, currentData} = state;
     // destructure properties needed
-    const {nIndex, nProperty, dIndex, dProperty} = variableSpec;
+    const {numerator, denominator, nIndex, nProperty, dIndex, dProperty} = variableSpec;
 
     // declare return object
     let returnTables = {
@@ -36,7 +36,7 @@ const getTables = (variableSpec, state) => {
         (o) => o.geojson === currentData
     )?.tables;
     // look for numerator table
-    if (nIndex === undefined && nProperty === undefined) { // default properties indicator
+    if (numerator === "properties") { // default properties indicator
         returnTables.numeratorData = storedGeojson[currentData].properties
     } else {  
         if (currentTables && currentTables.hasOwnProperty(variableSpec.numerator)) {
@@ -46,7 +46,7 @@ const getTables = (variableSpec, state) => {
         }
     }
     // look for denominator table
-    if (dIndex === undefined && dProperty === undefined) {
+    if (denominator === "properties") {
         returnTables.denominatorData = storedGeojson[currentData].properties
     } else {
         if (currentTables && currentTables.hasOwnProperty(variableSpec.denominator)) {
@@ -62,7 +62,7 @@ const getColumnData = (variableSpec, state, returnKeys=false) => {
     const {storedGeojson, currentData} = state;
     if (!storedGeojson[currentData]) return []
     const {numeratorData, denominatorData} = getTables(variableSpec, state);
-    const columnData = getRawColumnData({
+    const columnData = parseColumnData({
         numeratorData,
         denominatorData,
         dataParams: variableSpec

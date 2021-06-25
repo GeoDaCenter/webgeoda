@@ -6,12 +6,23 @@ import {
   dataFn,
   getVarId,
   shallowEqual,
-  find,
-} from "../utils/data";
+  find
+} from "@webgeoda/utils/data";
 
-import { findDatasetWithTable } from "../utils/summarize";
-import { getCartogramCenter, generateMapData } from "../utils/map";
-import { generateReport, parseTooltipData } from "../utils/summarize";
+import {
+  formatWidgetData
+} from '@webgeoda/utils/widgets';
+
+import { 
+  findDatasetWithTable,
+  generateReport, 
+  parseTooltipData
+} from "../utils/summarize";
+
+import { 
+  getCartogramCenter, 
+  generateMapData 
+} from "../utils/map";
 
 import { dataPresets } from "../../map-config";
 const [defaultTables, dataPresetsRedux, tooltipTables] = [{}, {}, []];
