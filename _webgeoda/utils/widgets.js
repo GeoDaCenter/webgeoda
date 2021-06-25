@@ -72,7 +72,7 @@ const getColumnData = (variableSpec, state, returnKeys=false) => {
     return [columnData]
 }
 
-export const formatWidgetData = (variableName, state, widgetType) => {
+export const formatWidgetData = (variableName, state, widgetType, options) => {
     const dataPresets = state.dataPresets
 
     if (widgetType === "histogram"){
@@ -99,14 +99,29 @@ export const formatWidgetData = (variableName, state, widgetType) => {
         let xData;
         let yData;
         let idKeys;
+        let isLisa = false;
+        let variableSpecs = [];
         for (let i = 0; i < 2; i++){
+            if(i == 1 && variableName[i] === "LISA"){
+                variableSpecs.push(null);
+                yData = null;
+                isLisa = true;
+                continue;
+            }
             const variableSpec = find(
                 dataPresets.variables,
                 (o) => o.variable === variableName[i]
             );
-            if (!variableSpec) return [];
+            if (!variableSpec){
+                console.warn("Scatter plot: could not find variableSpec for " + variableName[i]);
+                return null;
+            }
+            variableSpecs.push(variableSpec);
             const [data, keys] = getColumnData(variableSpec, state, true);
-            if (!data) return [];
+            if (!data){
+                console.warn("Scatter plot: could not find column data for " + variableName[i]);
+                return null;
+            }
             if (i===0) {
                 idKeys = keys;
                 xData = data;
@@ -114,7 +129,10 @@ export const formatWidgetData = (variableName, state, widgetType) => {
                 yData = data;
             }
         }
-        if(xData.length == 0) return [];
+        if(xData.length == 0){
+            console.warn("Scatter plot: xData length is 0");
+            return null;
+        }
         let min = xData[0];
         let max = xData[0];
         const formattedData = [];
@@ -124,25 +142,33 @@ export const formatWidgetData = (variableName, state, widgetType) => {
             if(xData[i] > max) max = xData[i];
             formattedData.push({
                 x: xData[i],
-                y: yData[i],
+                y: isLisa ? null : yData[i],
                 id: idKeys[i]
             });
-            if(xData[i] !== 0 && yData[i] !== 0){
+            if(options.showBestFitLine && xData[i] !== 0 && yData[i] !== 0){
                 // TODO: Find a smarter way to remove zero values
                 regressionFormattedData.push([
                     xData[i], yData[i]
                 ])
             }
         }
-        const bestFitInfo = linearRegression(regressionFormattedData);
-        const bestFit = linearRegressionLine(bestFitInfo);
-        return {
-            data: formattedData,
-            fittedLine: [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
+        let fittedLine = null;
+        let fittedLineEquation = null;
+        if(options.showBestFitLine){
+            const bestFitInfo = linearRegression(regressionFormattedData);
+            const bestFit = linearRegressionLine(bestFitInfo);
+            fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
                 {x: min, y: bestFit(min)},
                 {x: max, y: bestFit(max)}
-            ],
-            fittedLineEquation: `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
+            ];
+            fittedLineEquation = `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
+        }
+        return {
+            data: formattedData,
+            fittedLine,
+            fittedLineEquation,
+            variableSpecs,
+            isLisa
         };
     }
 

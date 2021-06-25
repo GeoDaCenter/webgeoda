@@ -57,7 +57,8 @@ function Widget(props) {
           {
             React.createElement(component, {
               options: props.options,
-              data: data
+              data: data,
+              fullWidgetConfig: props.fullWidgetConfig
             })
           }
         </div>
@@ -70,7 +71,7 @@ function Widget(props) {
 Widget.propTypes = {
   type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d", "cluster"]).isRequired,
   options: PropTypes.object.isRequired,
-  dataConfig: PropTypes.object.isRequired,
+  fullWidgetConfig: PropTypes.object.isRequired,
   id: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired
 };

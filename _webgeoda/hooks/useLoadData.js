@@ -174,6 +174,7 @@ export default function useLoadData(dateLists = {}) {
       return {
         id: i,
         type: widget.type,
+        options: widget.options,
         variable
       };
     });

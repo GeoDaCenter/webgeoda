@@ -13,7 +13,7 @@ const mapWidgets = ({widgets, widgetLocations, side}) => widgets
 export default function WidgetLayer(props){
   const renderWidget = (widget, trueIndex, columnIndex) => {
     if(widget == undefined) return <div />;
-    return <Widget type={widget.type} options={widget.options} dataConfig={widget.data} key={`widget-${trueIndex}`} id={trueIndex.toString()} index={columnIndex} />
+    return <Widget type={widget.type} options={widget.options} fullWidgetConfig={widget} key={`widget-${trueIndex}`} id={trueIndex.toString()} index={columnIndex} />
   };
 
   const defaultWidgetLocations = [];

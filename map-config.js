@@ -143,13 +143,14 @@ const widgets = [
     position: "right",
     type: "scatter",
     xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
+    yVariable: "LISA",
     options: {
-      header: "Median HH Income vs Median Gross Rent",
+      header: "Median HH Income LISA scatterplot",
       foregroundColor: "#00AAFF",
       pointSize: .2,
       xAxisLabel: "Median HH Income",
-      yAxisLabel: "Median Gross Rent"
+      yAxisLabel: "",
+      showBestFitLine: false
     }
   },
   {
@@ -160,7 +161,7 @@ const widgets = [
     zVariable: "Median age",
     options: {
       foregroundColor: "#00AAFF",
-      pointSize: .5,
+      pointSize: 1,
       xAxisLabel: "Median Household Income",
       yAxisLabel: "Median Gross Rent",
       zAxisLabel: "Median Age",
