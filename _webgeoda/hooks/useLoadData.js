@@ -3,7 +3,7 @@ import { useContext, useEffect } from 'react';
 import { GeodaContext } from "../contexts";
 
 import {
-  getColumnData,
+  parseColumnData,
   indexGeoProps,
   handleLoadData,
   find
@@ -161,7 +161,7 @@ export default function useLoadData(dateLists = {}) {
       ? getUniqueVals(
         numeratorData || geojsonProperties,
         dataParams)
-      : getColumnData({
+      : parseColumnData({
         numeratorData: dataParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
         denominatorData: dataParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
         dataParams,

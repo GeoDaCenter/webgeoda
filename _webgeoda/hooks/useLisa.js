@@ -3,7 +3,7 @@ import { useContext, useEffect } from "react";
 import { GeodaContext } from "../contexts";
 
 import {
-  getColumnData,
+  parseColumnData,
   findTable
 } from "../utils/data";
 
@@ -44,7 +44,7 @@ export default function useLisa() {
             dataParams.denominator
         )
 
-        const lisaData = getColumnData({
+        const lisaData = parseColumnData({
             numeratorData: dataParams.numerator === "properties" ? storedGeojson[geographyName].properties : storedData[numeratorTable]?.data,
             denominatorData: dataParams.numerator === "properties" ? storedGeojson[geographyName].properties : storedData[denominatorTable]?.data,
             dataParams: dataParams,

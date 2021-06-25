@@ -1,5 +1,5 @@
 import {
-    getColumnData,
+    parseColumnData,
     getUniqueVals,
     findTable,
     fixedScales,
@@ -90,7 +90,7 @@ export const generateBins = async ({
         ? getUniqueVals(
             storedData[numeratorTable]?.data||storedGeojson[currentData].properties,
             dataParams)
-        : getColumnData({
+        : parseColumnData({
             numeratorData: storedData[numeratorTable]?.data || storedGeojson[currentData].properties,
             denominatorData: storedData[denominatorTable]?.data || storedGeojson[currentData].properties,
             dataParams: dataParams

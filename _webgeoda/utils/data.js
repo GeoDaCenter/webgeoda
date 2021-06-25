@@ -215,7 +215,7 @@ export const indexTable = (data, key) => {
  * @param  {Array} fixedOrder A fixed ID column order for use with LISA. Default is false / not used.
  * @returns {Array} An array of parsed data according to the dataParams variable spec.
 */
-export const getColumnData = ({
+export const parseColumnData = ({
   numeratorData,
   denominatorData,
   dataParams,
