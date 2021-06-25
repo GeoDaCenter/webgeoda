@@ -1,5 +1,5 @@
 import {
-    getDataForBins,
+    getColumnData as getRawColumnData,
     find,
 } from "./data";
 import {TARGET_RANGE} from "../../components/map/widgets/Scatter3DWidget";
@@ -62,11 +62,11 @@ const getColumnData = (variableSpec, state, returnKeys=false) => {
     const {storedGeojson, currentData} = state;
     if (!storedGeojson[currentData]) return []
     const {numeratorData, denominatorData} = getTables(variableSpec, state);
-    const columnData = getDataForBins(
-      numeratorData,
-      denominatorData,
-      variableSpec
-    )
+    const columnData = getRawColumnData({
+        numeratorData,
+        denominatorData,
+        dataParams: variableSpec
+    });
 
     if (returnKeys) return [columnData, Object.keys(numeratorData)]
     return [columnData]
