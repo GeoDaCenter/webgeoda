@@ -141,8 +141,10 @@ export default function useLoadData(dateLists = {}) {
       currentDataPreset.id
     );
 
-    const bounds = await geoda.getBounds(mapId);
-
+    const bounds = currentDataPreset.bounds 
+      ? currentDataPreset.bounds 
+      : await geoda.getBounds(mapId);
+    
     const initialViewState =
       window !== undefined
         ? fitBounds({
