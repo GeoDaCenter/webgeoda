@@ -96,6 +96,9 @@ export default function useLoadData(dateLists = {}) {
   const dataParams = useSelector((state) => state.dataParams);
   const dispatch = useDispatch();
 
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [loadingProgress, setLoadingProgress] = useState(null);
+
   useEffect(() => {
     if (datasetToLoad) {
       loadData(dataPresets, datasetToLoad)

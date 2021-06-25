@@ -15,6 +15,12 @@ import {
   getLisaResults
 } from "../utils/geoda-helpers";
 
+
+import {
+    standardize
+} from "../utils/stats";
+
+
 export default function useLisa() {
     const geoda = useContext(GeodaContext);
     const currentData = useSelector((state) => state.currentData);
@@ -61,10 +67,12 @@ export default function useLisa() {
 
         if (getScatterPlot) {
             let scatterPlotData = [];
+            const standardizedVals = standardize(lisaData);
+            const spatialLags = await geoda.spatialLag(weights, standardizedVals);
             for (let i=0; i<lisaData.length; i++){
                 scatterPlotData.push({
                     x: lisaData[i],
-                    y: lisaResults.lisaValues[i],
+                    y: spatialLags[i],
                     cluster: lisaResults.clusters[i],
                     id: storedGeojson[geographyName].order[i]
                 })

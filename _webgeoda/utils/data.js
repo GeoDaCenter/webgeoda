@@ -309,6 +309,14 @@ export const find = (collection, testFunc) => {
     if (testFunc(collection[i])) return collection[i];
 };
 
+/**
+ * From the tables joined to a given geography, finds the name of the table file for reference
+ * in state.storedData.
+ * @param  {Array} dataPresets The array of available data presets, usually state.dataPresets
+ * @param  {String} currentData The current data table for which you want the table
+ * @param  {String} table The name of the table you are looking for
+ * @returns {String} Name of the data table file
+ */
 export const findTable = (
   dataPresets, 
   currentData, 
@@ -328,11 +336,20 @@ export const fileLoader = {
     return true;
   },
 };
-
+/**
+ * Handles tabular data loading based on dataset spec.
+ * @param  {Object} info
+ * @param  {} dateList
+ * @returns {Object} { 
+ *  dateIndices (indices of available dates for timeseries data),
+ *  columns (names of columns in data)
+ *  data (object, keyed to ID column with tabular data)
+ * }
+ */
 export const handleLoadData = async (info, dateList) => {
   const { file, type, join, dates, accumulate, schema } = info;
   const fetchUrl =
-    file.slice(0, 4) === "http" ? file : `${window && window.location.origin}/${file.slice(-3)}/${file}`;
+    file.slice(0, 4) === "http" ? file : `${window.location.origin}/${file.slice(-3)}/${file}`;
   let data = await fileLoader[file.slice(-3)](fetchUrl, schema);
   let dateIndices = [];
   let columns = Object.keys(data[0]);

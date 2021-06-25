@@ -30,7 +30,8 @@
     "react-dom": "17.0.2",
     "react-map-gl": "^6.1.15",
     "react-redux": "^7.2.4",
-    "redux": "^4.1.0"
+    "redux": "^4.1.0",
+    "simple-statistics": "^7.7.0"
   },
   "devDependencies": {
     "asciify-image": "^0.1.6",
