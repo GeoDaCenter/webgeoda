@@ -19,18 +19,19 @@ const data = [
       }
     },
   },
-  // {
-  //   name: 'US States', // Plain english name for dataset
-  //   geojson: 'states.geojson', // geospatial data to join to
-  //   id: 'GEOID', // fid / geoid join column
-  //   tables: {
-  //     acs_data: {
-  //       file: 'state_acs.csv',
-  //       type: 'characteristic',
-  //       join: 'FIPS',
-  //     }
-  //   },
-  // },
+  {
+    name: 'US States', // Plain english name for dataset
+    geojson: 'states.geojson', // geospatial data to join to
+    id: 'GEOID', // fid / geoid join column
+    bounds: [-125.109215,-66.925621,25.043926,49.295128],
+    tables: {
+      acs_data: {
+        file: 'state_acs.csv',
+        type: 'characteristic',
+        join: 'FIPS',
+      }
+    },
+  },
 ];
 
 const variables = [
@@ -43,15 +44,9 @@ const variables = [
     colorScale: colors.colorbrewer.Greens,
   },
   {
-    variable: "Median age",
-    numerator: "Median age",
-    binning: "naturalBreaks",
-    numberOfBins: 7,
-    colorScale: colors.colorbrewer.Purples,
-  },
-  {
     variable: "GEOID",
-    numerator: "GEOID",
+    numerator: "properties",
+    nProperty: "GEOID",
     binning: "naturalBreaks",
     colorScale: colors.colorbrewer.Pastel2,
   },

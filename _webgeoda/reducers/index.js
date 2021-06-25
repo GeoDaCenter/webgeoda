@@ -1,4 +1,4 @@
-import { INITIAL_STATE } from "@webgeoda/constants/defaults";
+import { INITIAL_STATE } from "../constants/defaults";
 
 import {
   mapFnNb,
@@ -7,9 +7,11 @@ import {
   getVarId,
   shallowEqual,
   find,
-} from "@webgeoda/utils/data";
-import { getCartogramCenter, generateMapData } from "@webgeoda/utils/map";
-import { generateReport, parseTooltipData } from "@webgeoda/utils/summarize";
+} from "../utils/data";
+
+import { findDatasetWithTable } from "../utils/summarize";
+import { getCartogramCenter, generateMapData } from "../utils/map";
+import { generateReport, parseTooltipData } from "../utils/summarize";
 
 import { dataPresets } from "../../map-config";
 const [defaultTables, dataPresetsRedux, tooltipTables] = [{}, {}, []];
@@ -34,8 +36,6 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state.storedGeojson,
         ...action.payload.storedGeojson,
       };
-      console.log(storedData)
-      console.log(action.payload.storedData)
       return {
         ...state,
         currentData: action.payload.currentData,
@@ -49,19 +49,21 @@ export default function reducer(state = INITIAL_STATE, action) {
             : null,
         currentId: action.payload.id,
         isLoading: false,
-        mapData: generateMapData({
-          ...state,
-          currentData: action.payload.currentData,
-          storedGeojson,
-          storedData,
-          dataParams,
-          mapParams,
-          initialViewState:
-            action.payload.viewState !== null
-              ? action.payload.initialViewState
-              : null,
-          currentId: action.payload.id
-        })
+        mapData: dataParams.lisa 
+          ? state.mapData 
+          : generateMapData({
+            ...state,
+            currentData: action.payload.currentData,
+            storedGeojson,
+            storedData,
+            dataParams,
+            mapParams,
+            initialViewState:
+              action.payload.viewState !== null
+                ? action.payload.initialViewState
+                : null,
+            currentId: action.payload.id
+          })
       };
     }
     case "CHANGE_VARIABLE": {
@@ -69,10 +71,44 @@ export default function reducer(state = INITIAL_STATE, action) {
         dataPresets.variables,
         (o) => o.variable === action.payload
       );
-      return {
-        ...state,
-        dataParams,
-      };
+
+      const currPresets = find(
+        state.dataPresets.data, 
+        o => o.geojson === state.currentData
+      );
+
+      if (
+        currPresets?.tables.hasOwnProperty(dataParams.numerator) 
+        || dataParams.numerator === "properties"
+      ){
+        return {
+          ...state,
+          dataParams,
+        };
+      } else {
+        const currentData = findDatasetWithTable(
+          dataParams.numerator, 
+          state.dataPresets.data
+        )
+        return {
+          ...state,
+          currentData,
+          dataParams
+        };
+      }
+    }
+    case "CHANGE_DATASET": {
+      if (state.storedGeojson.hasOwnProperty(action.payload)){
+        return {
+          ...state,
+          currentData: action.payload,
+        };
+      } else {
+        return {
+          ...state,
+          datasetToLoad: action.payload
+        };
+      }
     }
     case "UPDATE_BINS": {
       const mapParams = {

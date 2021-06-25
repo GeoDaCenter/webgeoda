@@ -215,25 +215,15 @@ export const indexTable = (data, key) => {
  * @param  {Array} fixedOrder A fixed ID column order for use with LISA. Default is false / not used.
  * @returns {Array} An array of parsed data according to the dataParams variable spec.
 */
-export const getColumnData = ({
+export const parseColumnData = ({
   numeratorData,
   denominatorData,
   dataParams,
   fixedOrder = false
 }) => {
+  const tempDenominatorData = denominatorData === undefined ? {} : denominatorData;
   let { nProperty, nIndex, dType, dIndex, dProperty } = dataParams;
   let tempDataParams = { ...dataParams };
-
-  if (nProperty === undefined && nIndex === undefined) {
-    nProperty = dataParams.numerator || null;
-    tempDataParams.nProperty = dataParams.numerator;
-    tempDataParams.numerator = "properties";
-  }
-  if (dProperty === undefined && dIndex === undefined) {
-    dProperty = dataParams.denominator || null;
-    tempDataParams.dProperty = dataParams.denominator;
-    tempDataParams.denominator = "properties";
-  }
 
   // declare empty array for return variables
   let rtn = new Array(
@@ -250,11 +240,11 @@ export const getColumnData = ({
     let tempIndex = numeratorData.length - 1;
     // if the denominator is time series data (eg. deaths / cases this week), make the indices the same (most recent)
     let tempDIndex =
-      dType === "time-series" ? denominatorData.length - 1 : dIndex;
+      dType === "time-series" ? tempDenominatorData.length - 1 : dIndex;
     // loop through, do appropriate calculation. add returned value to rtn array
     for (let i = 0; i < n; i++) {
       rtn[keys[i]] =
-        dataFn(numeratorData[keys[i]], denominatorData[keys[i]], {
+        dataFn(numeratorData[keys[i]], tempDenominatorData[keys[i]], {
           ...dataParams,
           nIndex: tempIndex,
           dIndex: tempDIndex,
@@ -265,7 +255,7 @@ export const getColumnData = ({
       rtn[i] =
         dataFn(
           numeratorData[keys[i]],
-          denominatorData[keys[i]],
+          tempDenominatorData[keys[i]],
           tempDataParams
         ) || 0;
     }

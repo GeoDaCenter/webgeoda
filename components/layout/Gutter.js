@@ -20,5 +20,5 @@ export const Gutter = (props) => {
   Units.forEach((unit) =>
     props[unit] ? (style.height = `${props[unit]}${unit}`) : null
   );
-  return <span style={style}></span>;
+  return <span style={{...style, display:'block'}}></span>;
 };
