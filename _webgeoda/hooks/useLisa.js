@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GeodaContext } from "../contexts";
 
 import {
@@ -45,8 +45,8 @@ export default function useLisa() {
         )
 
         const lisaData = getColumnData({
-            numeratorData: storedData[numeratorTable]?.data || storedGeojson[geographyName].properties,
-            denominatorData: storedData[denominatorTable]?.data || storedGeojson[geographyName].properties,
+            numeratorData: dataParams.numerator === "properties" ? storedGeojson[geographyName].properties : storedData[numeratorTable]?.data,
+            denominatorData: dataParams.numerator === "properties" ? storedGeojson[geographyName].properties : storedData[denominatorTable]?.data,
             dataParams: dataParams,
             fixedOrder: storedGeojson[geographyName].order
         })
@@ -76,7 +76,7 @@ export default function useLisa() {
     }
 
   const updateLisa = async () => {
-    
+
     const { weights, lisaResults } = await getLisa ({
         geographyName: currentData,
         dataParams

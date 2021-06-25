@@ -29,11 +29,71 @@ const getIdOrder = (features, idProp) => {
   return returnArray
 };
 
+const lisaBins = {
+  breaks: [
+    'Not significant',
+    'High-High',
+    'Low-Low',
+    'High-Low',
+    'Low-High',
+    'Undefined',
+    'Isolated'
+  ],
+  bins: [
+    'Not significant',
+    'High-High',
+    'Low-Low',
+    'High-Low',
+    'Low-High',
+    'Undefined',
+    'Isolated'
+  ]
+}
+
+const lisaColors = [
+  [
+    238,
+    238,
+    238
+  ],
+  [
+    255,
+    0,
+    0
+  ],
+  [
+    0,
+    0,
+    255
+  ],
+  [
+    167,
+    173,
+    249
+  ],
+  [
+    244,
+    173,
+    168
+  ],
+  [
+    70,
+    70,
+    70
+  ],
+  [
+    153,
+    153,
+    153
+  ]
+]
+
 export default function useLoadData(dateLists = {}) {
   const geoda = useContext(GeodaContext);
   const currentData = useSelector((state) => state.currentData);
   const datasetToLoad = useSelector((state) => state.datasetToLoad);
   const dataPresets = useSelector((state) => state.dataPresets);
+  const dataParams = useSelector((state) => state.dataParams);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -52,15 +112,15 @@ export default function useLoadData(dateLists = {}) {
     const currentDataPreset = find(dataPresets.data, f => f.geojson === datasetToLoad);
 
     const numeratorTable =
-      currentDataPreset.tables?.hasOwnProperty(dataPresets.variables[0].numerator) 
-      && currentDataPreset.tables[dataPresets.variables[0].numerator];
+      currentDataPreset.tables?.hasOwnProperty(dataParams.numerator) 
+      && currentDataPreset.tables[dataParams.numerator];
       
     const denominatorTable =
-      currentDataPreset.tables?.hasOwnProperty(dataPresets.variables[0].denominator) 
-      && currentDataPreset.tables[dataPresets.variables[0].denominator];
+      currentDataPreset.tables?.hasOwnProperty(dataParams.denominator) 
+      && currentDataPreset.tables[dataParams.denominator];
     
     const firstLoadPromises = [
-      geoda.loadGeoJSON(`${window && window.location.origin}/geojson/${currentDataPreset.geojson}`),
+      geoda.loadGeoJSON(`${window.location.origin}/geojson/${currentDataPreset.geojson}`, currentDataPreset.id),
       numeratorTable && handleLoadData(numeratorTable),
       denominatorTable && handleLoadData(denominatorTable),
     ];
@@ -95,35 +155,39 @@ export default function useLoadData(dateLists = {}) {
           })
         : null;
 
-    const binData = dataPresets.variables[0].categorical 
+    const binData = dataParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
-        dataPresets.variables[0])
+        dataParams)
       : getColumnData({
-        numeratorData: numeratorData.data || geojsonProperties,
-        denominatorData: denominatorData.data || geojsonProperties,
-        dataParams: dataPresets.variables[0]
+        numeratorData: dataParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
+        denominatorData: dataParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
+        dataParams,
+        geojsonOrder
     });
 
-    const bins = await getBins({
-      geoda,
-      dataParams: dataPresets.variables[0],
-      binData
-    })    
+    const bins = dataParams.lisa 
+      ? lisaBins
+      : await getBins({
+        geoda,
+        dataParams,
+        binData
+      })    
       
-    const colorScale = getColorScale({
-      dataParams: dataPresets.variables[0],
-      binData,
-      bins
-    })
+    const colorScale = dataParams.lisa 
+      ? lisaColors
+      : getColorScale({
+        dataParams,
+        bins
+      })
 
     dispatch({
       type: "INITIAL_LOAD",
       payload: {
         currentData: datasetToLoad,
         currentTable: {
-          numerator: "properties",
-          denominator: "properties",
+          numerator: dataParams.numerator === "properties" ? "properties" : numeratorTable,
+          denominator: dataParams.numerator === "properties" ? "properties" : denominatorTable,
         },
         storedGeojson: {
           [datasetToLoad]: {
@@ -142,7 +206,7 @@ export default function useLoadData(dateLists = {}) {
           bins,
           colorScale: colorScale || colors.colorbrewer.YlGnBu[5],
         },
-        variableParams: dataPresets.variables[0],
+        variableParams: dataParams,
         initialViewState,
         id: currentDataPreset.id,
       },

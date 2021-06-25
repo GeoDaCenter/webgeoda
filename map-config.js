@@ -43,15 +43,9 @@ const variables = [
     colorScale: colors.colorbrewer.Greens,
   },
   {
-    variable: "Median age",
-    numerator: "Median age",
-    binning: "naturalBreaks",
-    numberOfBins: 7,
-    colorScale: colors.colorbrewer.Purples,
-  },
-  {
     variable: "GEOID",
-    numerator: "GEOID",
+    numerator: "properties",
+    nProperty: "GEOID",
     binning: "naturalBreaks",
     colorScale: colors.colorbrewer.Pastel2,
   },

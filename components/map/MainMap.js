@@ -10,8 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../layout/Loader";
 
 import useLoadData from "@webgeoda/hooks/useLoadData";
-import useUpdateBins from "@webgeoda/hooks/useUpdateBins";
-import useLisa from "@webgeoda/hooks/useLisa";
+import useUpdateMap from "@webgeoda/hooks/useUpdateMap";
 
 import { dataPresets } from "../../map-config.js";
 
@@ -32,16 +31,7 @@ export default function MainMap() {
   const dispatch = useDispatch();
 
   const [loadData] = useLoadData();
-  const [updateBins] = useUpdateBins();
-  const [, updateLisa] = useLisa();
-
-  useEffect(() => {
-    if (dataParams.lisa){
-      updateLisa()
-    } else {
-      updateBins();
-    }
-  }, [dataParams.variable]);
+  const [] = useUpdateMap();
 
   const [viewState, setViewState] = useState({
     latitude: 0,
@@ -62,7 +52,7 @@ export default function MainMap() {
   });
 
   const mapRef = useRef();
-
+  
   useEffect(() => {
     if (initialViewState.longitude)
       setViewState({
@@ -93,51 +83,53 @@ export default function MainMap() {
       })
     }
   };
-
-  const layers = [
-    new GeoJsonLayer({
-      id: "choropleth",
-      data: currentMapGeography,
-      getFillColor: (d) => mapData.data[d.properties[currentId]].color,
-      // getElevation: d => currentMapData[d.properties.GEOID].height,
-      pickable: true,
-      stroked: false,
-      filled: true,
-      // wireframe: mapParams.vizType === '3D',
-      // extruded: mapParams.vizType === '3D',
-      // opacity: mapParams.vizType === 'dotDensity' ? mapParams.dotDensityParams.backgroundTransparency : 0.8,
-      material: false,
-      onHover: handleMapHover,
-      // onClick: handleMapClick,
-      updateTriggers: {
-        getFillColor: mapData.params,
-      },
-      transitions: {
-        getFillColor: dataParams.nIndex === undefined ? 250 : 0
-      }
-    }),
-    new GeoJsonLayer({
-      id: "choropleth-hover",
-      data: currentMapGeography,
-      getFillColor: [255, 255, 255],
-      getLineColor: (d) => [
-        0,
-        0,
-        0,
-        255 * (d.properties[currentId] === currentHoverId),
-      ],
-      lineWidthScale: 1,
-      lineWidthMinPixels: 1,
-      getLineWidth: 5,
-      pickable: false,
-      stroked: true,
-      filled: false,
-      updateTriggers: {
-        getLineColor: [mapData.params, currentHoverId],
-        // opacity: currentHoverTarget
-      },
-    }),
-  ];
+  
+  const layers = mapData.params.indexOf(currentData) === -1
+    ? []
+    : [
+      new GeoJsonLayer({
+        id: "choropleth",
+        data: currentMapGeography,
+        getFillColor: (d) => mapData.data[d.properties[currentId]].color,
+        // getElevation: d => currentMapData[d.properties.GEOID].height,
+        pickable: true,
+        stroked: false,
+        filled: true,
+        // wireframe: mapParams.vizType === '3D',
+        // extruded: mapParams.vizType === '3D',
+        // opacity: mapParams.vizType === 'dotDensity' ? mapParams.dotDensityParams.backgroundTransparency : 0.8,
+        material: false,
+        onHover: handleMapHover,
+        // onClick: handleMapClick,
+        updateTriggers: {
+          getFillColor: mapData.params,
+        },
+        transitions: {
+          getFillColor: dataParams.nIndex === undefined ? 250 : 0
+        }
+      }),
+      new GeoJsonLayer({
+        id: "choropleth-hover",
+        data: currentMapGeography,
+        getFillColor: [255, 255, 255],
+        getLineColor: (d) => [
+          0,
+          0,
+          0,
+          255 * (d.properties[currentId] === currentHoverId),
+        ],
+        lineWidthScale: 1,
+        lineWidthMinPixels: 1,
+        getLineWidth: 5,
+        pickable: false,
+        stroked: true,
+        filled: false,
+        updateTriggers: {
+          getLineColor: [mapData.params, currentHoverId],
+          // opacity: currentHoverTarget
+        },
+      }),
+    ];
 
   return (
     <div className={styles.mapContainer}>
