@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { GeodaContext } from "../contexts";
 
 import {
-  getColumnData,
+  parseColumnData,
   indexGeoProps,
   handleLoadData,
   find
@@ -29,26 +29,101 @@ const getIdOrder = (features, idProp) => {
   return returnArray
 };
 
+const lisaBins = {
+  breaks: [
+    'Not significant',
+    'High-High',
+    'Low-Low',
+    'High-Low',
+    'Low-High',
+    'Undefined',
+    'Isolated'
+  ],
+  bins: [
+    'Not significant',
+    'High-High',
+    'Low-Low',
+    'High-Low',
+    'Low-High',
+    'Undefined',
+    'Isolated'
+  ]
+}
+
+const lisaColors = [
+  [
+    238,
+    238,
+    238
+  ],
+  [
+    255,
+    0,
+    0
+  ],
+  [
+    0,
+    0,
+    255
+  ],
+  [
+    167,
+    173,
+    249
+  ],
+  [
+    244,
+    173,
+    168
+  ],
+  [
+    70,
+    70,
+    70
+  ],
+  [
+    153,
+    153,
+    153
+  ]
+]
+
 export default function useLoadData(dateLists = {}) {
   const geoda = useContext(GeodaContext);
   const currentData = useSelector((state) => state.currentData);
+  const datasetToLoad = useSelector((state) => state.datasetToLoad);
+  const dataPresets = useSelector((state) => state.dataPresets);
+  const dataParams = useSelector((state) => state.dataParams);
   const dispatch = useDispatch();
 
-  const loadData = async (dataPresets) => {
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [loadingProgress, setLoadingProgress] = useState(null);
 
+  useEffect(() => {
+    if (datasetToLoad) {
+      loadData(dataPresets, datasetToLoad)
+    }
+  },[datasetToLoad])
+
+
+  useEffect(() => {
+    loadData(dataPresets, dataPresets.data[0].geojson)
+  },[])
+
+  const loadData = async (dataPresets, datasetToLoad) => {
     if (geoda === undefined) location.reload();
-    const currentDataPreset = find(dataPresets.data, f => f.geojson === currentData);
+    const currentDataPreset = find(dataPresets.data, f => f.geojson === datasetToLoad);
 
     const numeratorTable =
-      currentDataPreset.tables?.hasOwnProperty(dataPresets.variables[0].numerator) 
-      && currentDataPreset.tables[dataPresets.variables[0].numerator];
+      currentDataPreset.tables?.hasOwnProperty(dataParams.numerator) 
+      && currentDataPreset.tables[dataParams.numerator];
       
     const denominatorTable =
-      currentDataPreset.tables?.hasOwnProperty(dataPresets.variables[0].denominator) 
-      && currentDataPreset.tables[dataPresets.variables[0].denominator];
+      currentDataPreset.tables?.hasOwnProperty(dataParams.denominator) 
+      && currentDataPreset.tables[dataParams.denominator];
     
     const firstLoadPromises = [
-      geoda.loadGeoJSON(`${window && window.location.origin}/geojson/${dataPresets.data[0].geojson}`),
+      geoda.loadGeoJSON(`${window.location.origin}/geojson/${currentDataPreset.geojson}`, currentDataPreset.id),
       numeratorTable && handleLoadData(numeratorTable),
       denominatorTable && handleLoadData(denominatorTable),
     ];
@@ -61,16 +136,18 @@ export default function useLoadData(dateLists = {}) {
 
     const geojsonProperties = indexGeoProps(
       geojsonData,
-      dataPresets.data[0].id
+      currentDataPreset.id
     );
 
     const geojsonOrder = getIdOrder(
       geojsonData.features,
-      dataPresets.data[0].id
+      currentDataPreset.id
     );
 
-    const bounds = await geoda.getBounds(mapId);
-
+    const bounds = currentDataPreset.bounds 
+      ? currentDataPreset.bounds 
+      : await geoda.getBounds(mapId);
+    
     const initialViewState =
       window !== undefined
         ? fitBounds({
@@ -83,38 +160,42 @@ export default function useLoadData(dateLists = {}) {
           })
         : null;
 
-    const binData = dataPresets.variables[0].categorical 
+    const binData = dataParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
-        dataPresets.variables[0])
-      : getColumnData({
-        numeratorData: numeratorData.data || geojsonProperties,
-        denominatorData: denominatorData.data || geojsonProperties,
-        dataParams: dataPresets.variables[0]
+        dataParams)
+      : parseColumnData({
+        numeratorData: dataParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
+        denominatorData: dataParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
+        dataParams,
+        geojsonOrder
     });
 
-    const bins = await getBins({
-      geoda,
-      dataParams: dataPresets.variables[0],
-      binData
-    })    
+    const bins = dataParams.lisa 
+      ? lisaBins
+      : await getBins({
+        geoda,
+        dataParams,
+        binData
+      })    
       
-    const colorScale = getColorScale({
-      dataParams: dataPresets.variables[0],
-      binData,
-      bins
-    })
+    const colorScale = dataParams.lisa 
+      ? lisaColors
+      : getColorScale({
+        dataParams,
+        bins
+      })
 
     dispatch({
       type: "INITIAL_LOAD",
       payload: {
-        currentData: dataPresets.data[0].geojson,
+        currentData: datasetToLoad,
         currentTable: {
-          numerator: "properties",
-          denominator: "properties",
+          numerator: dataParams.numerator === "properties" ? "properties" : numeratorTable,
+          denominator: dataParams.numerator === "properties" ? "properties" : denominatorTable,
         },
         storedGeojson: {
-          [dataPresets.data[0].geojson]: {
+          [datasetToLoad]: {
             data: geojsonData,
             properties: geojsonProperties,
             order: geojsonOrder,
@@ -130,20 +211,21 @@ export default function useLoadData(dateLists = {}) {
           bins,
           colorScale: colorScale || colors.colorbrewer.YlGnBu[5],
         },
-        variableParams: dataPresets.variables[0],
+        variableParams: dataParams,
         initialViewState,
-        id: dataPresets.data[0].id,
+        id: currentDataPreset.id,
       },
     });
     await loadTables(dataPresets, dateLists);
     loadWidgets(dataPresets);
   };
 
-  const loadTables = async (dataPresets, dateLists) => {
+  const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
     const tablesToFetch = find(
       dataPresets.data,
-      (o) => o.geojson === currentData
+      (o) => o.geojson === datasetToLoad
     ).tables;
+
     const tableNames = Object.keys(tablesToFetch);
     const tableDetails = Object.values(tablesToFetch);
     const tablePromises = tableDetails.map((table) =>

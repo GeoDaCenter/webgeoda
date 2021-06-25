@@ -1,6 +1,6 @@
 // import { useSelector, useDispatch } from 'react-redux';
 // import { useState, useEffect} from 'react';
-// import { getColumnData } from '../utils';
+// import { parseColumnData } from '../utils';
 
 // import {
 //   storeLisaValues, storeCartogramData, setMapParams, updateMap } from '../actions';
@@ -32,7 +32,7 @@
 //             })
 //           )
 //         } else {
-//           let binData = getColumnData(
+//           let binData = parseColumnData(
 //             dataParams.numerator === 'properties' ? storedGeojson[currentData].properties : storedData[currentTable.numerator].data,
 //             dataParams.denominator === 'properties' ? storedGeojson[currentData].properties : storedData[currentTable.denominator].data,
 //             dataParams
@@ -56,7 +56,7 @@
 
 //   const updateLisa = async () => {
 //     setIsCalculating(true)
-//     const dataForLisa = getColumnData(
+//     const dataForLisa = parseColumnData(
 //       dataParams.numerator === 'properties' ? storedGeojson[currentData].properties : storedData[currentTable.numerator].data,
 //       dataParams.denominator === 'properties' ? storedGeojson[currentData].properties : storedData[currentTable.denominator].data,
 //       dataParams,
@@ -70,7 +70,7 @@
 
 //   const updateCartogram = async () => {
 //     setIsCalculating(true)
-//     const dataForCartogram = getColumnData(
+//     const dataForCartogram = parseColumnData(
 //       dataParams.numerator === 'properties' ? storedGeojson[currentData].properties : storedData[currentTable.numerator].data,
 //       dataParams.denominator === 'properties' ? storedGeojson[currentData].properties : storedData[currentTable.denominator].data,
 //       dataParams,

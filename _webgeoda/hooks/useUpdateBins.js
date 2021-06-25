@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GeodaContext } from "@webgeoda/contexts";
 
 import {
@@ -27,6 +27,8 @@ export default function useUpdateBins() {
       storedData,
       storedGeojson 
     })
+
+    if (!bins) return;
 
     dispatch({
       type: "UPDATE_BINS",

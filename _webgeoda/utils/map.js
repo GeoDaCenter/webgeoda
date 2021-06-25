@@ -114,16 +114,6 @@ export const generateMapData = (state) => {
 
   let tempParams = { ...state.dataParams };
 
-  if (!tempParams.nProperty && !tempParams.nIndex) {
-    tempParams.nProperty = tempParams.numerator;
-    tempParams.numerator = "properties";
-  }
-
-  if (!tempParams.dProperty && !tempParams.dIndex) {
-    tempParams.dProperty = tempParams.denominator;
-    tempParams.denominator = "properties";
-  }
-
   if (state.mapParams.vizType === "cartogram") {
     for (let i = 0; i < state.storedCartogramData.length; i++) {
       const currGeoid =

@@ -1,5 +1,5 @@
 import {
-    getColumnData,
+    parseColumnData,
     getUniqueVals,
     findTable,
     fixedScales,
@@ -48,21 +48,20 @@ export const getBins = async ({
 
 export const getColorScale = ({
     dataParams,
-    binData,
     bins
 }) => {
 
     let colorScaleLength = dataParams.categorical 
-        ? binData.length
+        ? bins.breaks.length
         : bins.breaks.length + 1;
-    
+
     if (colorScaleLength < 3) colorScaleLength = 3;
-    
-    let colorScale = Array.isArray(dataParams.colorscale)
+
+    let colorScale = Array.isArray(dataParams.colorScale)
         ? dataParams.colorScale
         : dataParams.colorScale[colorScaleLength];
-      
-    if (dataParams.categorical && colorScaleLength !== binData.length) colorScale = colorScale.slice(0,binData.length);
+
+    if (dataParams.categorical && colorScaleLength !== bins.breaks.length) colorScale = colorScale.slice(0,bins.breaks.length);
     
     return colorScale
 }
@@ -91,7 +90,7 @@ export const generateBins = async ({
         ? getUniqueVals(
             storedData[numeratorTable]?.data||storedGeojson[currentData].properties,
             dataParams)
-        : getColumnData({
+        : parseColumnData({
             numeratorData: storedData[numeratorTable]?.data || storedGeojson[currentData].properties,
             denominatorData: storedData[denominatorTable]?.data || storedGeojson[currentData].properties,
             dataParams: dataParams

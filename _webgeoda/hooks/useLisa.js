@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GeodaContext } from "../contexts";
 
 import {
-  getColumnData,
+  parseColumnData,
   findTable
 } from "../utils/data";
 
@@ -14,6 +14,12 @@ import {
 import {
   getLisaResults
 } from "../utils/geoda-helpers";
+
+
+import {
+    standardize
+} from "../utils/stats";
+
 
 export default function useLisa() {
     const geoda = useContext(GeodaContext);
@@ -44,9 +50,9 @@ export default function useLisa() {
             dataParams.denominator
         )
 
-        const lisaData = getColumnData({
-            numeratorData: storedData[numeratorTable]?.data || storedGeojson[geographyName].properties,
-            denominatorData: storedData[denominatorTable]?.data || storedGeojson[geographyName].properties,
+        const lisaData = parseColumnData({
+            numeratorData: dataParams.numerator === "properties" ? storedGeojson[geographyName].properties : storedData[numeratorTable]?.data,
+            denominatorData: dataParams.numerator === "properties" ? storedGeojson[geographyName].properties : storedData[denominatorTable]?.data,
             dataParams: dataParams,
             fixedOrder: storedGeojson[geographyName].order
         })
@@ -61,10 +67,12 @@ export default function useLisa() {
 
         if (getScatterPlot) {
             let scatterPlotData = [];
+            const standardizedVals = standardize(lisaData);
+            const spatialLags = await geoda.spatialLag(weights, standardizedVals);
             for (let i=0; i<lisaData.length; i++){
                 scatterPlotData.push({
                     x: lisaData[i],
-                    y: lisaResults.lisaValues[i],
+                    y: spatialLags[i],
                     cluster: lisaResults.clusters[i],
                     id: storedGeojson[geographyName].order[i]
                 })
@@ -76,7 +84,7 @@ export default function useLisa() {
     }
 
   const updateLisa = async () => {
-    
+
     const { weights, lisaResults } = await getLisa ({
         geographyName: currentData,
         dataParams
