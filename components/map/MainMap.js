@@ -12,8 +12,6 @@ import Loader from "../layout/Loader";
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateMap from "@webgeoda/hooks/useUpdateMap";
 
-import { dataPresets } from "../../map-config.js";
-
 import Legend from "./Legend";
 import MapControls from "./MapControls";
 
@@ -30,7 +28,10 @@ export default function MainMap() {
   const isLoading = useSelector((state) => state.isLoading);
   const dispatch = useDispatch();
 
-  const [loadData] = useLoadData();
+  // eslint-disable-next-line no-empty-pattern
+  const [] = useLoadData();
+
+  // eslint-disable-next-line no-empty-pattern
   const [] = useUpdateMap();
 
   const [viewState, setViewState] = useState({
