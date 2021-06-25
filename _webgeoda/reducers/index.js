@@ -508,6 +508,11 @@ export default function reducer(state = INITIAL_STATE, action) {
       }
       return {...state, widgetData};
     }
+    case "CACHE_SCATTERPLOT_LISA": {
+      const cachedLisaScatterplotData = {...state.cachedLisaScatterplotData};
+      cachedLisaScatterplotData[action.payload.variableName] = action.payload.data;
+      return {...state, cachedLisaScatterplotData};
+    }
     default:
       return state;
   }

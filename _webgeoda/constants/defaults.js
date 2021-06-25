@@ -62,5 +62,6 @@ export const INITIAL_STATE = {
     data: null,
   },
   widgetData: {},
+  cachedLisaScatterplotData: {},
   isLoading: true
 };

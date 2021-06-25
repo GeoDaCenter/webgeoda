@@ -3,20 +3,22 @@ import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import {Scatter} from 'react-chartjs-2';
 import useLisa from '@webgeoda/hooks/useLisa';
+import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
 import {useDispatch} from 'react-redux';
 
 function ScatterWidgetUnwrapped(props) {
   const dispatch = useDispatch();
   const [getLisa,] = useLisa();
-  const [lisaData, setLisaData] = React.useState(null);
+  const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
+  const lisaData = getCachedLisa(props.data.variableSpecs[0]);
+
   React.useEffect(async () => {
     if(lisaData == null){
       const lisaData = await getLisa({
         dataParams: props.data.variableSpecs[0],
         getScatterPlot: true
       });
-      console.log(lisaData)
-      setLisaData(lisaData);
+      updateCachedLisa(props.data.variableSpecs[0], lisaData);
     }
   });
 
