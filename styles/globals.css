@@ -16,6 +16,7 @@ button {
 
 :root {
   --selected-color: #1816cc77;
+  --highlight-color: #e27213;
   --selected-color-light: #acaccc;
   --medium-gray: rgb(156, 156, 156);
   --orange: #e27213;

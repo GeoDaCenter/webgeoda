@@ -123,7 +123,7 @@ const mapModes = {
 
 const widgets = [
   {
-    position: "left",
+    coordinates: [3,1],
     type: "histogram",
     variable: "Median age",
     options: {
@@ -133,7 +133,7 @@ const widgets = [
     }
   },
   {
-    position: "right",
+    coordinates: [3,2],
     type: "histogram",
     variable: "Count No Internet Access",
     options: {
@@ -143,7 +143,7 @@ const widgets = [
     }
   },
   {
-    position: "right",
+    coordinates: [3,3],
     type: "scatter",
     xVariable: "Median Household Income",
     yVariable: "LISA",
@@ -157,7 +157,7 @@ const widgets = [
     }
   },
   {
-    position: "right",
+    coordinates: [3,4],
     type: "scatter3d",
     xVariable: "Median Household Income",
     yVariable: "Median Gross Rent",
@@ -173,10 +173,16 @@ const widgets = [
   }
 ];
 
+const layout = {
+  widgetColumns: 3,
+  widgetRows: 4
+}
+
 // 🦺 exports below -- you can safely ignore! 🦺 //
 export const dataPresets = {
   data,
   variables,
   mapModes,
-  widgets
+  widgets,
+  layout
 };

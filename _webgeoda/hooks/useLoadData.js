@@ -262,7 +262,9 @@ export default function useLoadData(dateLists = {}) {
     });
     dispatch({
       type: "FORMAT_WIDGET_DATA",
-      payload: {widgetSpecs}
+      payload: {
+        widgetSpecs
+      }
     });
   };
 

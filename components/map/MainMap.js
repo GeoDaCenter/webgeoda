@@ -134,7 +134,7 @@ export default function MainMap() {
     ];
 
   return (
-    <div className={`${styles.mapContainer} ${dataPresets.widgets.length && styles.mapContainerRightColumn}`}>
+    <div className={`${styles.mapContainer}`}>
       
       {isLoading && <div className={styles.preLoader}><Loader globe={true} /></div>}
       <DeckGL

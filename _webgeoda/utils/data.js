@@ -221,7 +221,6 @@ export const parseColumnData = ({
   dataParams,
   fixedOrder = false
 }) => {
-  console.log(numeratorData)
   const tempDenominatorData = denominatorData === undefined ? {} : denominatorData;
   let { nProperty, nIndex, dType, dIndex, dProperty } = dataParams;
   let tempDataParams = { ...dataParams };
@@ -308,6 +307,12 @@ export const getUniqueVals = (table, dataParams) => {
 export const find = (collection, testFunc) => {
   for (let i = 0; i < collection.length; i++)
     if (testFunc(collection[i])) return collection[i];
+};
+
+
+export const findIndex = (collection, testFunc) => {
+  for (let i = 0; i < collection.length; i++)
+    if (testFunc(collection[i])) return i;
 };
 
 /**

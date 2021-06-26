@@ -21,7 +21,7 @@ function HistogramWidget(props) {
 
 HistogramWidget.propTypes = {
   options: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  data: PropTypes.array.isRequired
 };
 
 export default HistogramWidget;

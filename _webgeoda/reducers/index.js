@@ -502,16 +502,40 @@ export default function reducer(state = INITIAL_STATE, action) {
       };
     }
     case "FORMAT_WIDGET_DATA": {
-      const widgetData = {...state.widgetData};
-      for(const i of action.payload.widgetSpecs){
-        widgetData[i.id] = formatWidgetData(i.variable, state, i.type, i.options);
+      let widgetData = {
+        ...state.widgetData
+      };
+
+      let widgets = {
+        ...state.dataPresets.widgets
+      };
+
+      for(let i=0; i<action.payload.widgetSpecs.length; i++){
+        widgets[i].id = i
+        widgetData[i] = formatWidgetData(
+          action.payload.widgetSpecs[i].variable, 
+          state, 
+          action.payload.widgetSpecs[i].type, 
+          action.payload.widgetSpecs[i].options
+        );
       }
-      return {...state, widgetData};
+
+      return {
+        ...state, 
+        widgetData,
+        dataPresets:{
+          ...state.dataPresets,
+          widgets: Object.values(widgets)
+        }
+      };
     }
     case "SET_WIDGET_LOCATIONS": {
       return {
         ...state,
-        widgetLocations: action.payload
+        dataPresets:{
+          ...state.dataPresets,
+          widgets: action.payload
+        }
       }
     }
     default:
