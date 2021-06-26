@@ -13,8 +13,9 @@ export const WIDGET_WIDTH = 400;
 
 function Widget(props) {
   const widgetData = useSelector(state => state.widgetData);
-  const data = widgetData[props.id]
-  if(!data || !props.id) {
+  const data = widgetData[`${props.id}`]
+
+  if(!data) {
     return (
       <div className={styles.widget}><Loader /></div>
     );

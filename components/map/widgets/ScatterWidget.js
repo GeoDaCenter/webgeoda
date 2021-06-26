@@ -6,6 +6,7 @@ import useLisa from '@webgeoda/hooks/useLisa';
 import {useDispatch} from 'react-redux';
 
 function ScatterWidgetUnwrapped(props) {
+  console.log(props)
   const dispatch = useDispatch();
   const [getLisa,] = useLisa();
   const [lisaData, setLisaData] = React.useState(null);
@@ -15,7 +16,6 @@ function ScatterWidgetUnwrapped(props) {
         dataParams: props.data.variableSpecs[0],
         getScatterPlot: true
       });
-      console.log(lisaData)
       setLisaData(lisaData);
     }
   });

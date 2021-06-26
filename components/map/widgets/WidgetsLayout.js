@@ -1,4 +1,4 @@
-import {useState, useEffect, createRef} from 'react';
+ import {useState, useEffect, createRef} from 'react';
 import styles from "./Widgets.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { find, findIndex } from "@webgeoda/utils/data";
@@ -29,6 +29,7 @@ const WidgetCell = ({
 
 const DraggableWidget = ({
     setIsDragging,
+    widget,
     widgets,
     setWidgets,
     setHoverTarget,
@@ -37,7 +38,6 @@ const DraggableWidget = ({
     gridColumnEnd,
     gridRowStart,
     gridRowEnd,
-    widget
 }) => {
 
     const draggableEntity = createRef();
@@ -52,7 +52,7 @@ const DraggableWidget = ({
                 o => (o.coordinates[0] === gridColumnStart && o.coordinates[1] === gridRowStart))
             tempArray.splice(spliceIndex, 1)
             tempArray.push({
-                widget,
+                ...widget,
                 coordinates: [+stringCoordinates[0],+stringCoordinates[1]]
             })
             setWidgets(tempArray);
@@ -92,7 +92,6 @@ const DraggableWidget = ({
                     gridColumnEnd,
                     gridRowStart,
                     gridRowEnd,
-                    background:'rgba(255,0,0,0.25)'
                 }}>
             <strong className={`cursor ${styles.grip}`}><FontAwesomeIcon icon={faGripVertical} /></strong>
                 <Widget 
@@ -146,6 +145,7 @@ export default function WidgetLayout(){
                 setIsDragging={setIsDragging}
                 setHoverTarget={setHoverTarget}
                 widget={widgetInThisCell}
+                widgets={widgets}
                 setWidgets={setWidgets}
                 id={`active-cell-${i}${n}`}
                 key={`active-cell-${i}${n}`}

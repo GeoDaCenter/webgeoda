@@ -5,7 +5,6 @@ import {BarChart, ResponsiveContainer, Bar, XAxis, YAxis, CartesianGrid, Tooltip
 // import { bin } from "d3-array";
 
 function HistogramWidget(props) {
-  
   return (
     <ResponsiveContainer height="90%">
       <BarChart data={props.data}>

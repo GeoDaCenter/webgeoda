@@ -156,21 +156,21 @@ const widgets = [
       showBestFitLine: false
     }
   },
-  {
-    coordinates: [3,4],
-    type: "scatter3d",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
-    zVariable: "Median age",
-    options: {
-      foregroundColor: "#00AAFF",
-      pointSize: 1,
-      xAxisLabel: "Median Household Income",
-      yAxisLabel: "Median Gross Rent",
-      zAxisLabel: "Median Age",
-      gridlinesInterval: [50000, 500, 5]
-    }
-  }
+  // {
+  //   coordinates: [3,4],
+  //   type: "scatter3d",
+  //   xVariable: "Median Household Income",
+  //   yVariable: "Median Gross Rent",
+  //   zVariable: "Median age",
+  //   options: {
+  //     foregroundColor: "#00AAFF",
+  //     pointSize: 1,
+  //     xAxisLabel: "Median Household Income",
+  //     yAxisLabel: "Median Gross Rent",
+  //     zAxisLabel: "Median Age",
+  //     gridlinesInterval: [50000, 500, 5]
+  //   }
+  // }
 ];
 
 const layout = {
