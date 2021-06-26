@@ -85,7 +85,10 @@
 .widgetLayoutCell {
   background:none;
   transition:350ms all;
+  opacity:0.75;
 }
+
+
 
 .widgetLayoutCell span{
   width:1rem;
@@ -103,17 +106,17 @@
 
 .widgetLayoutContainerGuides .widgetLayoutCell span {
   pointer-events: all;
-  opacity:0.5;
+  opacity:1;
 }
 
 .hoveredWidgetLayoutCell {
-  background: var(--highlight-color);
+  background: var(--selected-color-light-transparent);
+  border:2px solid var(--dark);
 }
 
 .hoveredWidgetLayoutCell span {
   width:3rem;
   height:3rem;
-  background: var(--highlight-color);
 }
 
 .grip {

@@ -18,12 +18,14 @@ button {
   --selected-color: #1816cc77;
   --highlight-color: #e27213;
   --selected-color-light: #acaccc;
+  --selected-color-light-transparent: #acaccc66;
   --medium-gray: rgb(156, 156, 156);
   --orange: #e27213;
   --green: #06cd57;
   --sky: #0bbedb;
   --blue: #1816cc;
   --transparent: rgba(255, 255, 255, 0);
+  --dark: rgb(40,40,40);
 }
 
 a {
