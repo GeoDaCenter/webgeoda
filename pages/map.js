@@ -5,7 +5,6 @@ import styles from "../styles/Map.module.css";
 import MainNav from "../components/layout/MainNav";
 import Loader from "../components/layout/Loader";
 
-import WidgetLayer from "../components/map/widgets/WidgetLayer";
 import WidgetsLayout from "../components/map/widgets/WidgetsLayout";
 import MainMap from "../components/map/MainMap";
 import VariablePanel from "../components/map/VariablePanel";
@@ -84,7 +83,6 @@ export default function Map() {
       <Provider store={store}>
         {geodaReady && (
           <GeodaContext.Provider value={geoda}>
-            {/* <WidgetLayer /> */}
             <MainMap />
             <VariablePanel />
             <MapTooltip />

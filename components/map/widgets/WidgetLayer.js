@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import styles from './Widgets.module.css';
 import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
@@ -15,7 +15,7 @@ const renderWidget = (widget, trueIndex, columnIndex) => {
   return <Widget type={widget.type} options={widget.options} fullWidgetConfig={widget} key={`widget-${trueIndex}`} id={trueIndex.toString()} index={columnIndex} />
 };
 
-export default function WidgetLayer(props){
+export default function WidgetLayer(){
   const dispatch = useDispatch();
   const widgetLocations = useSelector((state) => state.widgetLocations);
   const dataPresets = useSelector((state) => state.dataPresets);

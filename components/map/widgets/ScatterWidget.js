@@ -6,7 +6,7 @@ import useLisa from '@webgeoda/hooks/useLisa';
 import {useDispatch} from 'react-redux';
 
 function ScatterWidgetUnwrapped(props) {
-  console.log(props)
+  
   const dispatch = useDispatch();
   const [getLisa,] = useLisa();
   const [lisaData, setLisaData] = React.useState(null);
@@ -82,12 +82,12 @@ function ScatterWidgetUnwrapped(props) {
       legend: {
         display: true,
         labels: {
-          filter: (legend, data) => legend.datasetIndex != 0 // hide scatter label
+          filter: (legend) => legend.datasetIndex != 0 // hide scatter label
         }
       },
       tooltip: {
         callbacks: {
-          label: (tooltipItem, data) => {
+          label: (tooltipItem) => {
             const point = props.data.data[tooltipItem.dataIndex];
             return `${point.id} (${point.x}, ${point.y})`; // TODO: point.y is null for LISA scatterplots
           }

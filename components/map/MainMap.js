@@ -18,7 +18,6 @@ import MapControls from "./MapControls";
 export default function MainMap() {
   const initialViewState = useSelector((state) => state.initialViewState);
   const dataParams = useSelector((state) => state.dataParams);
-  const dataPresets = useSelector((state) => state.dataPresets);
   const mapParams = useSelector((state) => state.mapParams);
   const currentData = useSelector((state) => state.currentData);
   const currentId = useSelector((state) => state.currentId);

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import styles from './Widgets.module.css';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from '../../layout/Loader';
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';

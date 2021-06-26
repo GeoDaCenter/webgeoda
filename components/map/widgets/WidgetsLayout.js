@@ -1,4 +1,4 @@
- import {useState, useEffect, createRef} from 'react';
+import {useState, createRef} from 'react';
 import styles from "./Widgets.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { find, findIndex } from "@webgeoda/utils/data";
@@ -61,7 +61,7 @@ const DraggableWidget = ({
             resetPosition()
         }
     }
-    const resetPosition = (e) => {
+    const resetPosition = () => {
         draggableEntity.current.state.x = 0;
         draggableEntity.current.state.y = 0;
         setIsDragging(false);

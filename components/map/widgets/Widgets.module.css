@@ -82,6 +82,11 @@
   justify-content: center;
 }
 
+.widgetLayoutCell {
+  background:none;
+  transition:350ms all;
+}
+
 .widgetLayoutCell span{
   width:1rem;
   height:1rem;
@@ -101,11 +106,14 @@
   opacity:0.5;
 }
 
+.hoveredWidgetLayoutCell {
+  background: var(--highlight-color);
+}
+
 .hoveredWidgetLayoutCell span {
   width:3rem;
   height:3rem;
   background: var(--highlight-color);
-
 }
 
 .grip {
