@@ -19,7 +19,6 @@
 
 .widgetColumn {
   display: flex;
-  min-width: 400px; /* Ensure there is always an area to drop */
   flex-direction: column;
   justify-content: flex-start;
   overflow: auto;
@@ -34,8 +33,6 @@
 }
 
 .widget {
-  width: 400px;
-  min-height: 250px;
   background-color: #FFFFFF;
   padding: 0.75em;
   margin-bottom: 15px;

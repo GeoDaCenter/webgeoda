@@ -73,6 +73,7 @@ const getColumnData = (variableSpec, state, returnKeys=false) => {
 }
 
 export const formatWidgetData = (variableName, state, widgetType, options) => {
+    if ("string" !== typeof variableName && variableName.includes("LISA")) return { needsLisa: true }
     const dataPresets = state.dataPresets
 
     if (widgetType === "histogram"){

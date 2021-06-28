@@ -6,6 +6,7 @@ import Draggable from 'react-draggable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
 import Widget from "./Widget";
+import useUpdateWidgetData from '@webgeoda/hooks/useUpdateWidgetData';
 
 const WidgetCell = ({
     hovered,
@@ -110,6 +111,8 @@ export default function WidgetLayout(){
     const widgetRows = useSelector((state) => state.dataPresets.layout.widgetRows);
     const dataPresets = useSelector((state) => state.dataPresets);
     const widgets = dataPresets.widgets;
+    const [isUpdating] = useUpdateWidgetData()
+
     const setWidgets = (newWidgets) => 
         dispatch({
             type:"SET_WIDGET_LOCATIONS",
@@ -126,8 +129,7 @@ export default function WidgetLayout(){
     for (let i=1; i<widgetColumns+1; i++){
         for (let n=1; n<widgetRows+1; n++){
             
-            const widgetInThisCell = find(
-                widgets,
+            const widgetInThisCell = widgets.find(
                 o => (o.coordinates[0] === i && o.coordinates[1] === n)
             )
 

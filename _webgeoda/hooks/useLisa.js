@@ -67,17 +67,19 @@ export default function useLisa() {
 
         if (getScatterPlot) {
             let scatterPlotData = [];
+            let scatterPlotColors = [];
+            
             const standardizedVals = standardize(lisaData);
             const spatialLags = await geoda.spatialLag(weights, standardizedVals);
             for (let i=0; i<lisaData.length; i++){
                 scatterPlotData.push({
                     x: lisaData[i],
                     y: spatialLags[i],
-                    cluster: lisaResults.clusters[i],
                     id: storedGeojson[geographyName].order[i]
                 })
+                scatterPlotColors.push(lisaResults.colors[lisaResults.clusters[i]])
             }
-            return { weights, lisaResults, scatterPlotData};
+            return { weights, lisaResults, scatterPlotData, scatterPlotColors};
         }
 
         return { weights, lisaResults }

@@ -529,6 +529,16 @@ export default function reducer(state = INITIAL_STATE, action) {
         }
       };
     }
+    case "SET_WIDGET_DATA": {
+      const widgetData = {
+        ...state.widgetData,
+        ...action.payload
+      }
+      return {
+        ...state, 
+        widgetData,
+      };
+    }
     case "SET_WIDGET_LOCATIONS": {
       return {
         ...state,

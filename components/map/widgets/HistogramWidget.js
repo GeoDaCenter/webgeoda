@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {BarChart, ResponsiveContainer, Bar, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts'; // Cell, Legend
 // import { bin } from "d3-array";
 
-function HistogramWidget(props) {
+function HistogramWidget(props) { 
   return (
     <ResponsiveContainer height="90%">
       <BarChart data={props.data}>

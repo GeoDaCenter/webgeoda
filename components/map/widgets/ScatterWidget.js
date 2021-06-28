@@ -2,61 +2,53 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import {Scatter} from 'react-chartjs-2';
-import useLisa from '@webgeoda/hooks/useLisa';
 import {useDispatch} from 'react-redux';
 
-function ScatterWidgetUnwrapped(props) {
-  
+function ScatterWidget(props) {
   const dispatch = useDispatch();
-  const [getLisa,] = useLisa();
-  const [lisaData, setLisaData] = React.useState(null);
-  React.useEffect(async () => {
-    if(lisaData == null){
-      const lisaData = await getLisa({
-        dataParams: props.data.variableSpecs[0],
-        getScatterPlot: true
-      });
-      setLisaData(lisaData);
-    }
-  });
+  if (!props.data) return null;
 
-  let dataProp;
-  if(props.data.isLisa){
-    if(lisaData == null){
-      dataProp = {datasets: []};
-    } else {
-      dataProp = {
+  const dataProp = [props.config.xVariable, props.config.yVariable].includes("LISA")
+    ? {
         datasets: [
           {
             type: "scatter",
             label: props.options.header,
-            data: lisaData.scatterPlotData,
-            backgroundColor: lisaData.lisaResults.clusters.map(i => lisaData.lisaResults.colors[i])
+            data: props.data.scatterPlotData,
+            backgroundColor: props.data.scatterPlotColors
           }
         ]
-      };
-    }
-    
-  } else {
-    dataProp = {
-      datasets: [
-        {
-          type: "scatter",
-          label: props.options.header,
-          data: props.data.data,
-          backgroundColor: props.options.foregroundColor
-        }
-      ]
-    };
-    if(props.options.showBestFitLine && props.data.fittedLine != null && props.data.fittedLineEquation != null){
-      dataProp.datasets.push({
-        type: "line",
-        label: "Best fit: " + props.data.fittedLineEquation,
-        data: props.data.fittedLine,
-        borderColor: "#000000"
-      });
-    }
-  }
+      }
+    : (
+      props.options.showBestFitLine 
+      && props.data.fittedLine != null 
+      && props.data.fittedLineEquation != null)
+    ? {
+        datasets: [
+          {
+            type: "scatter",
+            label: props.options.header,
+            data: props.data.data,
+            backgroundColor: props.options.foregroundColor
+          },
+          {
+            type: "line",
+            label: "Best fit: " + props.data.fittedLineEquation,
+            data: props.data.fittedLine,
+            borderColor: "#000000"
+          }
+        ]
+      }
+    : {
+        datasets: [
+          {
+            type: "scatter",
+            label: props.options.header,
+            data: props.data.data,
+            backgroundColor: props.options.foregroundColor
+          }
+        ]
+      }
 
   const options = {
     maintainAspectRatio: false,
@@ -85,14 +77,14 @@ function ScatterWidgetUnwrapped(props) {
           filter: (legend) => legend.datasetIndex != 0 // hide scatter label
         }
       },
-      tooltip: {
-        callbacks: {
-          label: (tooltipItem) => {
-            const point = props.data.data[tooltipItem.dataIndex];
-            return `${point.id} (${point.x}, ${point.y})`; // TODO: point.y is null for LISA scatterplots
-          }
-        }
-      }
+      // tooltip: {
+      //   callbacks: {
+      //     label: (tooltipItem) => {
+      //       const point = props.data.data[tooltipItem.dataIndex];
+      //       return `${point.id} (${point.x}, ${point.y})`; // TODO: point.y is null for LISA scatterplots
+      //     }
+      //   }
+      // }
     }
   };
 
@@ -102,12 +94,5 @@ function ScatterWidgetUnwrapped(props) {
     </div>
   );
 }
-
-ScatterWidgetUnwrapped.propTypes = {
-  options: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
-};
-
-const ScatterWidget = React.memo(ScatterWidgetUnwrapped);
 
 export default ScatterWidget;
