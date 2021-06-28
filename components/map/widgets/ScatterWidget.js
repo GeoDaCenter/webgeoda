@@ -46,7 +46,7 @@ function ScatterWidgetUnwrapped(props) {
           type: "scatter",
           label: props.options.header,
           data: props.data.data,
-          backgroundColor: props.options.foregroundColor
+          backgroundColor: props.options.foregroundColor || "#000000"
         }
       ]
     };
@@ -65,7 +65,7 @@ function ScatterWidgetUnwrapped(props) {
     animation: false,
     elements: {
       point: {
-        radius: props.options.pointSize
+        radius: props.options.pointSize || 0.1
       }
     },
     onClick: (e, items) => {
@@ -93,6 +93,20 @@ function ScatterWidgetUnwrapped(props) {
             const point = props.data.data[tooltipItem.dataIndex];
             return `${point.id} (${point.x}, ${point.y})`; // TODO: point.y is null for LISA scatterplots
           }
+        }
+      }
+    },
+    scales: { // TODO: Support gridlinesInterval option
+      x: {
+        title: {
+          display: "xAxisLabel" in props.options,
+          text: props.options.xAxisLabel || ""
+        }
+      },
+      y: {
+        title: {
+          display: "yAxisLabel" in props.options,
+          text: props.options.yAxisLabel || ""
         }
       }
     }

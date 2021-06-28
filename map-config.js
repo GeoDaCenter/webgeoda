@@ -139,7 +139,9 @@ const widgets = [
     options: {
       header: "No Internet Access",
       foregroundColor: "#00FFAA",
-      yAxisLabel: "Count No Internet Access"
+      yAxisLabel: "Count No Internet Access",
+      xAxisLabel: "x axis label",
+      thresholds: 20
     }
   },
   {
@@ -152,7 +154,7 @@ const widgets = [
       foregroundColor: "#00AAFF",
       pointSize: .2,
       xAxisLabel: "Median HH Income",
-      yAxisLabel: "",
+      yAxisLabel: "Spatial Lag",
       showBestFitLine: false
     }
   },
@@ -164,7 +166,6 @@ const widgets = [
     zVariable: "Median age",
     options: {
       foregroundColor: "#00AAFF",
-      pointSize: 1,
       xAxisLabel: "Median Household Income",
       yAxisLabel: "Median Gross Rent",
       zAxisLabel: "Median Age",

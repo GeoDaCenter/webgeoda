@@ -83,7 +83,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         if (!variableSpec) return []
         const [data] = getColumnData(variableSpec, state)
         if (!data) return []
-        const binned = d3bin().thresholds(40)(data)
+        const binned = d3bin().thresholds(options.thresholds || 40)(data)
         let formattedData = []
         for (let i=0; i<binned.length; i++) {
             formattedData.push({
@@ -145,7 +145,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
                 y: isLisa ? null : yData[i],
                 id: idKeys[i]
             });
-            if(options.showBestFitLine && xData[i] !== 0 && yData[i] !== 0){
+            if(options.showBestFitLine === true && xData[i] !== 0 && yData[i] !== 0){
                 // TODO: Find a smarter way to remove zero values
                 regressionFormattedData.push([
                     xData[i], yData[i]
@@ -154,7 +154,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         }
         let fittedLine = null;
         let fittedLineEquation = null;
-        if(options.showBestFitLine){
+        if(options.showBestFitLine === true){
             const bestFitInfo = linearRegression(regressionFormattedData);
             const bestFit = linearRegressionLine(bestFitInfo);
             fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
