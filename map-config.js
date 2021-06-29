@@ -134,14 +134,12 @@ const widgets = [
   },
   {
     position: "right",
-    type: "histogram",
-    variable: "Count No Internet Access",
+    type: "line",
+    variable: "???",
     options: {
-      header: "No Internet Access",
-      foregroundColor: "#00FFAA",
-      yAxisLabel: "Count No Internet Access",
-      xAxisLabel: "x axis label",
-      thresholds: 20
+      header: "Time Series Data",
+      foregroundColor: "#AAAA00",
+      yAxisLabel: "Y Axis"
     }
   },
   {

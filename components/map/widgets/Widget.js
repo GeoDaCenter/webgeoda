@@ -9,6 +9,7 @@ import Loader from '../../layout/Loader';
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';
 import Scatter3DWidget from './Scatter3DWidget';
+import LineWidget from './LineWidget';
 
 // As defined in CSS
 export const WIDGET_WIDTH = 400;
@@ -32,6 +33,9 @@ function Widget(props) {
       break;
     case 'scatter3d':
       component = Scatter3DWidget;
+      break;
+    case 'line':
+      component = LineWidget;
       break;
     default:
       return (
