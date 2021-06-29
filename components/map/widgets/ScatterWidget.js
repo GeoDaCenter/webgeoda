@@ -46,7 +46,9 @@ function ScatterWidgetUnwrapped(props) {
           type: "scatter",
           label: props.options.header,
           data: props.data.data,
-          backgroundColor: props.options.foregroundColor || "#000000"
+          backgroundColor: (props.options.foregroundColor === "cluster") ? (
+            props.data.clusterLabels.map(i => props.options.clusterColors[i])
+          ) : (props.options.foregroundColor || "#000000")
         }
       ]
     };

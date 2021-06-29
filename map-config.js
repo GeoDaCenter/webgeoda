@@ -146,14 +146,17 @@ const widgets = [
     position: "right",
     type: "scatter",
     xVariable: "Median Household Income",
-    yVariable: "LISA",
+    yVariable: "Median Gross Rent",
     options: {
       header: "Median HH Income LISA scatterplot",
-      foregroundColor: "#00AAFF",
+      foregroundColor: "cluster",
+      numClusters: 3,
+      clusterColors: [
+        "#FF0000", "#00FF00", "#0000FF"
+      ],
       pointSize: .2,
       xAxisLabel: "Median HH Income",
-      yAxisLabel: "Spatial Lag",
-      showBestFitLine: false
+      yAxisLabel: "Spatial Lag"
     }
   },
   {

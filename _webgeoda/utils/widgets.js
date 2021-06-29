@@ -8,7 +8,7 @@ import {
 import {TARGET_RANGE} from "../../components/map/widgets/Scatter3DWidget";
 
 import { bin as d3bin } from "d3-array";
-import {linearRegression, linearRegressionLine} from "simple-statistics";
+import {linearRegression, linearRegressionLine, kMeansCluster} from "simple-statistics";
 
 const findFirstTable = (tableName, storedData, dataPresets) => {
     for (let i=0; i<dataPresets.length; i++){
@@ -100,6 +100,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
     }
 
     if (widgetType === "scatter"){
+        const isCluster = options.foregroundColor === "cluster";
         let xData;
         let yData;
         let idKeys;
@@ -140,7 +141,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         let min = xData[0];
         let max = xData[0];
         const formattedData = [];
-        const regressionFormattedData = [];
+        const statisticsFormattedData = [];
         for(let i = 0; i < idKeys.length; i++){
             if(xData[i] < min) min = xData[i];
             if(xData[i] > max) max = xData[i];
@@ -149,9 +150,8 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
                 y: isLisa ? null : yData[i],
                 id: idKeys[i]
             });
-            if(options.showBestFitLine === true && xData[i] !== 0 && yData[i] !== 0){
-                // TODO: Find a smarter way to remove zero values
-                regressionFormattedData.push([
+            if(options.showBestFitLine === true || isCluster){
+                statisticsFormattedData.push([
                     xData[i], yData[i]
                 ])
             }
@@ -159,7 +159,11 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         let fittedLine = null;
         let fittedLineEquation = null;
         if(options.showBestFitLine === true){
-            const bestFitInfo = linearRegression(regressionFormattedData);
+
+            // TODO: Find a smarter way to remove zero values
+            // TODO: Zero values influence k-means cluster algo, but need to be
+            // excluded in a way that preserves OG indices of data
+            const bestFitInfo = linearRegression(statisticsFormattedData.filter(i => i[0] !== 0 && i[1] !== 0));
             const bestFit = linearRegressionLine(bestFitInfo);
             fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
                 {x: min, y: bestFit(min)},
@@ -167,12 +171,18 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
             ];
             fittedLineEquation = `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
         }
+        let clusterLabels = null;
+        if(isCluster){
+            clusterLabels = kMeansCluster(statisticsFormattedData, options.numClusters || 2).labels;
+        }
         return {
             data: formattedData,
             fittedLine,
             fittedLineEquation,
             variableSpecs,
-            isLisa
+            isLisa,
+            clusterLabels,
+            isCluster
         };
     }
 
