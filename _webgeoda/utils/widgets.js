@@ -87,15 +87,16 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         const [data] = getColumnData(variableSpec, state)
         if (!data) return []
         const binned = d3bin().thresholds(options.thresholds || 40)(data)
-        let formattedData = []
+        let formattedData = [];
+        let labels = [];
         for (let i=0; i<binned.length; i++) {
-            formattedData.push({
-                name: `${binned[i].x0}-${binned[i].x1}`,
-                val: binned[i].length,
-                label: binned[i].length
-            })
+            formattedData.push(binned[i].length);
+            labels.push(`${binned[i].x0}-${binned[i].x1}`);
         }
-        return formattedData
+        return {
+            data: formattedData,
+            labels
+        }
     }
 
     if (widgetType === "scatter"){
