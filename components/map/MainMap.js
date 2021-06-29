@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Loader from "../layout/Loader";
 
+import { useViewport, useSetViewport } from '@webgeoda/contexts';
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateMap from "@webgeoda/hooks/useUpdateMap";
 
@@ -30,33 +31,19 @@ export default function MainMap() {
 
   // eslint-disable-next-line no-empty-pattern
   const [] = useLoadData();
-
   // eslint-disable-next-line no-empty-pattern
   const [] = useUpdateMap();
+  // eslint-disable-next-line no-empty-pattern
+  const viewport = useViewport();
+  // eslint-disable-next-line no-empty-pattern
+  const setViewport = useSetViewport();
 
-  const [viewState, setViewState] = useState({
-    latitude: 0,
-    longitude: 0,
-    zoom: 8,
-    bearing: 0,
-    pitch: 0,
-  });
-
-  const deckRef = useRef({
-    deck: {
-      viewState: {
-        MapView: {
-          ...viewState,
-        },
-      },
-    },
-  });
-
+  const deckRef = useRef();
   const mapRef = useRef();
   
   useEffect(() => {
     if (initialViewState.longitude)
-      setViewState({
+      setViewport({
         longitude: initialViewState.longitude,
         latitude: initialViewState.latitude,
         zoom: initialViewState.zoom * 0.9,
@@ -139,9 +126,10 @@ export default function MainMap() {
       <DeckGL
         layers={layers}
         ref={deckRef}
-        initialViewState={viewState}
+        initialViewState={viewport}
         controller={true}
         pickingRadius={20}
+        onViewStateChange={({viewState}) => setViewport(viewState)}
       >
         <MapboxGLMap
           reuseMaps
@@ -160,8 +148,6 @@ export default function MainMap() {
       />
       <MapControls
         deck={deckRef}
-        viewState={viewState}
-        setViewState={setViewState}
       />
     </div>
   );
