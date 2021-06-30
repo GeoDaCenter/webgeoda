@@ -43,7 +43,7 @@ function LineWidget(props){
   };
 
   return (
-    <div style={{height: "90%"}}>
+    <div>
       <Line data={dataProp} options={options} />
     </div>
   );

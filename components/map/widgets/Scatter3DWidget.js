@@ -22,6 +22,7 @@ const DEFAULT_VIEW_STATE = {
 export const TARGET_RANGE = 100;
 
 function Scatter3DWidgetUnwrapped(props) {
+  console.log(props)
   const [viewState, setViewState] = useState(DEFAULT_VIEW_STATE);
   const mins = [0, 0, 0];
   const maxs = [100, 100, 100];
@@ -156,7 +157,7 @@ function Scatter3DWidgetUnwrapped(props) {
   });
 
   return (
-    <div style={{height: "90%", position: "relative"}}>
+    <div>
       <DeckGL
         views={new OrbitView()}
         viewState={viewState}

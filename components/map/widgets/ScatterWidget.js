@@ -115,7 +115,7 @@ function ScatterWidgetUnwrapped(props) {
   };
 
   return (
-    <div style={{height: "90%"}}>
+    <div>
       <Scatter data={dataProp} options={options} />
     </div>
   );

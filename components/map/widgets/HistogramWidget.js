@@ -38,7 +38,7 @@ function HistogramWidget(props) {
   };
 
   return (
-    <div style={{height: "90%"}}>
+    <div>
       <Bar data={dataProp} options={options} />
     </div>
   );
