@@ -143,6 +143,9 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         const formattedData = [];
         const statisticsFormattedData = [];
         for(let i = 0; i < idKeys.length; i++){
+
+            // TODO: Find a smarter way to remove zero values
+            if(options.removeZeroValues === true && (xData[i] === 0 || yData[i] === 0)) continue;
             if(xData[i] < min) min = xData[i];
             if(xData[i] > max) max = xData[i];
             formattedData.push({
@@ -159,11 +162,9 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         let fittedLine = null;
         let fittedLineEquation = null;
         if(options.showBestFitLine === true){
-
-            // TODO: Find a smarter way to remove zero values
             // TODO: Zero values influence k-means cluster algo, but need to be
             // excluded in a way that preserves OG indices of data
-            const bestFitInfo = linearRegression(statisticsFormattedData.filter(i => i[0] !== 0 && i[1] !== 0));
+            const bestFitInfo = linearRegression(statisticsFormattedData);
             const bestFit = linearRegressionLine(bestFitInfo);
             fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
                 {x: min, y: bestFit(min)},

@@ -156,7 +156,8 @@ const widgets = [
       ],
       pointSize: .2,
       xAxisLabel: "Median HH Income",
-      yAxisLabel: "Spatial Lag"
+      yAxisLabel: "Spatial Lag",
+      removeZeroValues: true
     }
   },
   {
