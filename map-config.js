@@ -150,9 +150,9 @@ const widgets = [
     options: {
       header: "Median HH Income LISA scatterplot",
       foregroundColor: "cluster",
-      numClusters: 3,
+      numClusters: 5,
       clusterColors: [
-        "#FF0000", "#00FF00", "#0000FF"
+        "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF"
       ],
       pointSize: .2,
       xAxisLabel: "Median HH Income",

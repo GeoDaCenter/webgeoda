@@ -43,8 +43,68 @@
   z-index: 1;
   position: relative;
 }
+.widget .widgetSettings {
+  display: none;
+}
+.widget.showSettings {
+  animation: cardFlip 1s;
+}
+.widget.showSettings .widgetHeader, .widget.showSettings .settingsButton, .widget.showSettings .widgetContent {
+  display: none;
+  animation: hideContentOnFlip 1s;
+}
+.widget.showSettings .widgetSettings {
+  display: block;
+  animation: hideContentOnFlip 1s;
+}
+
+@keyframes cardFlip {
+  0% {
+    transform: rotate3d(0, 1, 0, 0deg);
+  }
+  100% {
+    transform: rotate3d(0, 1, 0, 180deg);
+  }
+}
+@keyframes hideContentOnFlip {
+  from {visibility: hidden;}
+  to {visibility: hidden;}
+}
+
+.widgetSettingItem {
+  margin-bottom: 15px;
+}
+
+.settingsButton {
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-size: 15px;
+  color: #00000055;
+  opacity: 0%;
+  transition: opacity .2s, transform .2s, color .2s;
+}
+.widget:hover .settingsButton {
+  opacity: 100%;
+}
+.settingsButton:hover {
+  transform: rotate(60deg);
+  color: #000000;
+}
 
 .widgetHeader {
+  height: 10%;
+  margin: 0;
+  font-size: 13px;
+  text-align: center;
+  text-transform: uppercase;
+}
+.widgetSettingsHeader {
   height: 10%;
   margin: 0;
   font-size: 13px;

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
+import { useSelector } from 'react-redux';
 import styles from './Widgets.module.css';
-import {dataPresets} from '../../../map-config';
 import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
@@ -11,15 +11,17 @@ const mapWidgets = ({widgets, widgetLocations, side}) => widgets
   .map(i => i.elem);
 
 export default function WidgetLayer(props){
+  const widgetConfig = useSelector(state => state.widgetConfig);
+
   const renderWidget = (widget, trueIndex, columnIndex) => {
     if(widget == undefined) return <div />;
-    return <Widget type={widget.type} options={widget.options} fullWidgetConfig={widget} key={`widget-${trueIndex}`} id={trueIndex.toString()} index={columnIndex} />
+    return <Widget type={widget.type} options={widget.options} fullWidgetConfig={widget} key={`widget-${trueIndex}`} id={trueIndex} index={columnIndex} />
   };
 
   const defaultWidgetLocations = [];
   let leftIndex = 0;
   let rightIndex = 0;
-  for(const i of dataPresets.widgets){
+  for(const i of widgetConfig){
     defaultWidgetLocations.push({
       side: i.position,
       index: i.position == "left" ? leftIndex : rightIndex
@@ -28,7 +30,7 @@ export default function WidgetLayer(props){
     else { rightIndex++; }
   }
   const [widgetLocations, setWidgetLocations] = useState(defaultWidgetLocations);
-  const widgets = dataPresets.widgets.map((widget, trueIndex) => {
+  const widgets = widgetConfig.map((widget, trueIndex) => {
     return renderWidget(widget, trueIndex, widgetLocations[trueIndex].index);
   });
 
@@ -59,7 +61,7 @@ export default function WidgetLayer(props){
         if(widget.index >= result.destination.index) widget.index++;
       }
       if(thisWidgetPrevIndex !== widget.index){
-        widgets[i] = renderWidget(dataPresets.widgets[i], i, widget.index);
+        widgets[i] = renderWidget(widgetConfig[i], i, widget.index);
       }
     }
     setWidgetLocations(newWidgetLocations);

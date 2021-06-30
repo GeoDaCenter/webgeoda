@@ -501,6 +501,11 @@ export default function reducer(state = INITIAL_STATE, action) {
         currentHoverTarget,
       };
     }
+    case "SET_WIDGET_CONFIG": {
+      const widgetConfig = [...state.widgetConfig];
+      widgetConfig[action.payload.widgetIndex] = action.payload.newConfig;
+      return {...state, widgetConfig};
+    }
     case "FORMAT_WIDGET_DATA": {
       const widgetData = {...state.widgetData};
       for(const i of action.payload.widgetSpecs){

@@ -61,6 +61,7 @@ export const INITIAL_STATE = {
     y: 0,
     data: null,
   },
+  widgetConfig: dataPresets.widgets,
   widgetData: {},
   cachedLisaScatterplotData: {},
   isLoading: true
