@@ -18,6 +18,34 @@ const WIDGET_OPTION_TYPES = [
         get: (w) => w.options.foregroundColor,
         set: (w, v) => { w.options.foregroundColor = v }
     },
+    {
+        displayName: "X-Axis Label",
+        datatype: "string",
+        supportedTypes: ["histogram", "line", "scatter", "scatter3d"],
+        get: (w) => w.options.xAxisLabel,
+        set: (w, v) => { w.options.xAxisLabel = v }
+    },
+    {
+        displayName: "Y-Axis Label",
+        datatype: "string",
+        supportedTypes: ["histogram", "line", "scatter", "scatter3d"],
+        get: (w) => w.options.yAxisLabel,
+        set: (w, v) => { w.options.yAxisLabel = v }
+    },
+    {
+        displayName: "Z-Axis Label",
+        datatype: "string",
+        supportedTypes: ["scatter3d"],
+        get: (w) => w.options.zAxisLabel,
+        set: (w, v) => { w.options.zAxisLabel = v }
+    },
+    {
+        displayName: "Point Size",
+        datatype: "number",
+        supportedTypes: ["scatter", "scatter3d"],
+        get: (w) => w.options.pointSize,
+        set: (w, v) => { w.options.pointSize = v }
+    },
 ]
 
 function WidgetSettings(props){
@@ -50,6 +78,10 @@ function WidgetSettings(props){
             }
             case "color": {
                 elem = <input type="color" value={i.get(data)} onChange={(e) => modifyData(data, i.set, e.target.value)} />;
+                break;
+            }
+            case "number": {
+                elem = <input type="number" value={i.get(data)} onChange={(e) => modifyData(data, i.set, e.target.value)} />;
                 break;
             }
         }
