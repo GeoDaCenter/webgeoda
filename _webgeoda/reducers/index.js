@@ -508,8 +508,14 @@ export default function reducer(state = INITIAL_STATE, action) {
     }
     case "FORMAT_WIDGET_DATA": {
       const widgetData = {...state.widgetData};
-      for(const i of action.payload.widgetSpecs){
-        widgetData[i.id] = formatWidgetData(i.variable, state, i.type, i.options);
+      if("widgetSpec" in action.payload){
+        // Only loading one widget's data
+        widgetData[action.payload.widgetSpec.id] = formatWidgetData(action.payload.widgetSpec.variable, action.payload.widgetSpec.type, action.payload.widgetSpec.options);
+      } else {
+        // Loading multiple widget data
+        for(const i of action.payload.widgetSpecs){
+          widgetData[i.id] = formatWidgetData(i.variable, state, i.type, i.options);
+        }
       }
       return {...state, widgetData};
     }

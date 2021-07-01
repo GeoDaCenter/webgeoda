@@ -2,8 +2,37 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Widgets.module.css';
 import {useDispatch} from 'react-redux';
+import useLoadWidgetData from '@webgeoda/hooks/useLoadWidgetData';
 
 const WIDGET_OPTION_TYPES = [
+    {
+        displayName: "Variable",
+        datatype: "variable",
+        supportedTypes: ["histogram"],
+        get: (w) => w.variable,
+        set: (w, v) => { w.variable = v }
+    },
+    {
+        displayName: "X Variable",
+        datatype: "variable",
+        supportedTypes: ["scatter", "scatter3d"],
+        get: (w) => w.xVariable,
+        set: (w, v) => { w.xVariable = v }
+    },
+    {
+        displayName: "Y Variable",
+        datatype: "variable",
+        supportedTypes: ["scatter", "scatter3d"],
+        get: (w) => w.yVariable,
+        set: (w, v) => { w.yVariable = v }
+    },
+    {
+        displayName: "Z Variable",
+        datatype: "variable",
+        supportedTypes: ["scatter3d"],
+        get: (w) => w.zVariable,
+        set: (w, v) => { w.zVariable = v }
+    },
     {
         displayName: "Header",
         datatype: "string",
@@ -50,7 +79,9 @@ const WIDGET_OPTION_TYPES = [
 
 function WidgetSettings(props){
     const dispatch = useDispatch();
+    const loadWidgetData = useLoadWidgetData();
     const [data, setData] = React.useState(props.config);
+    const [doesWidgetNeedRefresh, setDoesWidgetNeedRefresh] = React.useState(false);
 
     const save = () => {
         dispatch({
@@ -60,6 +91,9 @@ function WidgetSettings(props){
                 newConfig: data
             }
         });
+        if(doesWidgetNeedRefresh){
+            loadWidgetData(props.id);
+        }
         props.onSave();
     }
 
@@ -72,6 +106,13 @@ function WidgetSettings(props){
     const elems = WIDGET_OPTION_TYPES.filter(i => i.supportedTypes.includes(props.config.type)).map((i, idx) => {
         let elem = null;
         switch(i.datatype){
+            case "variable": {
+                elem = <input type="text" value={i.get(data)} onChange={(e) => {
+                    modifyData(data, i.set, e.target.value);
+                    setDoesWidgetNeedRefresh(true);
+                }} />;
+                break;
+            }
             case "string": {
                 elem = <input type="text" value={i.get(data)} onChange={(e) => modifyData(data, i.set, e.target.value)} />;
                 break;

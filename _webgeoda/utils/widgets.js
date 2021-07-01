@@ -248,3 +248,37 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         return {data, labels};
     }
 }
+
+export const getWidgetSpec = (widget, i) => {
+    let variable;
+    if(widget.type == 'scatter'){
+        variable = [widget.xVariable, widget.yVariable];
+    } else if(widget.type == 'scatter3d') {
+        variable = [widget.xVariable, widget.yVariable, widget.zVariable];
+    } else {
+        variable = widget.variable;
+    }
+    return {
+        id: i,
+        type: widget.type,
+        options: widget.options,
+        variable
+    };
+};
+
+export const loadWidget = async (widgetConfig, widgetIndex, dispatch) => {
+    const config = widgetConfig.widgets[widgetIndex];
+    const widgetSpec = getWidgetSpec(config, widgetIndex);
+    dispatch({
+        type: "FORMAT_WIDGET_DATA",
+        payload: {widgetSpec}
+    })
+}
+
+export const loadWidgets = async (widgetConfig, dispatch) => {
+    const widgetSpecs = widgetConfig.widgets.map(getWidgetSpec);
+    dispatch({
+        type: "FORMAT_WIDGET_DATA",
+        payload: {widgetSpecs}
+    });
+};

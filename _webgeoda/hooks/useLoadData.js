@@ -14,6 +14,8 @@ import {
   getBins
 } from "../utils/geoda-helpers";
 
+import {loadWidgets} from "../utils/widgets";
+
 import * as colors from "../utils/colors";
 
 import { fitBounds } from "@math.gl/web-mercator";
@@ -217,7 +219,7 @@ export default function useLoadData(dateLists = {}) {
       },
     });
     await loadTables(dataPresets, datasetToLoad, dateLists);
-    loadWidgets(dataPresets);
+    loadWidgets(dataPresets, dispatch); // TODO: Have useLoadWidgetData handle this?
   };
 
   const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
@@ -240,29 +242,6 @@ export default function useLoadData(dateLists = {}) {
     dispatch({
       type: "ADD_TABLES",
       payload: dataCollection,
-    });
-  };
-
-  const loadWidgets = async (dataPresets) => {
-    const widgetSpecs = dataPresets.widgets.map((widget, i) => {
-      let variable;
-      if(widget.type == 'scatter'){
-        variable = [widget.xVariable, widget.yVariable];
-      } else if(widget.type == 'scatter3d') {
-        variable = [widget.xVariable, widget.yVariable, widget.zVariable];
-      } else {
-        variable = widget.variable;
-      }
-      return {
-        id: i,
-        type: widget.type,
-        options: widget.options,
-        variable
-      };
-    });
-    dispatch({
-      type: "FORMAT_WIDGET_DATA",
-      payload: {widgetSpecs}
     });
   };
 
