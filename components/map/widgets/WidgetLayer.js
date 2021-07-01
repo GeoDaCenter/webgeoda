@@ -10,7 +10,7 @@ const mapWidgets = ({widgets, widgetLocations, side}) => widgets
   .sort((a, b) => widgetLocations[a.index].index - widgetLocations[b.index].index)
   .map(i => i.elem);
 
-export default function WidgetLayer(props){
+export default function WidgetLayer(){
   const widgetConfig = useSelector(state => state.widgetConfig);
 
   const renderWidget = (widget, trueIndex, columnIndex) => {

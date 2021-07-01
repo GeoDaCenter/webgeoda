@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import styles from './Widgets.module.css';
+// import styles from './Widgets.module.css';
 import {hexToRgb} from '@webgeoda/utils/map';
 import DeckGL from '@deck.gl/react';
 import {COORDINATE_SYSTEM, OrbitView} from '@deck.gl/core';
 import {PointCloudLayer, TextLayer} from '@deck.gl/layers';
 import {SimpleMeshLayer} from '@deck.gl/mesh-layers';
-import {WIDGET_WIDTH} from './Widget';
+// import {WIDGET_WIDTH} from './Widget';
 
 const DEFAULT_VIEW_STATE = {
   target: [0, 0, 0],
@@ -24,8 +24,8 @@ export const TARGET_RANGE = 100;
 function Scatter3DWidgetUnwrapped(props) {
   console.log(props)
   const [viewState, setViewState] = useState(DEFAULT_VIEW_STATE);
-  const mins = [0, 0, 0];
-  const maxs = [100, 100, 100];
+  // const mins = [0, 0, 0];
+  // const maxs = [100, 100, 100];
   const showGridlines = "gridlinesInterval" in props.options && props.options.gridlinesInterval.length === 3;
   const xTick = showGridlines ? (props.data.axesInfo[0].scalar * props.options.gridlinesInterval[0]) : null;
   const yTick = showGridlines ? (props.data.axesInfo[1].scalar * props.options.gridlinesInterval[1]) : null;
