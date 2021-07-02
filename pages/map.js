@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "../styles/Map.module.css";
 
 import MainNav from "../components/layout/MainNav";
-import Loader from "../components/layout/Loader";
+// import Loader from "../components/layout/Loader";
 
 import MainMap from "../components/map/MainMap";
 import VariablePanel from "../components/map/VariablePanel";

@@ -1,5 +1,5 @@
 import styles from "./MainMap.module.css";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 // deck GL and helper function import
 import DeckGL from "@deck.gl/react";
