@@ -66,6 +66,27 @@ class GeodaWorkerProxy {
     return [id, geojsonData];
   }
 
+  async loadGeoBuf(url, geoIdColumn) {
+    importScripts("./geobuf.js", "./pbf.js");
+    if (this.geoda === null) await this.New();
+    var response = await fetch(url);
+    var data = await response.arrayBuffer();
+    var geojsonData = geobuf.decode(new Pbf(data));
+
+    if (
+      !(isNaN(+geojsonData.features[0].properties[geoIdColumn])) 
+      && "number" !== typeof geojsonData.features[0].properties[geoIdColumn])
+    {   
+      for (var i=0; i<geojsonData.features.length; i++) {
+        geojsonData.features[i].properties[geoIdColumn] = +geojsonData.features[i].properties[geoIdColumn]
+      }
+    }
+
+    var ab = new TextEncoder().encode(JSON.stringify(geojsonData));
+    var id = this.readGeoJSON(ab);
+    return [id, geojsonData];
+  }
+
   /**
    * Worker functions are slightly obfuscated, so this lists out availble Prototype functions.
    * @returns {Array} List of available functions.

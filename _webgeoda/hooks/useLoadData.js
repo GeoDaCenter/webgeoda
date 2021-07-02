@@ -51,8 +51,7 @@ const lisaBins = {
 }
 
 const lisaColors = [
-  [
-    238,
+  [238,
     238,
     238
   ],
@@ -87,6 +86,17 @@ const lisaColors = [
     153
   ]
 ]
+
+const handleGeoLoad = async (geoda, fileName, id) => {
+  if (!window.location.origin) throw 'Window not ready!';
+  const fetchUrl = fileName.slice(0,4) === 'http' ? fileName : `${window.location.origin}/geojson/${fileName}`;
+
+  if (fileName.slice(-3,) === 'pbf') {
+    return geoda.loadGeoBuf(fetchUrl, id)
+  } else {
+    return geoda.loadGeoJSON(fetchUrl, id)
+  }
+}
 
 export default function useLoadData(dateLists = {}) {
   const geoda = useContext(GeodaContext);
@@ -123,7 +133,7 @@ export default function useLoadData(dateLists = {}) {
       && currentDataPreset.tables[dataParams.denominator];
     
     const firstLoadPromises = [
-      geoda.loadGeoJSON(`${window.location.origin}/geojson/${currentDataPreset.geojson}`, currentDataPreset.id),
+      handleGeoLoad(geoda, currentDataPreset.geojson, currentDataPreset.id),
       numeratorTable && handleLoadData(numeratorTable),
       denominatorTable && handleLoadData(denominatorTable),
     ];

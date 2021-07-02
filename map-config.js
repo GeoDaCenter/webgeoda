@@ -2,6 +2,13 @@ import * as colors from "@webgeoda/utils/colors";
 
 const data = [
   {
+    name: 'US Tracts', // Plain english name for dataset
+    geojson: 'us_tracts.pbf', // geospatial data to join to
+    id: 'G', // fid / geoid join column
+    bounds: [-125.109215,-66.925621,25.043926,49.295128],
+    tables: {},
+  },
+  {
     name: 'Texas Block Groups', // Plain english name for dataset
     geojson: 'tx.geojson', // geospatial data to join to
     id: 'GEOID', // fid / geoid join column
@@ -36,19 +43,19 @@ const data = [
 
 const variables = [
   {
+    variable: "G",
+    numerator: "properties",
+    nProperty: "G",
+    binning: "naturalBreaks",
+    colorScale: colors.colorbrewer.Pastel2,
+  },
+  {
     variable: "Total Population",
     numerator: "acs_data",
     nProperty: "Total Population",
     binning: "naturalBreaks",
     numberOfBins: 8,
     colorScale: colors.colorbrewer.Greens,
-  },
-  {
-    variable: "GEOID",
-    numerator: "properties",
-    nProperty: "GEOID",
-    binning: "naturalBreaks",
-    colorScale: colors.colorbrewer.Pastel2,
   },
   {
     variable: "Population Density",
