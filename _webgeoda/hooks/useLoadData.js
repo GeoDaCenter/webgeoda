@@ -219,7 +219,7 @@ export default function useLoadData(dateLists = {}) {
       },
     });
     await loadTables(dataPresets, datasetToLoad, dateLists);
-    loadWidgets(dataPresets, dispatch); // TODO: Have useLoadWidgetData handle this?
+    loadWidgets(dataPresets.widgets, dispatch); // TODO: Have useLoadWidgetData handle this?
   };
 
   const loadTables = async (dataPresets, datasetToLoad, dateLists) => {

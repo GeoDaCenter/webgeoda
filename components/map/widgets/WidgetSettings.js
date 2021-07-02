@@ -91,6 +91,7 @@ function WidgetSettings(props){
                 newConfig: data
             }
         });
+        // TODO Problem: loadWidgetData fires before variable change propagates
         if(doesWidgetNeedRefresh){
             loadWidgetData(props.id);
         }

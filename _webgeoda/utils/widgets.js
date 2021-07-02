@@ -77,7 +77,6 @@ const getColumnData = (variableSpec, state, returnKeys=false) => {
 
 export const formatWidgetData = (variableName, state, widgetType, options) => {
     const dataPresets = state.dataPresets
-
     if (widgetType === "histogram"){
         const variableSpec = find(
             dataPresets.variables,
@@ -267,7 +266,7 @@ export const getWidgetSpec = (widget, i) => {
 };
 
 export const loadWidget = async (widgetConfig, widgetIndex, dispatch) => {
-    const config = widgetConfig.widgets[widgetIndex];
+    const config = widgetConfig[widgetIndex];
     const widgetSpec = getWidgetSpec(config, widgetIndex);
     dispatch({
         type: "FORMAT_WIDGET_DATA",
@@ -276,7 +275,7 @@ export const loadWidget = async (widgetConfig, widgetIndex, dispatch) => {
 }
 
 export const loadWidgets = async (widgetConfig, dispatch) => {
-    const widgetSpecs = widgetConfig.widgets.map(getWidgetSpec);
+    const widgetSpecs = widgetConfig.map(getWidgetSpec);
     dispatch({
         type: "FORMAT_WIDGET_DATA",
         payload: {widgetSpecs}
