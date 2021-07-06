@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './Widgets.module.css';
 import {useDispatch} from 'react-redux';
 import useLoadWidgetData from '@webgeoda/hooks/useLoadWidgetData';
+import {shallowEqual} from '@webgeoda/utils/data';
 
 const WIDGET_OPTION_TYPES = [
     {
@@ -84,17 +85,16 @@ function WidgetSettings(props){
     const [doesWidgetNeedRefresh, setDoesWidgetNeedRefresh] = React.useState(false);
 
     const save = () => {
-        dispatch({
-            type: "SET_WIDGET_CONFIG",
-            payload: {
-                widgetIndex: props.id,
-                newConfig: data
-            }
-        });
-        // TODO Problem: loadWidgetData fires before variable change propagates
-        if(doesWidgetNeedRefresh){
-            loadWidgetData(props.id);
+        if (!shallowEqual(props.config, data)){
+            dispatch({
+                type: "UPDATE_WIDGET_CONFIG_AND_DATA",
+                payload: {
+                    widgetIndex: props.id,
+                    newConfig: data
+                }
+            });
         }
+
         props.onSave();
     }
 

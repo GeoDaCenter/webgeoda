@@ -519,6 +519,34 @@ export default function reducer(state = INITIAL_STATE, action) {
       }
       return {...state, widgetData};
     }
+    case "UPDATE_WIDGET_CONFIG_AND_DATA":{
+      let widgetConfig = [...state.widgetConfig];
+
+      const newWidgetSpec = {
+        ...state.widgetConfig[action.payload.widgetIndex],
+        ...action.payload.newConfig
+      }
+
+      widgetConfig[action.payload.widgetIndex] = newWidgetSpec;
+
+      const newWidgetData = formatWidgetData(
+        newWidgetSpec.variable, 
+        state,
+        newWidgetSpec.type, 
+        newWidgetSpec.options
+      );      
+
+      const widgetData = {
+        ...state.widgetData,
+        [action.payload.widgetIndex]: newWidgetData
+      };
+      
+      return {
+        ...state,
+        widgetData,
+        widgetConfig
+      }
+    }
     case "CACHE_SCATTERPLOT_LISA": {
       const cachedLisaScatterplotData = {...state.cachedLisaScatterplotData};
       cachedLisaScatterplotData[action.payload.variableName] = action.payload.data;
