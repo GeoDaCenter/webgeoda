@@ -142,48 +142,48 @@ const widgets = [
       yAxisLabel: "Median Gross Rent"
     }
   },
-  // {
-  //   position: "right",
-  //   type: "line",
-  //   variable: "???",
-  //   options: {
-  //     header: "Time Series Data",
-  //     foregroundColor: "#AAAA00",
-  //     yAxisLabel: "Y Axis"
-  //   }
-  // },
-  // {
-  //   position: "right",
-  //   type: "scatter",
-  //   xVariable: "Median Household Income",
-  //   yVariable: "Median Gross Rent",
-  //   options: {
-  //     header: "Median HH Income LISA scatterplot",
-  //     foregroundColor: "cluster",
-  //     numClusters: 5,
-  //     clusterColors: [
-  //       "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF"
-  //     ],
-  //     pointSize: .2,
-  //     xAxisLabel: "Median HH Income",
-  //     yAxisLabel: "Spatial Lag",
-  //     removeZeroValues: true
-  //   }
-  // },
-  // {
-  //   position: "right",
-  //   type: "scatter3d",
-  //   xVariable: "Median Household Income",
-  //   yVariable: "Median Gross Rent",
-  //   zVariable: "Median age",
-  //   options: {
-  //     foregroundColor: "#00AAFF",
-  //     xAxisLabel: "Median Household Income",
-  //     yAxisLabel: "Median Gross Rent",
-  //     zAxisLabel: "Median Age",
-  //     gridlinesInterval: [50000, 500, 5]
-  //   }
-  // }
+  {
+    position: "right",
+    type: "line",
+    variable: "???",
+    options: {
+      header: "Time Series Data",
+      foregroundColor: "#AAAA00",
+      yAxisLabel: "Y Axis"
+    }
+  },
+  {
+    position: "right",
+    type: "scatter",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
+    options: {
+      header: "Median HH Income LISA scatterplot",
+      foregroundColor: "cluster",
+      numClusters: 5,
+      clusterColors: [
+        "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF"
+      ],
+      pointSize: .2,
+      xAxisLabel: "Median HH Income",
+      yAxisLabel: "Spatial Lag",
+      removeZeroValues: true
+    }
+  },
+  {
+    position: "right",
+    type: "scatter3d",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
+    zVariable: "Median age",
+    options: {
+      foregroundColor: "#00AAFF",
+      xAxisLabel: "Median Household Income",
+      yAxisLabel: "Median Gross Rent",
+      zAxisLabel: "Median Age",
+      gridlinesInterval: [50000, 500, 5]
+    }
+  }
 ];
 
 // 🦺 exports below -- you can safely ignore! 🦺 //

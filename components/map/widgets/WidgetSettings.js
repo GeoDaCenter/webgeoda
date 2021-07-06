@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Widgets.module.css';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import useLoadWidgetData from '@webgeoda/hooks/useLoadWidgetData';
 import {shallowEqual} from '@webgeoda/utils/data';
 
@@ -80,7 +80,9 @@ const WIDGET_OPTION_TYPES = [
 
 function WidgetSettings(props){
     const dispatch = useDispatch();
-    const loadWidgetData = useLoadWidgetData();
+    const variableConfig = useSelector(state => state.dataPresets.variables);
+    const variableOptions = variableConfig.filter(config => config.categorical !== true).map(config => config.variable);
+
     const [data, setData] = React.useState(props.config);
     const [doesWidgetNeedRefresh, setDoesWidgetNeedRefresh] = React.useState(false);
 
@@ -90,7 +92,8 @@ function WidgetSettings(props){
                 type: "UPDATE_WIDGET_CONFIG_AND_DATA",
                 payload: {
                     widgetIndex: props.id,
-                    newConfig: data
+                    newConfig: data,
+                    doesWidgetNeedRefresh
                 }
             });
         }
@@ -108,10 +111,18 @@ function WidgetSettings(props){
         let elem = null;
         switch(i.datatype){
             case "variable": {
-                elem = <input type="text" value={i.get(data)} onChange={(e) => {
-                    modifyData(data, i.set, e.target.value);
-                    setDoesWidgetNeedRefresh(true);
-                }} />;
+                elem = (
+                    <select value={i.get(data)} onChange={(e) => {
+                        modifyData(data, i.set, e.target.value);
+                        setDoesWidgetNeedRefresh(true);
+                    }}>
+                        {
+                            variableOptions.map(v => (
+                                <option value={v} key={`variable-choice-${v}`}>{v}</option>
+                            ))
+                        }
+                    </select>
+                )
                 break;
             }
             case "string": {

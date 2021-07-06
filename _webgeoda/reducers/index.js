@@ -529,18 +529,16 @@ export default function reducer(state = INITIAL_STATE, action) {
 
       widgetConfig[action.payload.widgetIndex] = newWidgetSpec;
 
-      const newWidgetData = formatWidgetData(
-        newWidgetSpec.variable, 
-        state,
-        newWidgetSpec.type, 
-        newWidgetSpec.options
-      );      
-
-      const widgetData = {
-        ...state.widgetData,
-        [action.payload.widgetIndex]: newWidgetData
-      };
-      
+      const widgetData = {...state.widgetData};
+      if(action.payload.doesWidgetNeedRefresh){
+        const newWidgetData = formatWidgetData(
+          newWidgetSpec.variable, 
+          state,
+          newWidgetSpec.type, 
+          newWidgetSpec.options
+        );  
+        widgetData[action.payload.widgetIndex] = newWidgetData;
+      }
       return {
         ...state,
         widgetData,
