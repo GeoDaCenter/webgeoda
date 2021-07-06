@@ -173,7 +173,12 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         }
         let clusterLabels = null;
         if(isCluster){
-            clusterLabels = kMeansCluster(statisticsFormattedData, options.numClusters || 2).labels;
+            try {
+                clusterLabels = kMeansCluster(statisticsFormattedData, options.numClusters || 2).labels;
+            } catch(e) {
+                console.warn(e);
+                return;
+            }
         }
         return {
             data: formattedData,

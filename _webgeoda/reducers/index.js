@@ -1,4 +1,5 @@
 import { INITIAL_STATE } from "../constants/defaults";
+import {getWidgetSpec} from "../utils/widgets";
 
 import {
   mapFnNb,
@@ -522,20 +523,21 @@ export default function reducer(state = INITIAL_STATE, action) {
     case "UPDATE_WIDGET_CONFIG_AND_DATA":{
       let widgetConfig = [...state.widgetConfig];
 
-      const newWidgetSpec = {
+      const newWidgetConfig = {
         ...state.widgetConfig[action.payload.widgetIndex],
         ...action.payload.newConfig
       }
 
-      widgetConfig[action.payload.widgetIndex] = newWidgetSpec;
+      widgetConfig[action.payload.widgetIndex] = newWidgetConfig;
+      const widgetSpec = getWidgetSpec(newWidgetConfig, action.payload.widgetIndex);
 
       const widgetData = {...state.widgetData};
       if(action.payload.doesWidgetNeedRefresh){
         const newWidgetData = formatWidgetData(
-          newWidgetSpec.variable, 
+          widgetSpec.variable, 
           state,
-          newWidgetSpec.type, 
-          newWidgetSpec.options
+          widgetSpec.type, 
+          widgetSpec.options
         );  
         widgetData[action.payload.widgetIndex] = newWidgetData;
       }
