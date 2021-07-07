@@ -8,12 +8,14 @@ import {MVTLayer} from '@deck.gl/geo-layers';
 import {MapboxLayer} from '@deck.gl/mapbox';
 import MapboxGLMap from "react-map-gl";
 import { useDispatch, useSelector } from "react-redux";
+import {FlyToInterpolator} from '@deck.gl/core';
 
 import Loader from "../layout/Loader";
 
 import { useViewport, useSetViewport } from '@webgeoda/contexts';
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateMap from "@webgeoda/hooks/useUpdateMap";
+import usePanMap from "@webgeoda/hooks/usePanMap";
 
 import Legend from "./Legend";
 import MapControls from "./MapControls";
@@ -33,6 +35,7 @@ export default function MainMap() {
   const isLoading = useSelector((state) => state.isLoading);
   const [glContext, setGLContext] = useState();
   const dispatch = useDispatch();
+  // const panToGeoid = usePanMap();
 
   // eslint-disable-next-line no-empty-pattern
   const [] = useLoadData();
@@ -54,6 +57,8 @@ export default function MainMap() {
         zoom: initialViewState.zoom * 0.9,
       });
   }, [initialViewState]);
+
+  // const handleMapClick = (e) => e.object && panToGeoid(e.object?.properties[currentId])
 
   const handleMapHover = (e) => {
     if (e.object) {
@@ -117,12 +122,19 @@ export default function MainMap() {
         id: "choropleth",
         data: currentMapGeography,
         getFillColor: (d) => mapData.data[d.properties[currentId]]?.color,
+        getLineColor: (d) => [
+          0,
+          0,
+          0,
+          255 * (+d.properties[currentId] === currentHoverId),
+        ],
         // getElevation: d => currentMapData[d.properties.GEOID].height,
         pickable: true,
-        stroked: false,
+        stroked: true,
         filled: true,
-        autoHighlight: true,
-        highlightColor: [40,40,40],
+        lineWidthScale: 1,
+        lineWidthMinPixels: 1,
+        getLineWidth: 5,
         // wireframe: mapParams.vizType === '3D',
         // extruded: mapParams.vizType === '3D',
         // opacity: mapParams.vizType === 'dotDensity' ? mapParams.dotDensityParams.backgroundTransparency : 0.8,
@@ -131,29 +143,11 @@ export default function MainMap() {
         // onClick: handleMapClick,
         updateTriggers: {
           getFillColor: mapData.params,
+          getLineColor: [mapData.params, currentHoverId]
         },
         transitions: {
           getFillColor: dataParams.nIndex === undefined ? 250 : 0
         }
-      }),
-      new GeoJsonLayer({
-        id: "choropleth-hover",
-        data: currentMapGeography,
-        getLineColor: (d) => [
-          0,
-          0,
-          0,
-          255 * (+d.properties[currentId] === currentHoverId),
-        ],
-        lineWidthScale: 1,
-        lineWidthMinPixels: 1,
-        getLineWidth: 5,
-        pickable: false,
-        stroked: true,
-        filled: false,
-        updateTriggers: {
-          getLineColor: [mapData.params, currentHoverId]
-        },
       })];
 
     // h
