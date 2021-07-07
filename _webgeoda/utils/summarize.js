@@ -552,7 +552,7 @@ export const generateReport = (
 };
 
 export const findDataset = (currentData, preset) =>
-  find(preset, (d) => d.geojson === currentData);
+  find(preset, (d) => d.geodata === currentData);
 
 export const findDatasetTable = (currentData, tableName, presets) =>
   findDataset(currentData, presets)["tables"][tableName];
@@ -560,13 +560,13 @@ export const findDatasetTable = (currentData, tableName, presets) =>
 export const findAnyTable = (tableName, presets) => {
   for (let i = 0; i < presets.length; i++) {
     try {
-      return findDatasetTable(presets[i].geojson, tableName, presets);
+      return findDatasetTable(presets[i].geodata, tableName, presets);
     } catch {}
   }
 };
 export const findDatasetWithTable = (tableName, presets) => {
   for (let i = 0; i < presets.length; i++) {
-    if (presets[i].tables?.hasOwnProperty(tableName)) return presets[i].geojson
+    if (presets[i].tables?.hasOwnProperty(tableName)) return presets[i].geodata
   }
 };
 

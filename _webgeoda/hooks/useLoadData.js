@@ -107,13 +107,14 @@ export default function useLoadData(dateLists = {}) {
 
 
   useEffect(() => {
-    loadData(dataPresets, dataPresets.data[0].geojson)
+    loadData(dataPresets, dataPresets.data[0].geodata)
   },[])
 
   const loadData = async (dataPresets, datasetToLoad) => {
     if (geoda === undefined) location.reload();
-    const currentDataPreset = find(dataPresets.data, f => f.geojson === datasetToLoad);
-
+    const notTiles = !datasetToLoad.includes('tiles')
+    const currentDataPreset = find(dataPresets.data, f => f.geodata === datasetToLoad);
+    
     const numeratorTable =
       currentDataPreset.tables?.hasOwnProperty(dataParams.numerator) 
       && currentDataPreset.tables[dataParams.numerator];
@@ -123,26 +124,24 @@ export default function useLoadData(dateLists = {}) {
       && currentDataPreset.tables[dataParams.denominator];
     
     const firstLoadPromises = [
-      geoda.loadGeoJSON(`${window.location.origin}/geojson/${currentDataPreset.geojson}`, currentDataPreset.id),
+      notTiles ? geoda.loadGeoJSON(`${window.location.origin}/geojson/${currentDataPreset.geodata}`, currentDataPreset.id) : [false, false],
       numeratorTable && handleLoadData(numeratorTable),
       denominatorTable && handleLoadData(denominatorTable),
     ];
-
+    
     const [
       [mapId, geojsonData], 
       numeratorData, 
       denominatorData
     ] = await Promise.all(firstLoadPromises);
 
-    const geojsonProperties = indexGeoProps(
-      geojsonData,
-      currentDataPreset.id
-    );
+    const geojsonProperties = notTiles 
+    ? indexGeoProps(geojsonData,currentDataPreset.id)
+    : false;
 
-    const geojsonOrder = getIdOrder(
-      geojsonData.features,
-      currentDataPreset.id
-    );
+    const geojsonOrder = notTiles 
+    ? getIdOrder(geojsonData.features,currentDataPreset.id) 
+    : false;
 
     const bounds = currentDataPreset.bounds 
       ? currentDataPreset.bounds 
@@ -185,7 +184,6 @@ export default function useLoadData(dateLists = {}) {
         dataParams,
         bins
       })
-
     dispatch({
       type: "INITIAL_LOAD",
       payload: {
@@ -194,6 +192,7 @@ export default function useLoadData(dateLists = {}) {
           numerator: dataParams.numerator === "properties" ? "properties" : numeratorTable,
           denominator: dataParams.numerator === "properties" ? "properties" : denominatorTable,
         },
+        currentTiles: currentDataPreset.tiles,
         storedGeojson: {
           [datasetToLoad]: {
             data: geojsonData,
@@ -216,6 +215,7 @@ export default function useLoadData(dateLists = {}) {
         id: currentDataPreset.id,
       },
     });
+
     loadTables(dataPresets, datasetToLoad, dateLists);
     // loadWidgets(dataPresets);
   };
@@ -223,7 +223,7 @@ export default function useLoadData(dateLists = {}) {
   const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
     const tablesToFetch = find(
       dataPresets.data,
-      (o) => o.geojson === datasetToLoad
+      (o) => o.geodata === datasetToLoad
     ).tables;
 
     const tableNames = Object.keys(tablesToFetch);
