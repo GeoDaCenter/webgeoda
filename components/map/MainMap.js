@@ -1,5 +1,5 @@
 import styles from "./MainMap.module.css";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 // deck GL and helper function import
 import DeckGL from "@deck.gl/react";
@@ -73,11 +73,12 @@ export default function MainMap() {
       })
     }
   };
-  console.log(mapData.params)
+
   const layers = !mapData.params.includes(currentData)
     ? []
     : currentData.includes('tiles')
     ? [new MVTLayer({
+         // eslint-disable-next-line no-undef
         data: `https://api.mapbox.com/v4/${currentTiles}/{z}/{x}/{y}.mvt?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
         getFillColor: (d) => mapData.data[d.properties[currentId]]?.color||[0,0,0,0],
         updateTriggers: {
