@@ -51,7 +51,7 @@ export default function VariablePanel(props) {
         }
         >
           {dataPresets.data.map((entry, i) => (
-            <ListboxOption value={entry.geojson} key={`geography-list-${i}`} disabled={!((dataParams.numerator in entry.tables)||dataParams.numerator==="properties")}>
+            <ListboxOption value={entry.geodata} key={`geography-list-${i}`} disabled={!((dataParams.numerator in entry.tables)||dataParams.numerator==="properties")}>
               {entry.name}
             </ListboxOption>
           ))}

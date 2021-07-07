@@ -1,9 +1,8 @@
 import * as colors from "@webgeoda/utils/colors";
-
 const data = [
   {
     name: 'Texas Block Groups', // Plain english name for dataset
-    geojson: 'tx.geojson', // geospatial data to join to
+    geodata: 'tx.geojson', // geospatial data to join to
     id: 'GEOID', // fid / geoid join column
     tables: {
       // any additional tabular data
@@ -26,7 +25,7 @@ const data = [
   },
   {
     name: 'US States', // Plain english name for dataset
-    geojson: 'states.geojson', // geospatial data to join to
+    geodata: 'states.geojson', // geospatial data to join to
     id: 'GEOID', // fid / geoid join column
     bounds: [-125.109215,-66.925621,25.043926,49.295128],
     tables: {
@@ -37,6 +36,20 @@ const data = [
       }
     },
   },
+  {
+    name: 'US Tracts',
+    geodata: 'US Tracts [tiles]',
+    tiles: `csds-hiplab.3ezoql1c`,
+    id: 'GEOID',
+    bounds: [-125.109215,-66.925621,25.043926,49.295128],
+    tables: {
+      acs_data: {
+        file: 'tract_acs.csv',
+        type: 'characteristic',
+        join: 'FIPS',
+      }
+    },
+  }
 ];
 
 const variables = [
@@ -186,10 +199,16 @@ const widgets = [
   }
 ];
 
+// const style = {
+//   mapboxStyle: 'mapbox://styles/dhalpern/ckpkalk6o2me517kvlgz1eo7r',
+//   underLayerId: 'hillshade copy'
+// }
+
 // 🦺 exports below -- you can safely ignore! 🦺 //
 export const dataPresets = {
   data,
   variables,
   mapModes,
-  widgets
+  widgets,
+  // style
 };

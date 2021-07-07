@@ -37,6 +37,12 @@ const getSimpleColor = (
   mapFn
 ) => mapFn(value, bins, colorScale, mapType, numerator);
 
+const geoGeojsonKeyList = (object, prop) => {
+  let returnArray = [];
+  for (let i=0; i<object.features.length; i++) returnArray.push(object.features[i].properties[prop])
+  return returnArray
+}
+
 const getLisaColor = (
   value,
   bins,
@@ -85,26 +91,17 @@ export const generateMapData = (state) => {
   let returnObj = {};
   let i = 0;
 
-  const getTable = (i, predicate) => {
+  const getTable = (id, predicate, table) => {
     if (!state.dataParams[predicate]) return {};
 
     if (
       state.dataParams[predicate] === "properties" ||
       (!state.dataParams.nIndex && !state.dataParams.nProperty)
     ) {
-      return state.storedGeojson[state.currentData].data.features[i].properties;
+      return state.storedGeojson[state.currentData].properties[id];
     } else {
       // todo fallback table
-      const currentTables = find(
-        state.dataPresets.data,
-        (o) => o.geojson === state.currentData
-      )?.tables;
-      const tableName = currentTables[state.dataParams[predicate]]?.file;
-      const id =
-        state.storedGeojson[state.currentData].data.features[i].properties[
-          state.currentId
-        ];
-      return tableName && state.storedData[tableName].data[id];
+      return state.storedData[table]?.data[id];
     }
   };
   
@@ -148,16 +145,31 @@ export const generateMapData = (state) => {
       params: getVarId(state.currentData, tempParams, state.mapParams),
       data: returnObj,
     };
-  }
+  }  
+    
+  const currentTables = find(
+    state.dataPresets.data,
+    (o) => o.geodata === state.currentData
+  )?.tables;
+  
+  const [numeratorTable, denominatorTable]
+    = [
+      currentTables[state.dataParams.numerator]?.file,
+      currentTables[state.dataParams.denominator]?.file,
+    ]
+
+  const idList = state.currentData.includes('tiles') 
+  ? Object.keys(state.storedData[numeratorTable].data)
+  : state.storedGeojson[state.currentData].order
 
   for (
     let i = 0;
-    i < state.storedGeojson[state.currentData].data.features.length;
+    i < idList.length;
     i++
   ) {
     const tempVal = dataFn(
-      getTable(i, "numerator"),
-      getTable(i, "denominator"),
+      getTable(idList[i], "numerator", numeratorTable),
+      getTable(idList[i], "denominator", denominatorTable),
       tempParams
     );
 
@@ -170,28 +182,17 @@ export const generateMapData = (state) => {
       state.storedLisaData,
       state.storedGeojson,
       state.currentData,
-      state.storedGeojson[state.currentData].data.features[i].properties[
-        state.currentId
-      ],
+      idList[i],
       mapFn
     );
     
     const height = getHeight(tempVal, tempParams);
 
     if (color === null) {
-      returnObj[
-        state.storedGeojson[state.currentData].data.features[i].properties[
-          state.currentId
-        ]
-      ] = { color: [0, 0, 0, 0], height: 0 };
+      returnObj[idList[i]] = { color: [0, 0, 0, 0], height: 0 };
       continue;
     }
-
-    returnObj[
-      state.storedGeojson[state.currentData].data.features[i].properties[
-        state.currentId
-      ]
-    ] = { color, height };
+    returnObj[idList[i]] = { color, height };
   }
 
   return {

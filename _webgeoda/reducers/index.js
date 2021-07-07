@@ -50,6 +50,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       };
       return {
         ...state,
+        currentTiles: action.payload.currentTiles,
         currentData: action.payload.currentData,
         storedGeojson,
         storedData,
@@ -86,7 +87,7 @@ export default function reducer(state = INITIAL_STATE, action) {
 
       const currPresets = find(
         state.dataPresets.data, 
-        o => o.geojson === state.currentData
+        o => o.geodata === state.currentData
       );
 
       if (
@@ -114,6 +115,7 @@ export default function reducer(state = INITIAL_STATE, action) {
         return {
           ...state,
           currentData: action.payload,
+          currentTiles: find(state.dataPresets.data, o => o.geodata === action.payload).tiles
         };
       } else {
         return {
@@ -496,10 +498,11 @@ export default function reducer(state = INITIAL_STATE, action) {
         data: tooltipData,
         id: +action.payload.id,
       };
-
+      
       return {
         ...state,
         currentHoverTarget,
+        currentHoverId: action.payload.layer?.includes("tiles") ? null : +action.payload.id
       };
     }
     case "SET_WIDGET_CONFIG": {
