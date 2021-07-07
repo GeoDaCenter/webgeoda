@@ -26,6 +26,13 @@
   position: sticky;
   top: 0;
 }
+.widgetDropdownHandle .caret {
+  margin-left: 5px;
+  transition: transform 0.5s;
+}
+#columnLeft:hover .widgetDropdownHandle .caret, #columnLeft.dropping .widgetDropdownHandle .caret {
+  transform: rotate(90deg);
+}
 
 .widgetColumn {
   display: flex;

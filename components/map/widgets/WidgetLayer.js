@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import styles from './Widgets.module.css';
 import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
 const mapWidgets = ({widgets, widgetLocations, side}) => widgets
   .map((elem, index) => ({elem, index}))
@@ -75,7 +77,7 @@ export default function WidgetLayer(){
             {(provided, snapshot) => (
               <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""}`} id={styles.columnLeft}>
                 <div className={styles.widgetDropdownHandle}>
-                  <p>Widgets</p>
+                  <p>Widgets <FontAwesomeIcon icon={faAngleRight} className={styles.caret} /></p>
                 </div>
                 {widgetElementsLeft}
               </div>
