@@ -37,7 +37,7 @@ export default function usePanMap(){
         const bounds = findBounds(
             find(
                 storedGeojson[currentData].data.features,
-                (o) => o.properties[currentId] === geoid
+                (o) => o.properties[currentId].toString() === geoid.toString()
             )
             ?.geometry?.coordinates
         )

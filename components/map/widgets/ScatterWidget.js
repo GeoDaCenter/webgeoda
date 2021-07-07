@@ -5,9 +5,11 @@ import {Scatter} from 'react-chartjs-2';
 import useLisa from '@webgeoda/hooks/useLisa';
 import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
 import {useDispatch} from 'react-redux';
+import usePanMap from '@webgeoda/hooks/usePanMap';
 
 function ScatterWidgetUnwrapped(props) {
   const dispatch = useDispatch();
+  const panToGeoid = usePanMap();
   const [getLisa,] = useLisa();
   const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
   const lisaData = getCachedLisa(props.data.variableSpecs[0]);
@@ -73,14 +75,7 @@ function ScatterWidgetUnwrapped(props) {
     onClick: (e, items) => {
       if(items.length == 0) return;
       const point = props.data.data[items[0].index];
-      dispatch({
-        type: "SET_HOVER_OBJECT",
-        payload: {
-          id: point.id,
-          x: 500, // TODO: Query map data, get current screen point of selected item
-          y: 250
-        },
-      });
+      panToGeoid(point.id);
     },
     plugins: {
       legend: {

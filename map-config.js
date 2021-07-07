@@ -148,11 +148,11 @@ const widgets = [
   {
     hidden: true,
     type: "histogram",
-    variable: "Median Gross Rent",
+    variable: "Median age",
     options: {
-      header: "Median Gross Rent",
+      header: "Median age",
       foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Gross Rent"
+      yAxisLabel: "Median age"
     }
   },
   {
@@ -168,31 +168,31 @@ const widgets = [
   {
     hidden: false,
     type: "scatter",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
+    xVariable: "Median age",
+    yVariable: "Median age",
     options: {
-      header: "Median HH Income LISA scatterplot",
-      foregroundColor: "cluster",
+      header: "Median age",
+      foregroundColor: "#000000",
       numClusters: 5,
       clusterColors: [
         "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF"
       ],
       pointSize: .2,
-      xAxisLabel: "Median HH Income",
-      yAxisLabel: "Spatial Lag",
+      xAxisLabel: "Median age",
+      yAxisLabel: "Median age",
       removeZeroValues: true
     }
   },
   {
     hidden: false,
     type: "scatter3d",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
+    xVariable: "Median age",
+    yVariable: "Median age",
     zVariable: "Median age",
     options: {
       foregroundColor: "#00AAFF",
-      xAxisLabel: "Median Household Income",
-      yAxisLabel: "Median Gross Rent",
+      xAxisLabel: "Median age",
+      yAxisLabel: "Median age",
       zAxisLabel: "Median Age",
       gridlinesInterval: [50000, 500, 5]
     }
