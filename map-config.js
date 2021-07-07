@@ -1,5 +1,4 @@
 import * as colors from "@webgeoda/utils/colors";
-
 const data = [
   {
     name: 'Texas Block Groups', // Plain english name for dataset
@@ -35,7 +34,7 @@ const data = [
   {
     name: 'US Tracts',
     geodata: 'US Tracts [tiles]',
-    tiles: 'https://api.mapbox.com/v4/csds-hiplab.ctqxwoi9/{z}/{x}/{y}.mvt?access_token=pk.eyJ1IjoiY3Nkcy1oaXBsYWIiLCJhIjoiY2tkcTdlYXNsMGRhNDJybXl1MWdpejdidSJ9.mgK9yXDfhFCLh5YQuz6r_g',
+    tiles: `csds-hiplab.3ezoql1c`,
     id: 'GEOID',
     bounds: [-125.109215,-66.925621,25.043926,49.295128],
     tables: {
@@ -56,13 +55,6 @@ const variables = [
     binning: "naturalBreaks",
     numberOfBins: 8,
     colorScale: colors.colorbrewer.Greens,
-  },
-  {
-    variable: "GEOID",
-    numerator: "properties",
-    nProperty: "GEOID",
-    binning: "naturalBreaks",
-    colorScale: colors.colorbrewer.Pastel2,
   },
   {
     variable: "Population Density",

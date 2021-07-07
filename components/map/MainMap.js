@@ -73,14 +73,16 @@ export default function MainMap() {
       })
     }
   };
-  console.log(currentTiles)
-  
+  console.log(mapData.params)
   const layers = !mapData.params.includes(currentData)
     ? []
     : currentData.includes('tiles')
     ? [new MVTLayer({
-        data: currentTiles,
+        data: `https://api.mapbox.com/v4/${currentTiles}/{z}/{x}/{y}.mvt?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
         getFillColor: (d) => mapData.data[d.properties[currentId]]?.color||[0,0,0,0],
+        updateTriggers: {
+          getFillColor: mapData.params,
+        },
       })]  
     : [
       new GeoJsonLayer({
