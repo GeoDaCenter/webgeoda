@@ -1,10 +1,11 @@
 import styles from "./MainMap.module.css";
-import React, { useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 
 // deck GL and helper function import
 import DeckGL from "@deck.gl/react";
 import { GeoJsonLayer } from "@deck.gl/layers";
 import {MVTLayer} from '@deck.gl/geo-layers';
+import {MapboxLayer} from '@deck.gl/mapbox';
 import MapboxGLMap from "react-map-gl";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -24,11 +25,13 @@ export default function MainMap() {
   const currentData = useSelector((state) => state.currentData);
   const currentTiles = useSelector((state) => state.currentTiles);
   const currentId = useSelector((state) => state.currentId);
-  const currentHoverId = useSelector((state) => state.currentHoverTarget.id);
+  const currentHoverId = useSelector((state) => state.currentHoverId);
   const storedGeojson = useSelector((state) => state.storedGeojson);
   const currentMapGeography = storedGeojson[currentData]?.data || [];
   const mapData = useSelector((state) => state.mapData);
+  const mapStyle = useSelector((state) => state.mapStyle);
   const isLoading = useSelector((state) => state.isLoading);
+  const [glContext, setGLContext] = useState();
   const dispatch = useDispatch();
 
   // eslint-disable-next-line no-empty-pattern
@@ -58,6 +61,7 @@ export default function MainMap() {
         type: "SET_HOVER_OBJECT",
         payload: {
           id: e.object?.properties[currentId],
+          layer: e.layer.id,
           x: e.x,
           y: e.y,
         },
@@ -74,13 +78,33 @@ export default function MainMap() {
     }
   };
 
+  const onMapLoad = useCallback(() => {
+    const map = mapRef.current.getMap();
+    const deck = deckRef.current.deck;
+    
+    map.addLayer(
+      new MapboxLayer({ id: "choropleth", deck }),
+      mapStyle.underLayerId
+    );
+    map.addLayer(
+      new MapboxLayer({ id: "tiles layer", deck }),
+      mapStyle.underLayerId
+    );
+  }, []);
+
   const layers = !mapData.params.includes(currentData)
-    ? []
+    ? [new GeoJsonLayer({
+      id: "choropleth",
+      data: null
+    })]
     : currentData.includes('tiles')
     ? [new MVTLayer({
-         // eslint-disable-next-line no-undef
+         // eslint-disable-next-line no-undef 
+        id: "tiles layer",
         data: `https://api.mapbox.com/v4/${currentTiles}/{z}/{x}/{y}.mvt?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
         getFillColor: (d) => mapData.data[d.properties[currentId]]?.color||[0,0,0,0],
+        pickable: true,
+        onHover: handleMapHover,
         updateTriggers: {
           getFillColor: mapData.params,
         },
@@ -141,12 +165,19 @@ export default function MainMap() {
         controller={true}
         pickingRadius={20}
         onViewStateChange={({viewState}) => setViewport(viewState)}
+        onWebGLInitialized={setGLContext}
+        glOptions={{
+          /* To render vector tile polygons correctly */
+          stencil: true
+        }}
       >
         <MapboxGLMap
           reuseMaps
           ref={mapRef}
-          mapStyle={"mapbox://styles/dhalpern/ckp07gekw2p2317phroaarzej"}
+          gl={glContext}
+          mapStyle={mapStyle.mapboxStyle}
           preventStyleDiffing={true}
+          onLoad={onMapLoad}
           // eslint-disable-next-line no-undef
           mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         ></MapboxGLMap>

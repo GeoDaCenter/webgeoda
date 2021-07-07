@@ -52,6 +52,10 @@ export const INITIAL_STATE = {
   sidebarData: {},
   anchorEl: null,
   mapLoaded: false,
+  mapStyle: {
+    mapboxStyle: dataPresets.style?.mapboxStyle || 'mapbox://styles/dhalpern/ckp07gekw2p2317phroaarzej',
+    underLayerId: dataPresets.style?.underLayerId || 'water'
+  },
   notification: {
     info: null,
     location: "",

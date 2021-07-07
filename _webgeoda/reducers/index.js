@@ -486,10 +486,11 @@ export default function reducer(state = INITIAL_STATE, action) {
         data: tooltipData,
         id: +action.payload.id,
       };
-
+      
       return {
         ...state,
         currentHoverTarget,
+        currentHoverId: action.payload.layer?.includes("tiles") ? null : +action.payload.id
       };
     }
     case "FORMAT_WIDGET_DATA": {

@@ -12,6 +12,7 @@
     "@deck.gl/core": "^8.4.20",
     "@deck.gl/geo-layers": "^8.4.20",
     "@deck.gl/layers": "^8.4.20",
+    "@deck.gl/mapbox": "^8.4.20",
     "@deck.gl/mesh-layers": "^8.4.20",
     "@deck.gl/react": "^8.4.20",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",

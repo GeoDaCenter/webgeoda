@@ -98,9 +98,15 @@ const mapModes = {
   BubbleCartogram: false,
 };
 
+// const style = {
+//   mapboxStyle: 'mapbox://styles/dhalpern/ckpkalk6o2me517kvlgz1eo7r',
+//   underLayerId: 'hillshade copy'
+// }
+
 // 🦺 exports below -- you can safely ignore! 🦺 //
 export const dataPresets = {
   data,
   variables,
   mapModes,
+  // style
 };
