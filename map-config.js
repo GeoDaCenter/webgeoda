@@ -123,7 +123,7 @@ const mapModes = {
 
 const widgets = [
   {
-    position: "left",
+    hidden: true,
     type: "histogram",
     variable: "Median age",
     options: {
@@ -133,7 +133,7 @@ const widgets = [
     }
   },
   {
-    position: "left",
+    hidden: true,
     type: "histogram",
     variable: "Median Gross Rent",
     options: {
@@ -143,7 +143,7 @@ const widgets = [
     }
   },
   {
-    position: "right",
+    hidden: false,
     type: "line",
     variable: "???",
     options: {
@@ -153,7 +153,7 @@ const widgets = [
     }
   },
   {
-    position: "right",
+    hidden: false,
     type: "scatter",
     xVariable: "Median Household Income",
     yVariable: "Median Gross Rent",
@@ -171,7 +171,7 @@ const widgets = [
     }
   },
   {
-    position: "right",
+    hidden: false,
     type: "scatter3d",
     xVariable: "Median Household Income",
     yVariable: "Median Gross Rent",

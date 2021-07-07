@@ -23,10 +23,10 @@ export default function WidgetLayer(){
   let rightIndex = 0;
   for(const i of widgetConfig){
     defaultWidgetLocations.push({
-      side: i.position,
-      index: i.position == "left" ? leftIndex : rightIndex
+      side: i.hidden ? "left" : "right",
+      index: i.hidden ? leftIndex : rightIndex
     });
-    if(i.position == "left") { leftIndex++; }
+    if(i.hidden) { leftIndex++; }
     else { rightIndex++; }
   }
   const [widgetLocations, setWidgetLocations] = useState(defaultWidgetLocations);
@@ -71,21 +71,19 @@ export default function WidgetLayer(){
     <div className={styles.widgetLayer}>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className={styles.widgetsContainer}>
-          <div className={styles.hidingWidgetMenu}>
-            <div className={styles.widgetDropdownHandle}>
-              <p>Widgets</p>
-            </div>
-            <Droppable droppableId="widgets-left">
-              {provided => (
-                <div {...provided.droppableProps} ref={provided.innerRef} className={styles.widgetColumn} id={styles.columnLeft}>
-                  {widgetElementsLeft}
+          <Droppable droppableId="widgets-left">
+            {(provided, snapshot) => (
+              <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""}`} id={styles.columnLeft}>
+                <div className={styles.widgetDropdownHandle}>
+                  <p>Widgets</p>
                 </div>
-              )}
-            </Droppable>
-          </div>
+                {widgetElementsLeft}
+              </div>
+            )}
+          </Droppable>
           <Droppable droppableId="widgets-right">
-            {provided => (
-              <div {...provided.droppableProps} ref={provided.innerRef} className={styles.widgetColumn} id={styles.columnRight}>
+            {(provided, snapshot) => (
+              <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""}`} id={styles.columnRight}>
                 {widgetElementsRight}
               </div>
             )}

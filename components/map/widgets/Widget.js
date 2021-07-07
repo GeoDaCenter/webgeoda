@@ -48,8 +48,8 @@ function Widget(props) {
 
   return (
     <Draggable draggableId={props.id.toString()} index={props.index}>
-      {provided => (
-        <div className={`${styles.widget} ${showSettings ? styles.showSettings : ""}`} ref={provided.innerRef} {...provided.draggableProps}>
+      {(provided, snapshot) => (
+        <div className={`${styles.widget} ${showSettings ? styles.showSettings : ""} ${snapshot.isDragging ? styles.dragging : ""}`} ref={provided.innerRef} {...provided.draggableProps}>
           <button className={styles.settingsButton} onClick={() => {
             setShowSettings(true);
           }}>
