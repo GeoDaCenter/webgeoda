@@ -90,6 +90,9 @@ export default function MainMap() {
       new MapboxLayer({ id: "tiles layer", deck }),
       mapStyle.underLayerId
     );
+    map.addLayer(
+      new MapboxLayer({ id: "choropleth-hover", deck })
+    );
   }, []);
 
   const layers = !mapData.params.includes(currentData)
@@ -118,6 +121,8 @@ export default function MainMap() {
         pickable: true,
         stroked: false,
         filled: true,
+        autoHighlight: true,
+        highlightColor: [40,40,40],
         // wireframe: mapParams.vizType === '3D',
         // extruded: mapParams.vizType === '3D',
         // opacity: mapParams.vizType === 'dotDensity' ? mapParams.dotDensityParams.backgroundTransparency : 0.8,
@@ -134,12 +139,11 @@ export default function MainMap() {
       new GeoJsonLayer({
         id: "choropleth-hover",
         data: currentMapGeography,
-        getFillColor: [255, 255, 255],
         getLineColor: (d) => [
           0,
           0,
           0,
-          255 * (d.properties[currentId] === currentHoverId),
+          255 * (+d.properties[currentId] === currentHoverId),
         ],
         lineWidthScale: 1,
         lineWidthMinPixels: 1,
@@ -148,8 +152,7 @@ export default function MainMap() {
         stroked: true,
         filled: false,
         updateTriggers: {
-          getLineColor: [mapData.params, currentHoverId],
-          // opacity: currentHoverTarget
+          getLineColor: [mapData.params, currentHoverId]
         },
       })];
 
