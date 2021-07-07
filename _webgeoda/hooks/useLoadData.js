@@ -16,7 +16,7 @@ import {
 
 import * as colors from "../utils/colors";
 
-import { fitBounds } from "@math.gl/web-mercator";
+import { fitBounds, zoomToScale } from "@math.gl/web-mercator";
 
 // Main data loader
 // This functions asynchronously accesses the Geojson data and CSVs
@@ -147,7 +147,8 @@ export default function useLoadData(dateLists = {}) {
       ? currentDataPreset.bounds 
       : await geoda.getBounds(mapId);
     
-    const initialViewState =
+
+    let initialViewState =
       window !== undefined
         ? fitBounds({
             width: window.innerWidth,
@@ -159,6 +160,8 @@ export default function useLoadData(dateLists = {}) {
           })
         : null;
 
+    if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
+    
     const binData = dataParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,

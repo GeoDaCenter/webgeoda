@@ -103,6 +103,7 @@ export default function reducer(state = INITIAL_STATE, action) {
         return {
           ...state,
           currentData: action.payload,
+          currentTiles: find(state.dataPresets.data, o => o.geodata === action.payload).tiles
         };
       } else {
         return {
