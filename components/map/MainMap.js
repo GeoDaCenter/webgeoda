@@ -1,9 +1,10 @@
 import styles from "./MainMap.module.css";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 // deck GL and helper function import
 import DeckGL from "@deck.gl/react";
 import { GeoJsonLayer } from "@deck.gl/layers";
+import {MVTLayer} from '@deck.gl/geo-layers';
 import MapboxGLMap from "react-map-gl";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -21,6 +22,7 @@ export default function MainMap() {
   const dataParams = useSelector((state) => state.dataParams);
   const mapParams = useSelector((state) => state.mapParams);
   const currentData = useSelector((state) => state.currentData);
+  const currentTiles = useSelector((state) => state.currentTiles);
   const currentId = useSelector((state) => state.currentId);
   const currentHoverId = useSelector((state) => state.currentHoverTarget.id);
   const storedGeojson = useSelector((state) => state.storedGeojson);
@@ -71,14 +73,23 @@ export default function MainMap() {
       })
     }
   };
-  
-  const layers = mapData.params.indexOf(currentData) === -1
+
+  const layers = !mapData.params.includes(currentData)
     ? []
+    : currentData.includes('tiles')
+    ? [new MVTLayer({
+         // eslint-disable-next-line no-undef
+        data: `https://api.mapbox.com/v4/${currentTiles}/{z}/{x}/{y}.mvt?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
+        getFillColor: (d) => mapData.data[d.properties[currentId]]?.color||[0,0,0,0],
+        updateTriggers: {
+          getFillColor: mapData.params,
+        },
+      })]  
     : [
       new GeoJsonLayer({
         id: "choropleth",
         data: currentMapGeography,
-        getFillColor: (d) => mapData.data[d.properties[currentId]].color,
+        getFillColor: (d) => mapData.data[d.properties[currentId]]?.color,
         // getElevation: d => currentMapData[d.properties.GEOID].height,
         pickable: true,
         stroked: false,
@@ -116,9 +127,9 @@ export default function MainMap() {
           getLineColor: [mapData.params, currentHoverId],
           // opacity: currentHoverTarget
         },
-      }),
-    ];
+      })];
 
+    // h
   return (
     <div className={styles.mapContainer}>
       

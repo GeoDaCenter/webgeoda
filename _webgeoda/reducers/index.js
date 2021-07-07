@@ -38,6 +38,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       };
       return {
         ...state,
+        currentTiles: action.payload.currentTiles,
         currentData: action.payload.currentData,
         storedGeojson,
         storedData,
@@ -74,7 +75,7 @@ export default function reducer(state = INITIAL_STATE, action) {
 
       const currPresets = find(
         state.dataPresets.data, 
-        o => o.geojson === state.currentData
+        o => o.geodata === state.currentData
       );
 
       if (

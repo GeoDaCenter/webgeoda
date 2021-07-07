@@ -3,7 +3,7 @@ import { dataPresets } from "../../map-config";
 export const INITIAL_STATE = {
   storedGeojson: {},
   storedData: {},
-  currentData: dataPresets.data[0].geojson,
+  currentData: dataPresets.data[0].geodata,
   currentMethod: "natural_breaks",
   currentOverlay: "",
   currentResource: "",
