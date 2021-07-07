@@ -102,8 +102,8 @@ export default function MainMap() {
     })]
     : currentData.includes('tiles')
     ? [new MVTLayer({
-         // eslint-disable-next-line no-undef 
         id: "tiles layer",
+        // eslint-disable-next-line no-undef 
         data: `https://api.mapbox.com/v4/${currentTiles}/{z}/{x}/{y}.mvt?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
         getFillColor: (d) => mapData.data[d.properties[currentId]]?.color||[0,0,0,0],
         pickable: true,
