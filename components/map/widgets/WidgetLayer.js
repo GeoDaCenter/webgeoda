@@ -71,13 +71,18 @@ export default function WidgetLayer(){
     <div className={styles.widgetLayer}>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className={styles.widgetsContainer}>
-          <Droppable droppableId="widgets-left">
-            {provided => (
-              <div {...provided.droppableProps} ref={provided.innerRef} className={styles.widgetColumn} id={styles.columnLeft}>
-                {widgetElementsLeft}
-              </div>
-            )}
-          </Droppable>
+          <div className={styles.hidingWidgetMenu}>
+            <div className={styles.widgetDropdownHandle}>
+              <p>Widgets</p>
+            </div>
+            <Droppable droppableId="widgets-left">
+              {provided => (
+                <div {...provided.droppableProps} ref={provided.innerRef} className={styles.widgetColumn} id={styles.columnLeft}>
+                  {widgetElementsLeft}
+                </div>
+              )}
+            </Droppable>
+          </div>
           <Droppable droppableId="widgets-right">
             {provided => (
               <div {...provided.droppableProps} ref={provided.innerRef} className={styles.widgetColumn} id={styles.columnRight}>

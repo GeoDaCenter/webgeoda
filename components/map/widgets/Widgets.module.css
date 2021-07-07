@@ -16,6 +16,14 @@
   justify-content: space-between;
 }
 
+.hidingWidgetMenu {
+  margin-top: 150px;
+}
+
+.widgetDropdownHandle {
+  z-index: 1;
+}
+
 .widgetColumn {
   display: flex;
   min-width: 400px; /* Ensure there is always an area to drop */
