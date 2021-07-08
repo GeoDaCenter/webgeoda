@@ -47,7 +47,7 @@ class GeodaWorkerProxy {
   async loadGeoJSON(url, geoIdColumn) {
     if (this.geoda === null) await this.New();
     var response = await fetch(url);
-    var responseClone = response.clone();
+    var responseClone = await response.clone();
     var [geojsonData, ab] = await Promise.all([
       response.json(),
       responseClone.arrayBuffer(),
