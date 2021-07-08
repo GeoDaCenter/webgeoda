@@ -49,7 +49,6 @@ class GeodaWorkerProxy {
     var response = await fetch(url);
     var responseClone = await response.clone();
     var geojsonData = await response.json();
-    console.log(geojsonData)
     var ab = await responseClone.arrayBuffer();
 
     if (
@@ -60,9 +59,19 @@ class GeodaWorkerProxy {
         geojsonData.features[i].properties[geoIdColumn] = +geojsonData.features[i].properties[geoIdColumn]
       }
     }
-
-    var id = this.readGeoJSON(ab);
-    return [id, geojsonData];
+    try {
+      var id = this.readGeoJSON(ab);
+      return [id, geojsonData];
+    } catch {
+      if (geojsonData.features.length){
+        var abFallback = new TextEncoder().encode(JSON.stringify(geojsonData));
+        var id = this.readGeoJSON(abFallback);
+        return [id, geojsonData];
+      } else {
+        return [false, geojsonData]
+      }
+    }
+    
   }
 
   /**
