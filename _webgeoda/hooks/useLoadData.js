@@ -105,8 +105,7 @@ export default function useLoadData(dateLists = {}) {
     if (shouldRetryLoadGeoJSON) {
       setTimeout(() => {
         attemptGeojsonLoad();
-        setShouldRetryLoadGeoJSON(false)
-      }, 3000)
+      }, 10000)
     }
   },[shouldRetryLoadGeoJSON])
 
@@ -119,8 +118,10 @@ export default function useLoadData(dateLists = {}) {
       dataPresets.data,
       (o) => o.geodata === currentData
     )
+    alert(`${window.location.origin}/geojson/${currentDataPreset.geodata}`)
     const secondMapId = await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentDataPreset.geodata}`) 
     alert(secondMapId)
+    setShouldRetryLoadGeoJSON(false)
   }
 
   const loadData = async (dataPresets, datasetToLoad) => {
