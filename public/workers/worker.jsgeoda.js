@@ -59,13 +59,17 @@ class GeodaWorkerProxy {
         geojsonData.features[i].properties[geoIdColumn] = +geojsonData.features[i].properties[geoIdColumn]
       }
     }
+
     try {
-      var id = this.readGeoJSON(ab);
+      console.log(ab)
+      console.log(this.geoda)
+      var id = this.geoda.readGeoJSON(ab);
       return [id, geojsonData];
     } catch {
       if (geojsonData.features.length){
         var abFallback = new TextEncoder().encode(JSON.stringify(geojsonData));
-        var id = this.readGeoJSON(abFallback);
+        console.log(abFallback)
+        var id = this.geoda.readGeoJSON(abFallback);
         return [id, geojsonData];
       } else {
         return [false, geojsonData]
