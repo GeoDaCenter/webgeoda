@@ -137,11 +137,11 @@ export default function useLoadData(dateLists = {}) {
     ? getIdOrder(geojsonData.features,currentDataPreset.id) 
     : false;
 
-    const bounds = mapId === null && secondMapId === null 
+    const bounds = mapId === null
       ? [-180,180,-70,80]
       : currentDataPreset.bounds 
       ? currentDataPreset.bounds 
-      : await geoda.getBounds(mapId||secondMapId);
+      : await geoda.getBounds(mapId);
 
     let initialViewState =
       window !== undefined
@@ -196,7 +196,7 @@ export default function useLoadData(dateLists = {}) {
             data: geojsonData,
             properties: geojsonProperties,
             order: geojsonOrder,
-            id: mapId||secondMapId,
+            id: mapId,
             weights: {}
           },
         },
