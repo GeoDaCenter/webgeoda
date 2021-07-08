@@ -129,6 +129,8 @@ export default function useLoadData(dateLists = {}) {
       denominatorData
     ] = await Promise.all(firstLoadPromises);
 
+    const secondMapId = mapId === null && notTiles ? await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentDataPreset.geodata}`) : false;
+
     const geojsonProperties = notTiles 
     ? indexGeoProps(geojsonData,currentDataPreset.id)
     : false;
@@ -139,7 +141,7 @@ export default function useLoadData(dateLists = {}) {
 
     const bounds = currentDataPreset.bounds 
       ? currentDataPreset.bounds 
-      : await geoda.getBounds(mapId);
+      : await geoda.getBounds(mapId||secondMapId);
     
 
     let initialViewState =
@@ -195,7 +197,7 @@ export default function useLoadData(dateLists = {}) {
             data: geojsonData,
             properties: geojsonProperties,
             order: geojsonOrder,
-            id: mapId,
+            id: mapId||secondMapId,
             weights: {}
           },
         },

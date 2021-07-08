@@ -48,8 +48,10 @@ class GeodaWorkerProxy {
     if (this.geoda === null) await this.New();
     var response = await fetch(url);
     var responseClone = await response.clone();
-    var geojsonData = await response.json();
-    var ab = await responseClone.arrayBuffer();
+    var [geojsonData, ab] = await Promise.all([
+      response.json(),
+      responseClone.arrayBuffer(),
+    ]);
 
     if (
       !(isNaN(+geojsonData.features[0].properties[geoIdColumn])) 
@@ -59,23 +61,25 @@ class GeodaWorkerProxy {
         geojsonData.features[i].properties[geoIdColumn] = +geojsonData.features[i].properties[geoIdColumn]
       }
     }
-
     try {
-      console.log(ab)
-      console.log(this.geoda)
-      var id = this.geoda.readGeoJSON(ab);
+      var id = this.readGeoJSON(ab);
       return [id, geojsonData];
     } catch {
-      if (geojsonData.features.length){
-        var abFallback = new TextEncoder().encode(JSON.stringify(geojsonData));
-        console.log(abFallback)
-        var id = this.geoda.readGeoJSON(abFallback);
-        return [id, geojsonData];
-      } else {
-        return [false, geojsonData]
-      }
+      return [null, geojsonData]
     }
-    
+  }
+
+  async attemptSecondGeojsonLoad(url){
+    if (this.geoda === null) await this.New();
+    var response = await fetch(url);
+    var ab = await response.arrayBuffer();
+    console.log(ab)
+    try {
+      var id = this.readGeoJSON(ab);
+      return id;
+    } catch {
+      return null;
+    }
   }
 
   /**
