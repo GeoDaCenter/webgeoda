@@ -96,17 +96,12 @@ export default function useLoadData(dateLists = {}) {
   const dataParams = useSelector((state) => state.dataParams);
   const dispatch = useDispatch();
 
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [loadingProgress, setLoadingProgress] = useState(null);
-
   useEffect(() => {
-    if (datasetToLoad) {
-      loadData(dataPresets, datasetToLoad)
-    }
+    if (datasetToLoad) { loadData(dataPresets, datasetToLoad) }
   },[datasetToLoad])
 
-
   useEffect(() => {
+    console.log(dataPresets.data[0].geodata)
     loadData(dataPresets, dataPresets.data[0].geodata)
   },[])
 
@@ -122,6 +117,8 @@ export default function useLoadData(dateLists = {}) {
     const denominatorTable =
       currentDataPreset.tables?.hasOwnProperty(dataParams.denominator) 
       && currentDataPreset.tables[dataParams.denominator];
+      
+    console.log(`${window.location.origin}/geojson/${currentDataPreset.geodata}`)
     
     const firstLoadPromises = [
       notTiles ? geoda.loadGeoJSON(`${window.location.origin}/geojson/${currentDataPreset.geodata}`, currentDataPreset.id) : [false, false],

@@ -48,10 +48,9 @@ class GeodaWorkerProxy {
     if (this.geoda === null) await this.New();
     var response = await fetch(url);
     var responseClone = await response.clone();
-    var [geojsonData, ab] = await Promise.all([
-      response.json(),
-      responseClone.arrayBuffer(),
-    ]);
+    var geojsonData = await response.json();
+    console.log(geojsonData)
+    var ab = await responseClone.arrayBuffer();
 
     if (
       !(isNaN(+geojsonData.features[0].properties[geoIdColumn])) 
