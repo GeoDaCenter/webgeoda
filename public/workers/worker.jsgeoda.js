@@ -73,7 +73,6 @@ class GeodaWorkerProxy {
     if (this.geoda === null) await this.New();
     var response = await fetch(url);
     var ab = await response.arrayBuffer();
-    console.log(ab)
     try {
       var id = this.readGeoJSON(ab);
       return id;

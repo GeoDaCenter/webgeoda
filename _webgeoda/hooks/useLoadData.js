@@ -129,18 +129,6 @@ export default function useLoadData(dateLists = {}) {
       denominatorData
     ] = await Promise.all(firstLoadPromises);
     
-    if (mapId === null){
-      await (async ()=>{
-          return new Promise((resolve) => {
-          setTimeout(() => resolve(), 1000)
-        })
-      })()
-    }
-
-    const secondMapId = mapId === null && notTiles 
-      ? await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentDataPreset.geodata}`) 
-      : false;
-
     const geojsonProperties = notTiles 
     ? indexGeoProps(geojsonData,currentDataPreset.id)
     : false;
@@ -226,15 +214,20 @@ export default function useLoadData(dateLists = {}) {
       },
     });
 
-    loadTables(dataPresets, datasetToLoad, dateLists);
+    loadTables(dataPresets, datasetToLoad, dateLists, mapId);
     // loadWidgets(dataPresets);
   };
 
-  const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
-    const tablesToFetch = find(
+  const loadTables = async (dataPresets, datasetToLoad, dateLists, mapId) => {
+    const currentDataPreset = find(
       dataPresets.data,
       (o) => o.geodata === datasetToLoad
-    ).tables;
+    )
+    const tablesToFetch = currentDataPreset.tables;
+    if (mapId === null){
+      const secondMapId = await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentDataPreset.geodata}`) 
+      alert(secondMapId)
+    }
 
     const tableNames = Object.keys(tablesToFetch);
     const tableDetails = Object.values(tablesToFetch);
