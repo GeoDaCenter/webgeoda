@@ -31,6 +31,7 @@
     "@visx/scale": "^1.11.1",
     "axios": "^0.21.1",
     "chart.js": "^3.3.2",
+    "chartjs-plugin-boxselect": "^1.0.6",
     "colorbrewer": "^1.5.1",
     "comlink": "^4.3.1",
     "d3-array": "^2.12.1",

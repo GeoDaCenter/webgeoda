@@ -555,6 +555,23 @@ export default function reducer(state = INITIAL_STATE, action) {
       cachedLisaScatterplotData[action.payload.variableName] = action.payload.data;
       return {...state, cachedLisaScatterplotData};
     }
+    case "SET_MAP_FILTER": {
+      const mapFilters = {...state.mapFilters};
+      const newFilter = action.payload.filter === null ? null : {
+        ...action.payload.filter,
+        source: action.payload.widgetIndex
+      };
+      const index = mapFilters.findIndex(i => i.source == action.payload.widgetIndex);
+
+      // Append, replace, or delete
+      if(index === -1) { mapFilters.push(newFilter); }
+      else {
+        if(action.payload.filter === null) { mapFilters.splice(index, 1); }
+        else { mapFilters[index] = newFilter; }
+      }
+
+      return {...state, mapFilters};
+    }
     default:
       return state;
   }

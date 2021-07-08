@@ -56,6 +56,7 @@ export const INITIAL_STATE = {
     mapboxStyle: dataPresets.style?.mapboxStyle || 'mapbox://styles/dhalpern/ckp07gekw2p2317phroaarzej',
     underLayerId: dataPresets.style?.underLayerId || 'water'
   },
+  mapFilters: [],
   notification: {
     info: null,
     location: "",

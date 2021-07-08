@@ -36,7 +36,7 @@ const getTables = (variableSpec, state) => {
     // find current tables attached to dataset    
     const currentTables = find(
         dataPresets.data,
-        (o) => o.geojson === currentData
+        (o) => o.geodata === currentData
     )?.tables;
     // look for numerator table
     if (numerator === "properties") { // default properties indicator
