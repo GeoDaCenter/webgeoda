@@ -13,6 +13,7 @@ var defaultOptions = {
 			return true;
 		},
 		afterSelect: function (startX, endX, startY, endY, datasets) {
+			// console.log(datasets)
 		}
 	}
 }
@@ -45,8 +46,8 @@ function doSelect(chart, startX, endX, startY, endY) {
 
 	// notify delegate
 	var beforeSelectCallback = valueOrDefault(chart.options.plugins.boxselect.callbacks ? chart.options.plugins.boxselect.callbacks.beforeSelect : undefined, defaultOptions.callbacks.beforeSelect);
-
-	if (!beforeSelectCallback(startX, endX, startY, endY)) {
+	
+	if (!beforeSelectCallback) {
 		return false;
 	}
 
@@ -99,7 +100,10 @@ function doSelect(chart, startX, endX, startY, endY) {
 	chart.boxselect.end = endX;
 
 	// chart.update();
+	// workaround - add the current datasets to the chart as a property, allowing access via Ref
+	chart.boxselect.selection = datasets
 
+	// TODO: afterSelectCallback fires, but is not receiving arguments
 	var afterSelectCallback = getOption(chart, 'callbacks', 'afterSelect');
 	afterSelectCallback(startX, endX, startY, endY, datasets);
 }
@@ -157,34 +161,26 @@ var boxselectPlugin = {
 			dragEndX: null,
 			dragStartY: null,
 			dragEndY: null,
-			suppressTooltips: false,
+			suppressTooltips: false
 		};
 
 	},
 
 	afterEvent: function (chart, e) {
 
-        console.log(chart)
-        console.log(Chart)
-        if(chart == undefined || Chart == undefined) return;
-
 		var chartType = chart.config.type;
 		if (chartType !== 'scatter' && chartType !== 'line') return;
-
+		
 		// fix for Safari
-		var buttons = e.event.native.buttons;
-		if (e.event.native.type === 'mouseup') {
-			buttons = 0;
-		}
-
+		const buttons = e.event.native.buttons;
 		chart.boxselect.enabled = true;
 
 		// handle drag to select
 		var selectEnabled = getOption(chart, 'select', 'enabled');
 
 		if (buttons === 1 && !chart.boxselect.dragStarted && selectEnabled) {
-			chart.boxselect.dragStartX = e.x;
-			chart.boxselect.dragStartY = e.y;
+			chart.boxselect.dragStartX = e.event.x;
+			chart.boxselect.dragStartY = e.event.y;
 			chart.boxselect.dragStarted = true;
 		}
 
@@ -216,8 +212,8 @@ var boxselectPlugin = {
 			}
 		}
 
-		chart.boxselect.x = e.x;
-		chart.boxselect.y = e.y;
+		chart.boxselect.x = e.event.x;
+		chart.boxselect.y = e.event.y;
 
 		chart.draw();
 	},

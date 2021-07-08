@@ -94,6 +94,21 @@ function ScatterWidgetUnwrapped(props) {
             return `${point.id} (${point.x}, ${point.y})`; // TODO: point.y is null for LISA scatterplots
           }
         }
+      },
+      boxselect: { // this was the boxselect.select etc that was throwing the error!
+        select: {
+          enabled: true,
+          direction: 'xy'
+        },
+        callbacks: { // todo: these are not actually receiving arguments from the chart, but do get fired on the relevant event
+          beforeSelect: function(startX, endX, startY, endY) {
+              // return false to cancel selection
+              return true;
+          },
+          afterSelect: function(startX, endX, startY, endY, datasets) {
+            console.log(chartRef.current.boxselect.selection)
+          }
+        }
       }
     },
     scales: { // TODO: Support gridlinesInterval option
@@ -128,6 +143,7 @@ function ScatterWidgetUnwrapped(props) {
         data={dataProp}
         options={options}
         plugins={[pluginBoxSelect]}
+        ref={chartRef}
       />
     </div>
   );
