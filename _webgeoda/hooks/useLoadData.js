@@ -128,8 +128,18 @@ export default function useLoadData(dateLists = {}) {
       numeratorData, 
       denominatorData
     ] = await Promise.all(firstLoadPromises);
+    
+    if (mapId === null){
+      await (async ()=>{
+          return new Promise((resolve) => {
+          setTimeout(() => resolve(), 1000)
+        })
+      })()
+    }
 
-    const secondMapId = mapId === null && notTiles ? await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentDataPreset.geodata}`) : false;
+    const secondMapId = mapId === null && notTiles 
+      ? await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentDataPreset.geodata}`) 
+      : false;
 
     const geojsonProperties = notTiles 
     ? indexGeoProps(geojsonData,currentDataPreset.id)
