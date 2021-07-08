@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { GeodaContext } from "../contexts";
 
 import {
@@ -94,6 +94,7 @@ export default function useLoadData(dateLists = {}) {
   const datasetToLoad = useSelector((state) => state.datasetToLoad);
   const dataPresets = useSelector((state) => state.dataPresets);
   const dataParams = useSelector((state) => state.dataParams);
+  const [shouldRetryLoadGeoJSON, setShouldRetryLoadGeoJSON] = useState(false)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -101,8 +102,26 @@ export default function useLoadData(dateLists = {}) {
   },[datasetToLoad])
 
   useEffect(() => {
+    if (shouldRetryLoadGeoJSON) {
+      setTimeout(() => {
+        attemptGeojsonLoad();
+        setShouldRetryLoadGeoJSON(false)
+      }, 3000)
+    }
+  },[shouldRetryLoadGeoJSON])
+
+  useEffect(() => {
     loadData(dataPresets, dataPresets.data[0].geodata)
   },[])
+
+  const attemptGeojsonLoad = async () => {
+    const currentDataPreset = find(
+      dataPresets.data,
+      (o) => o.geodata === currentData
+    )
+    const secondMapId = await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentDataPreset.geodata}`) 
+    alert(secondMapId)
+  }
 
   const loadData = async (dataPresets, datasetToLoad) => {
     if (geoda === undefined) location.reload();
@@ -129,6 +148,8 @@ export default function useLoadData(dateLists = {}) {
       denominatorData
     ] = await Promise.all(firstLoadPromises);
     
+    if (mapId === null) setShouldRetryLoadGeoJSON(true)
+
     const geojsonProperties = notTiles 
     ? indexGeoProps(geojsonData,currentDataPreset.id)
     : false;
@@ -218,16 +239,12 @@ export default function useLoadData(dateLists = {}) {
     // loadWidgets(dataPresets);
   };
 
-  const loadTables = async (dataPresets, datasetToLoad, dateLists, mapId) => {
+  const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
     const currentDataPreset = find(
       dataPresets.data,
       (o) => o.geodata === datasetToLoad
     )
     const tablesToFetch = currentDataPreset.tables;
-    if (mapId === null){
-      const secondMapId = await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentDataPreset.geodata}`) 
-      alert(secondMapId)
-    }
 
     const tableNames = Object.keys(tablesToFetch);
     const tableDetails = Object.values(tablesToFetch);
