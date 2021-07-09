@@ -261,11 +261,11 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         const [data] = getColumnData(variableSpec, state)
         if (!data) return []
         return {
-            median: median(data),
+            median: median(data).toFixed(3),
             mean: mean(data).toFixed(3),
             stdev: standardDeviation(data).toFixed(3),
-            min: min(data),
-            max: max(data),
+            min: min(data).toFixed(3),
+            max: max(data).toFixed(3),
         }
     }
 }

@@ -11,33 +11,33 @@ const WIDGET_OPTION_TYPES = [
         datatype: "variable",
         supportedTypes: ["histogram", "summary"],
         get: (w) => w.variable,
-        set: (w, v) => { w.variable = v }
+        set: (w, v) => { w.variable = v , w.options.header = v}
     },
     {
         displayName: "X Variable",
         datatype: "variable",
         supportedTypes: ["scatter", "scatter3d"],
         get: (w) => w.xVariable,
-        set: (w, v) => { w.xVariable = v }
+        set: (w, v) => { w.xVariable = v, w.options.xAxisLabel = v, w.options.header = w.yVariable + " vs " + v}
     },
     {
         displayName: "Y Variable",
         datatype: "variable",
         supportedTypes: ["scatter", "scatter3d"],
         get: (w) => w.yVariable,
-        set: (w, v) => { w.yVariable = v }
+        set: (w, v) => { w.yVariable = v, w.options.yAxisLabel = v, w.options.header = v + " vs " + w.xVariable}
     },
     {
         displayName: "Z Variable",
         datatype: "variable",
         supportedTypes: ["scatter3d"],
         get: (w) => w.zVariable,
-        set: (w, v) => { w.zVariable = v }
+        set: (w, v) => { w.zVariable = v ,w.options.zAxisLabel = v}
     },
     {
         displayName: "Header",
         datatype: "string",
-        supportedTypes: ["histogram", "line", "scatter", "scatter3d", "summary"],
+        supportedTypes: ["line", "scatter3d"],
         get: (w) => w.options.header,
         set: (w, v) => { w.options.header = v }
     },
@@ -48,27 +48,27 @@ const WIDGET_OPTION_TYPES = [
         get: (w) => w.options.foregroundColor,
         set: (w, v) => { w.options.foregroundColor = v }
     },
-    {
-        displayName: "X-Axis Label",
-        datatype: "string",
-        supportedTypes: ["histogram", "line", "scatter", "scatter3d"],
-        get: (w) => w.options.xAxisLabel,
-        set: (w, v) => { w.options.xAxisLabel = v }
-    },
-    {
-        displayName: "Y-Axis Label",
-        datatype: "string",
-        supportedTypes: ["histogram", "line", "scatter", "scatter3d"],
-        get: (w) => w.options.yAxisLabel,
-        set: (w, v) => { w.options.yAxisLabel = v }
-    },
-    {
-        displayName: "Z-Axis Label",
-        datatype: "string",
-        supportedTypes: ["scatter3d"],
-        get: (w) => w.options.zAxisLabel,
-        set: (w, v) => { w.options.zAxisLabel = v }
-    },
+    // {
+    //     displayName: "X-Axis Label",
+    //     datatype: "string",
+    //     supportedTypes: ["histogram", "line", "scatter", "scatter3d"],
+    //     get: (w) => w.options.xAxisLabel,
+    //     set: (w, v) => { w.options.xAxisLabel = v }
+    // },
+    // {
+    //     displayName: "Y-Axis Label",
+    //     datatype: "string",
+    //     supportedTypes: ["histogram", "line", "scatter", "scatter3d"],
+    //     get: (w) => w.options.yAxisLabel,
+    //     set: (w, v) => { w.options.yAxisLabel = v }
+    // },
+    // {
+    //     displayName: "Z-Axis Label",
+    //     datatype: "string",
+    //     supportedTypes: ["scatter3d"],
+    //     get: (w) => w.options.zAxisLabel,
+    //     set: (w, v) => { w.options.zAxisLabel = v }
+    // },
     {
         displayName: "Point Size",
         datatype: "number",
