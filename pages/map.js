@@ -3,7 +3,6 @@ import Head from "next/head";
 import styles from "../styles/Map.module.css";
 
 import MainNav from "../components/layout/MainNav";
-import Loader from "../components/layout/Loader";
 
 import WidgetLayer from "../components/map/widgets/WidgetLayer";
 import MainMap from "../components/map/MainMap";
@@ -13,7 +12,7 @@ import MapTooltip from "../components/map/MapTooltip";
 // import useLoadData from '@webgeoda/hooks/useLoadData'
 // import useUpdateData from '@webgeoda/hooks/useUpdateData'
 import rootReducer from "@webgeoda/reducers";
-import {GeodaContext} from "@webgeoda/contexts";
+import {GeodaContext, ViewportProvider} from "@webgeoda/contexts";
 
 import { createStore } from "redux";
 import { Provider } from "react-redux";
@@ -78,8 +77,9 @@ export default function Map() {
         </noscript>
       </Head>
       <MainNav />
-      {!geodaReady && <div className={styles.preLoader}><Loader globe={true} /></div>}
+      {/* {!geodaReady && <div className={styles.preLoader}><Loader globe={true} /></div>} */}
       
+      <ViewportProvider>
       <Provider store={store}>
         {geodaReady && (
           <GeodaContext.Provider value={geoda}>
@@ -90,6 +90,7 @@ export default function Map() {
           </GeodaContext.Provider>
         )}
       </Provider>
+      </ViewportProvider>
     </div>
   );
 }

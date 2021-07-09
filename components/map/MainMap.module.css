@@ -162,14 +162,14 @@ p.variableName {
 .mapButton {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   display: block;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.75rem;
+  height: 1.75rem;
   background: white;
   border: none;
   margin: 0.25rem;
   cursor: pointer;
   transition: 250ms all;
-  border-radius: 0.125em;
+  border-radius: 4px;
 }
 
 .mapButton:hover {
@@ -196,6 +196,9 @@ p.variableName {
   padding: 0;
 }
 
+.icon {
+
+}
 
 /* Preloader */
 .preLoader {

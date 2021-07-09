@@ -3,7 +3,7 @@ import { dataPresets } from "../../map-config";
 export const INITIAL_STATE = {
   storedGeojson: {},
   storedData: {},
-  currentData: dataPresets.data[0].geojson,
+  currentData: dataPresets.data[0].geodata,
   currentMethod: "natural_breaks",
   currentOverlay: "",
   currentResource: "",
@@ -52,6 +52,11 @@ export const INITIAL_STATE = {
   sidebarData: {},
   anchorEl: null,
   mapLoaded: false,
+  mapStyle: {
+    mapboxStyle: dataPresets.style?.mapboxStyle || 'mapbox://styles/dhalpern/ckp07gekw2p2317phroaarzej',
+    underLayerId: dataPresets.style?.underLayerId || 'water'
+  },
+  mapFilters: [],
   notification: {
     info: null,
     location: "",

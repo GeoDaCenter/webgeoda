@@ -2,12 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import {Scatter} from 'react-chartjs-2';
+import pluginBoxSelect from '../../../TEMP_chartjs-plugin-boxselect';
 import useLisa from '@webgeoda/hooks/useLisa';
 import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
 import {useDispatch} from 'react-redux';
+import usePanMap from '@webgeoda/hooks/usePanMap';
 
 function ScatterWidgetUnwrapped(props) {
+  const chartRef = React.useRef();
   const dispatch = useDispatch();
+  const panToGeoid = usePanMap();
   const [getLisa,] = useLisa();
   const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
   const lisaData = getCachedLisa(props.data.variableSpecs[0]);
@@ -63,6 +67,7 @@ function ScatterWidgetUnwrapped(props) {
   }
 
   const options = {
+    events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
     maintainAspectRatio: false,
     animation: false,
     elements: {
@@ -73,14 +78,7 @@ function ScatterWidgetUnwrapped(props) {
     onClick: (e, items) => {
       if(items.length == 0) return;
       const point = props.data.data[items[0].index];
-      dispatch({
-        type: "SET_HOVER_OBJECT",
-        payload: {
-          id: point.id,
-          x: 500, // TODO: Query map data, get current screen point of selected item
-          y: 250
-        },
-      });
+      panToGeoid(point.id);
     },
     plugins: {
       legend: {
@@ -94,6 +92,43 @@ function ScatterWidgetUnwrapped(props) {
           label: (tooltipItem) => { //data
             const point = props.data.data[tooltipItem.dataIndex];
             return `${point.id} (${point.x}, ${point.y})`; // TODO: point.y is null for LISA scatterplots
+          }
+        }
+      },
+      boxselect: { // this was the boxselect.select etc that was throwing the error!
+        select: {
+          enabled: true,
+          direction: 'xy'
+        },
+        callbacks: { // todo: these are not actually receiving arguments from the chart, but do get fired on the relevant event
+          beforeSelect: function(startX, endX, startY, endY) {
+              // return false to cancel selection
+              return true;
+          },
+          afterSelect: (startX, endX, startY, endY, datasets) => {
+            console.log(startX);
+            console.log(endX);
+            return;
+            if(datasets.length == 0) return;
+            const dataset = datasets[0];
+            if(dataset.data.length == 0) {
+                // Empty click; reset filter
+                dispatch({
+                    type: "SET_MAP_FILTER",
+                    widgetIndex: props.id,
+                    filter: null
+                });
+            } else {
+                dispatch({
+                type: "SET_MAP_FILTER",
+                    widgetIndex: props.id,
+                    filter: {
+                        type: "set",
+                        field: "GEOID",
+                        values: dataset.indexes.map(index => props.data.data[index].id)
+                    }
+                });
+            }
           }
         }
       }
@@ -114,16 +149,32 @@ function ScatterWidgetUnwrapped(props) {
     }
   };
 
+  // const dragPlugin = {
+  //   id: "custom-drag-selection",
+  //   afterEvent: (chart, e) => {
+  //     console.log(e.event.native?.buttons);
+  //     if(e.event.type === "click"){
+
+  //     }
+  //   }
+  // };
+
   return (
     <div>
-      <Scatter data={dataProp} options={options} />
+      <Scatter
+        data={dataProp}
+        options={options}
+        plugins={[pluginBoxSelect]}
+        ref={chartRef}
+      />
     </div>
   );
 }
 
 ScatterWidgetUnwrapped.propTypes = {
   options: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  data: PropTypes.object.isRequired,
+  id: PropTypes.number.isRequired
 };
 
 const ScatterWidget = React.memo(ScatterWidgetUnwrapped);

@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import styles from './Widgets.module.css';
 import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
 const mapWidgets = ({widgets, widgetLocations, side}) => widgets
   .map((elem, index) => ({elem, index}))
@@ -23,10 +25,10 @@ export default function WidgetLayer(){
   let rightIndex = 0;
   for(const i of widgetConfig){
     defaultWidgetLocations.push({
-      side: i.position,
-      index: i.position == "left" ? leftIndex : rightIndex
+      side: i.hidden ? "left" : "right",
+      index: i.hidden ? leftIndex : rightIndex
     });
-    if(i.position == "left") { leftIndex++; }
+    if(i.hidden) { leftIndex++; }
     else { rightIndex++; }
   }
   const [widgetLocations, setWidgetLocations] = useState(defaultWidgetLocations);
@@ -72,15 +74,18 @@ export default function WidgetLayer(){
       <DragDropContext onDragEnd={onDragEnd}>
         <div className={styles.widgetsContainer}>
           <Droppable droppableId="widgets-left">
-            {provided => (
-              <div {...provided.droppableProps} ref={provided.innerRef} className={styles.widgetColumn} id={styles.columnLeft}>
+            {(provided, snapshot) => (
+              <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""}`} id={styles.columnLeft}>
+                <div className={styles.widgetDropdownHandle}>
+                  <p>Widgets <FontAwesomeIcon icon={faAngleRight} className={styles.caret} /></p>
+                </div>
                 {widgetElementsLeft}
               </div>
             )}
           </Droppable>
           <Droppable droppableId="widgets-right">
-            {provided => (
-              <div {...provided.droppableProps} ref={provided.innerRef} className={styles.widgetColumn} id={styles.columnRight}>
+            {(provided, snapshot) => (
+              <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""}`} id={styles.columnRight}>
                 {widgetElementsRight}
               </div>
             )}

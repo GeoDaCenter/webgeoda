@@ -323,7 +323,7 @@ export const findTable = (
   table
 ) => find(
       dataPresets,
-      (o) => o.geojson === currentData
+      (o) => o.geodata === currentData
   )?.tables[table]?.file;
 
 

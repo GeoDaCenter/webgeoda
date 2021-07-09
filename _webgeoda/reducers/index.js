@@ -1,4 +1,5 @@
 import { INITIAL_STATE } from "../constants/defaults";
+import {getWidgetSpec} from "../utils/widgets";
 
 import {
   mapFnNb,
@@ -49,6 +50,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       };
       return {
         ...state,
+        currentTiles: action.payload.currentTiles,
         currentData: action.payload.currentData,
         storedGeojson,
         storedData,
@@ -85,7 +87,7 @@ export default function reducer(state = INITIAL_STATE, action) {
 
       const currPresets = find(
         state.dataPresets.data, 
-        o => o.geojson === state.currentData
+        o => o.geodata === state.currentData
       );
 
       if (
@@ -113,6 +115,7 @@ export default function reducer(state = INITIAL_STATE, action) {
         return {
           ...state,
           currentData: action.payload,
+          currentTiles: find(state.dataPresets.data, o => o.geodata === action.payload).tiles
         };
       } else {
         return {
@@ -495,10 +498,11 @@ export default function reducer(state = INITIAL_STATE, action) {
         data: tooltipData,
         id: +action.payload.id,
       };
-
+      
       return {
         ...state,
         currentHoverTarget,
+        currentHoverId: action.payload.layer?.includes("tiles") ? null : +action.payload.id
       };
     }
     case "SET_WIDGET_CONFIG": {
@@ -522,20 +526,21 @@ export default function reducer(state = INITIAL_STATE, action) {
     case "UPDATE_WIDGET_CONFIG_AND_DATA":{
       let widgetConfig = [...state.widgetConfig];
 
-      const newWidgetSpec = {
+      const newWidgetConfig = {
         ...state.widgetConfig[action.payload.widgetIndex],
         ...action.payload.newConfig
       }
 
-      widgetConfig[action.payload.widgetIndex] = newWidgetSpec;
+      widgetConfig[action.payload.widgetIndex] = newWidgetConfig;
+      const widgetSpec = getWidgetSpec(newWidgetConfig, action.payload.widgetIndex);
 
       const widgetData = {...state.widgetData};
       if(action.payload.doesWidgetNeedRefresh){
         const newWidgetData = formatWidgetData(
-          newWidgetSpec.variable, 
+          widgetSpec.variable, 
           state,
-          newWidgetSpec.type, 
-          newWidgetSpec.options
+          widgetSpec.type, 
+          widgetSpec.options
         );  
         widgetData[action.payload.widgetIndex] = newWidgetData;
       }
@@ -549,6 +554,23 @@ export default function reducer(state = INITIAL_STATE, action) {
       const cachedLisaScatterplotData = {...state.cachedLisaScatterplotData};
       cachedLisaScatterplotData[action.payload.variableName] = action.payload.data;
       return {...state, cachedLisaScatterplotData};
+    }
+    case "SET_MAP_FILTER": {
+      const mapFilters = {...state.mapFilters};
+      const newFilter = action.payload.filter === null ? null : {
+        ...action.payload.filter,
+        source: action.payload.widgetIndex
+      };
+      const index = mapFilters.findIndex(i => i.source == action.payload.widgetIndex);
+
+      // Append, replace, or delete
+      if(index === -1) { mapFilters.push(newFilter); }
+      else {
+        if(action.payload.filter === null) { mapFilters.splice(index, 1); }
+        else { mapFilters[index] = newFilter; }
+      }
+
+      return {...state, mapFilters};
     }
     default:
       return state;

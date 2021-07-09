@@ -1,9 +1,8 @@
 import * as colors from "@webgeoda/utils/colors";
-
 const data = [
   {
     name: 'Texas Block Groups', // Plain english name for dataset
-    geojson: 'tx.geojson', // geospatial data to join to
+    geodata: 'tx.geojson', // geospatial data to join to
     id: 'GEOID', // fid / geoid join column
     tables: {
       // any additional tabular data
@@ -26,7 +25,7 @@ const data = [
   },
   {
     name: 'US States', // Plain english name for dataset
-    geojson: 'states.geojson', // geospatial data to join to
+    geodata: 'states.geojson', // geospatial data to join to
     id: 'GEOID', // fid / geoid join column
     bounds: [-125.109215,-66.925621,25.043926,49.295128],
     tables: {
@@ -37,6 +36,20 @@ const data = [
       }
     },
   },
+  {
+    name: 'US Tracts',
+    geodata: 'US Tracts [tiles]',
+    tiles: `csds-hiplab.3ezoql1c`,
+    id: 'GEOID',
+    bounds: [-125.109215,-66.925621,25.043926,49.295128],
+    tables: {
+      acs_data: {
+        file: 'tract_acs.csv',
+        type: 'characteristic',
+        join: 'FIPS',
+      }
+    },
+  }
 ];
 
 const variables = [
@@ -123,7 +136,7 @@ const mapModes = {
 
 const widgets = [
   {
-    position: "left",
+    hidden: true,
     type: "histogram",
     variable: "Median age",
     options: {
@@ -133,7 +146,7 @@ const widgets = [
     }
   },
   {
-    position: "right",
+    hidden: false,
     type: "summary",
     variable: "Median age",
     options: {
@@ -143,17 +156,17 @@ const widgets = [
     }
   },
   {
-    position: "left",
+    hidden: true,
     type: "histogram",
-    variable: "Median Gross Rent",
+    variable: "Median age",
     options: {
-      header: "Median Gross Rent",
+      header: "Median age",
       foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Gross Rent"
+      yAxisLabel: "Median age"
     }
   },
   {
-    position: "right",
+    hidden: false,
     type: "line",
     variable: "???",
     options: {
@@ -163,43 +176,49 @@ const widgets = [
     }
   },
   {
-    position: "right",
+    hidden: false,
     type: "scatter",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
+    xVariable: "Median age",
+    yVariable: "Median age",
     options: {
-      header: "Median HH Income LISA scatterplot",
-      foregroundColor: "cluster",
+      header: "Median age",
+      foregroundColor: "#000000",
       numClusters: 5,
       clusterColors: [
         "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF"
       ],
       pointSize: .2,
-      xAxisLabel: "Median HH Income",
-      yAxisLabel: "Spatial Lag",
+      xAxisLabel: "Median age",
+      yAxisLabel: "Median age",
       removeZeroValues: true
     }
   },
   {
-    position: "right",
+    hidden: false,
     type: "scatter3d",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
+    xVariable: "Median age",
+    yVariable: "Median age",
     zVariable: "Median age",
     options: {
       foregroundColor: "#00AAFF",
-      xAxisLabel: "Median Household Income",
-      yAxisLabel: "Median Gross Rent",
+      xAxisLabel: "Median age",
+      yAxisLabel: "Median age",
       zAxisLabel: "Median Age",
       gridlinesInterval: [50000, 500, 5]
     }
   }
 ];
 
+// const style = {
+//   mapboxStyle: 'mapbox://styles/dhalpern/ckpkalk6o2me517kvlgz1eo7r',
+//   underLayerId: 'hillshade copy'
+// }
+
 // 🦺 exports below -- you can safely ignore! 🦺 //
 export const dataPresets = {
   data,
   variables,
   mapModes,
-  widgets
+  widgets,
+  // style
 };

@@ -18,7 +18,7 @@ import {loadWidgets} from "../utils/widgets";
 
 import * as colors from "../utils/colors";
 
-import { fitBounds } from "@math.gl/web-mercator";
+import { fitBounds, zoomToScale } from "@math.gl/web-mercator";
 
 // Main data loader
 // This functions asynchronously accesses the Geojson data and CSVs
@@ -109,13 +109,14 @@ export default function useLoadData(dateLists = {}) {
 
 
   useEffect(() => {
-    loadData(dataPresets, dataPresets.data[0].geojson)
+    loadData(dataPresets, dataPresets.data[0].geodata)
   },[])
 
   const loadData = async (dataPresets, datasetToLoad) => {
     if (geoda === undefined) location.reload();
-    const currentDataPreset = find(dataPresets.data, f => f.geojson === datasetToLoad);
-
+    const notTiles = !datasetToLoad.includes('tiles')
+    const currentDataPreset = find(dataPresets.data, f => f.geodata === datasetToLoad);
+    
     const numeratorTable =
       currentDataPreset.tables?.hasOwnProperty(dataParams.numerator) 
       && currentDataPreset.tables[dataParams.numerator];
@@ -125,32 +126,31 @@ export default function useLoadData(dateLists = {}) {
       && currentDataPreset.tables[dataParams.denominator];
     
     const firstLoadPromises = [
-      geoda.loadGeoJSON(`${window.location.origin}/geojson/${currentDataPreset.geojson}`, currentDataPreset.id),
+      notTiles ? geoda.loadGeoJSON(`${window.location.origin}/geojson/${currentDataPreset.geodata}`, currentDataPreset.id) : [false, false],
       numeratorTable && handleLoadData(numeratorTable),
       denominatorTable && handleLoadData(denominatorTable),
     ];
-
+    
     const [
       [mapId, geojsonData], 
       numeratorData, 
       denominatorData
     ] = await Promise.all(firstLoadPromises);
 
-    const geojsonProperties = indexGeoProps(
-      geojsonData,
-      currentDataPreset.id
-    );
+    const geojsonProperties = notTiles 
+    ? indexGeoProps(geojsonData,currentDataPreset.id)
+    : false;
 
-    const geojsonOrder = getIdOrder(
-      geojsonData.features,
-      currentDataPreset.id
-    );
+    const geojsonOrder = notTiles 
+    ? getIdOrder(geojsonData.features,currentDataPreset.id) 
+    : false;
 
     const bounds = currentDataPreset.bounds 
       ? currentDataPreset.bounds 
       : await geoda.getBounds(mapId);
     
-    const initialViewState =
+
+    let initialViewState =
       window !== undefined
         ? fitBounds({
             width: window.innerWidth,
@@ -162,6 +162,8 @@ export default function useLoadData(dateLists = {}) {
           })
         : null;
 
+    if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
+    
     const binData = dataParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
@@ -187,7 +189,6 @@ export default function useLoadData(dateLists = {}) {
         dataParams,
         bins
       })
-
     dispatch({
       type: "INITIAL_LOAD",
       payload: {
@@ -196,6 +197,7 @@ export default function useLoadData(dateLists = {}) {
           numerator: dataParams.numerator === "properties" ? "properties" : numeratorTable,
           denominator: dataParams.numerator === "properties" ? "properties" : denominatorTable,
         },
+        currentTiles: currentDataPreset.tiles,
         storedGeojson: {
           [datasetToLoad]: {
             data: geojsonData,
@@ -225,7 +227,7 @@ export default function useLoadData(dateLists = {}) {
   const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
     const tablesToFetch = find(
       dataPresets.data,
-      (o) => o.geojson === datasetToLoad
+      (o) => o.geodata === datasetToLoad
     ).tables;
 
     const tableNames = Object.keys(tablesToFetch);
