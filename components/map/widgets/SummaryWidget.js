@@ -3,25 +3,16 @@ import PropTypes from 'prop-types';
 import * as ss from 'simple-statistics';
 
 function SummaryWidget(props) {
-console.log(props);
-  const dataProp = {
-    labels: props.data.labels,
-    datasets: [
-      {
-        label: props.options.header,
-        data: props.data.data,
-        backgroundColor: props.options.foregroundColor || "#000000"
-      }
-    ]
-  };
 
   return (
     <div>
-      Mean: {props.data.mean}
-      Median: {props.data.median}
-      Median: {ss.standardDeviation([1,1])}
-      Min: {ss.min([1,3])}
-      Min: {ss.max([1,3])}
+    <center>
+        <br /><b>Mean:</b> {props.data.mean}
+      <br /><b>Median:</b> {props.data.median}
+      <br /><b>Standard Dev: </b>{props.data.stdev}
+      <br /><b>Min:</b> {props.data.min}
+      <br /><b>Max:</b> {props.data.max}
+    </center>
     </div>
   );
 }

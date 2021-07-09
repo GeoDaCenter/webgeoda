@@ -9,7 +9,7 @@ const WIDGET_OPTION_TYPES = [
     {
         displayName: "Variable",
         datatype: "variable",
-        supportedTypes: ["histogram"],
+        supportedTypes: ["histogram", "summary"],
         get: (w) => w.variable,
         set: (w, v) => { w.variable = v }
     },
@@ -37,14 +37,14 @@ const WIDGET_OPTION_TYPES = [
     {
         displayName: "Header",
         datatype: "string",
-        supportedTypes: ["histogram", "line", "scatter", "scatter3d"],
+        supportedTypes: ["histogram", "line", "scatter", "scatter3d", "summary"],
         get: (w) => w.options.header,
         set: (w, v) => { w.options.header = v }
     },
     {
         displayName: "Foreground Color",
         datatype: "color",
-        supportedTypes: ["histogram", "line", "scatter", "scatter3d"],
+        supportedTypes: ["histogram", "line", "scatter", "scatter3d", "summary"],
         get: (w) => w.options.foregroundColor,
         set: (w, v) => { w.options.foregroundColor = v }
     },

@@ -17,9 +17,7 @@ import SummaryWidget from './SummaryWidget';
 export const WIDGET_WIDTH = 400;
 
 function Widget(props) {
-  console.log(props)
   const data = useSelector(state => state.widgetData[props.id]);
-  console.log(data)
   const [showSettings, setShowSettings] = React.useState(false);
   if(data == null){
     return (

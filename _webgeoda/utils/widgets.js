@@ -8,7 +8,7 @@ import {
 import {TARGET_RANGE} from "../../components/map/widgets/Scatter3DWidget";
 
 import { bin as d3bin } from "d3-array";
-import {linearRegression, linearRegressionLine, kMeansCluster} from "simple-statistics";
+import {linearRegression, linearRegressionLine, kMeansCluster, min, max, standardDeviation, median, mean} from "simple-statistics";
 
 const findFirstTable = (tableName, storedData, dataPresets) => {
     for (let i=0; i<dataPresets.length; i++){
@@ -260,12 +260,12 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         if (!variableSpec) return []
         const [data] = getColumnData(variableSpec, state)
         if (!data) return []
-        let formattedData = [];
-        // TODO: Format data using like .map to plug into simple statistics 
         return {
-            median: 42,
-            mean: 32,
-            ...
+            median: median(data),
+            mean: mean(data).toFixed(3),
+            stdev: standardDeviation(data).toFixed(3),
+            min: min(data),
+            max: max(data),
         }
     }
 }
