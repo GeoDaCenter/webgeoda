@@ -556,7 +556,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {...state, cachedLisaScatterplotData};
     }
     case "SET_MAP_FILTER": {
-      const mapFilters = {...state.mapFilters};
+      const mapFilters = [...state.mapFilters];
       const newFilter = action.payload.filter === null ? null : {
         ...action.payload.filter,
         source: action.payload.widgetIndex
