@@ -17,8 +17,8 @@ console.log(props);
 
   return (
     <div>
-      Mean: {ss.mean([1,1])}
-      Median: {ss.median([1,1])}
+      Mean: {props.data.mean}
+      Median: {props.data.median}
       Median: {ss.standardDeviation([1,1])}
       Min: {ss.min([1,3])}
       Min: {ss.max([1,3])}

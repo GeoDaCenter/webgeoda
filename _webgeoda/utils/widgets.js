@@ -246,6 +246,23 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         })
         return {data, labels};
     }
+
+    if(widgetType === "summary"){
+        const variableSpec = find(
+            dataPresets.variables,
+            (o) => o.variable === variableName
+        )
+        if (!variableSpec) return []
+        const [data] = getColumnData(variableSpec, state)
+        if (!data) return []
+        let formattedData = [];
+        // TODO: Format data using like .map to plug into simple statistics 
+        return {
+            median: 42,
+            mean: 32,
+            ...
+        }
+    }
 }
 
 export const getWidgetSpec = (widget, i) => {
