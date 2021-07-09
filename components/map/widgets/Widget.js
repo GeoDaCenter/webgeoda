@@ -11,12 +11,15 @@ import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';
 import Scatter3DWidget from './Scatter3DWidget';
 import LineWidget from './LineWidget';
+import SummaryWidget from './SummaryWidget';
 
 // As defined in CSS
 export const WIDGET_WIDTH = 400;
 
 function Widget(props) {
+  console.log(props)
   const data = useSelector(state => state.widgetData[props.id]);
+  console.log(data)
   const [showSettings, setShowSettings] = React.useState(false);
   if(data == null){
     return (
@@ -37,6 +40,9 @@ function Widget(props) {
       break;
     case 'line':
       component = LineWidget;
+      break;
+    case 'summary':
+      component = SummaryWidget;
       break;
     default:
       return (
@@ -87,7 +93,7 @@ function Widget(props) {
 }
 
 Widget.propTypes = {
-  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d"]).isRequired,
+  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d","summary"]).isRequired,
   options: PropTypes.object.isRequired,
   fullWidgetConfig: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,

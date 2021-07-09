@@ -133,6 +133,16 @@ const widgets = [
     }
   },
   {
+    position: "right",
+    type: "summary",
+    variable: "Median age",
+    options: {
+      header: "Median Age",
+      foregroundColor: "#FF00FF",
+      yAxisLabel: "Median Age"
+    }
+  },
+  {
     position: "left",
     type: "histogram",
     variable: "Median Gross Rent",
