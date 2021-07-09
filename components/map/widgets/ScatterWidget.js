@@ -105,8 +105,30 @@ function ScatterWidgetUnwrapped(props) {
               // return false to cancel selection
               return true;
           },
-          afterSelect: function(startX, endX, startY, endY, datasets) {
-            console.log(chartRef.current.boxselect.selection)
+          afterSelect: (startX, endX, startY, endY, datasets) => {
+            console.log(startX);
+            console.log(endX);
+            return;
+            if(datasets.length == 0) return;
+            const dataset = datasets[0];
+            if(dataset.data.length == 0) {
+                // Empty click; reset filter
+                dispatch({
+                    type: "SET_MAP_FILTER",
+                    widgetIndex: props.id,
+                    filter: null
+                });
+            } else {
+                dispatch({
+                type: "SET_MAP_FILTER",
+                    widgetIndex: props.id,
+                    filter: {
+                        type: "set",
+                        field: "GEOID",
+                        values: dataset.indexes.map(index => props.data.data[index].id)
+                    }
+                });
+            }
           }
         }
       }

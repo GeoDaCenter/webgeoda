@@ -19,7 +19,10 @@ var defaultOptions = {
 }
 
 function getOption(chart, category, name) {
-	return valueOrDefault(chart.options.plugins.boxselect[category] ? chart.options.plugins.boxselect[category][name] : undefined, defaultOptions[category][name]);
+	if(category in chart.options.plugins.boxselect && name in chart.options.plugins.boxselect[category]){
+		return chart.options.plugins.boxselect[category][name];
+	}
+	return defaultOptions[category][name];
 }
 
 
@@ -102,9 +105,17 @@ function doSelect(chart, startX, endX, startY, endY) {
 	// chart.update();
 	// workaround - add the current datasets to the chart as a property, allowing access via Ref
 	chart.boxselect.selection = datasets
-
+	console.log("Getting option")
 	// TODO: afterSelectCallback fires, but is not receiving arguments
-	var afterSelectCallback = getOption(chart, 'callbacks', 'afterSelect');
+	// Avoid using getOption here so ChartJS does not evaluate function as a scripted parameter
+	
+	console.log("🚀 ~ file: TEMP_chartjs-plugin-boxselect.js ~ line 115 ~ doSelect ~ chart.options.plugins.boxselect.callbacks", chart.options.plugins.boxselect.callbacks);
+	const afterSelectCallback = (
+		chart.options.plugins.boxselect.callbacks == null || chart.options.plugins.boxselect.callbacks.afterSelect == null ?
+		defaultOptions.callbacks.afterSelect :
+		chart.options.plugins.boxselect.callbacks.afterSelect
+	);
+	console.log("Got option")
 	afterSelectCallback(startX, endX, startY, endY, datasets);
 }
 
