@@ -150,9 +150,17 @@ const widgets = [
     type: "summary",
     variable: "Median age",
     options: {
-      header: "Median Age",
+      header: "Median Age Statistics",
       foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Age"
+    }
+  },
+  {
+    hidden: false,
+    type: "lisaW",
+    variable: "Median Household Income",
+    options: {
+      header: "Median Household Income LISA",
+      foregroundColor: "#FF00FF",
     }
   },
   {

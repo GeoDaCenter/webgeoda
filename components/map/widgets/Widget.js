@@ -12,6 +12,7 @@ import ScatterWidget from './ScatterWidget';
 import Scatter3DWidget from './Scatter3DWidget';
 import LineWidget from './LineWidget';
 import SummaryWidget from './SummaryWidget';
+import LisaWidget from './LisaWidget';
 
 // As defined in CSS
 export const WIDGET_WIDTH = 400;
@@ -41,6 +42,9 @@ function Widget(props) {
       break;
     case 'summary':
       component = SummaryWidget;
+      break;
+    case 'lisaW':
+      component = LisaWidget;
       break;
     default:
       return (
@@ -91,7 +95,7 @@ function Widget(props) {
 }
 
 Widget.propTypes = {
-  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d","summary"]).isRequired,
+  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d","summary", "lisaW"]).isRequired,
   options: PropTypes.object.isRequired,
   fullWidgetConfig: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,

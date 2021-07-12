@@ -105,6 +105,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         let idKeys;
         let isLisa = false;
         let variableSpecs = [];
+        console.log(variableName)
         for (let i = 0; i < 2; i++){
             if(i == 1 && variableName[i] === "LISA"){
                 variableSpecs.push(null);
@@ -266,6 +267,23 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
             stdev: standardDeviation(data).toFixed(3),
             min: min(data).toFixed(3),
             max: max(data).toFixed(3),
+        }
+    }
+
+    if (widgetType === "lisaW"){
+        
+        const variableSpec = find(
+            dataPresets.variables,
+            (o) => o.variable === variableName
+        )
+        if (!variableSpec) return []
+        const [data] = getColumnData(variableSpec, state)
+        if (!data) return []
+
+
+        return {
+            mean: mean(data).toFixed(3),
+            stdev: standardDeviation(data).toFixed(3),
         }
     }
 }
