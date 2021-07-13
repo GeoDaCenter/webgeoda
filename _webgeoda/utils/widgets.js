@@ -105,7 +105,6 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         let idKeys;
         let isLisa = false;
         let variableSpecs = [];
-        console.log(variableName)
         for (let i = 0; i < 2; i++){
             if(i == 1 && variableName[i] === "LISA"){
                 variableSpecs.push(null);
@@ -284,6 +283,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         return {
             mean: mean(data).toFixed(3),
             stdev: standardDeviation(data).toFixed(3),
+            variable: variableSpec,
         }
     }
 }
