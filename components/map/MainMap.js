@@ -104,22 +104,18 @@ export default function MainMap() {
 
   // Apply map filters
   const itemIsInFilter = (id) => {
-    // const d = ??? find a way to access current raw data
-    // if(d === null) return false;
+    const cachedData = cachedVariables[currentData];
+    if(cachedData === null) return false;
     for(const filter of mapFilters){
       if(filter.type === "set"){
-        // TODO: Respect filter.field, not just id
-        if(!filter.values.includes(id.toString())) return false;
-        
-        // if(!filter.values.includes(d[filter.field])) return false;
+        if(!filter.values.includes(cachedData[filter.field][id])) return false;
       } else if(filter.type === "range"){
-        // const val = d[filter.field];
-        // if(!(val >= filter.from && val <= filter.to)) return false;
+        const val = cachedData[filter.field][id];
+        if(!(val >= filter.from && val <= filter.to)) return false;
       }
     }
     return true;
   }
-  // console.log(itemIsInFilter(481130143075));
 
   const layers = !mapData.params.includes(currentData)
     ? [new GeoJsonLayer({

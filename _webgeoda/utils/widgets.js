@@ -47,6 +47,7 @@ const getTables = (variableSpec, state) => {
     if (numerator === "properties") { // default properties indicator
         returnTables.numeratorData = storedGeojson[currentData].properties
         // TODO: Set returnTables.dataset in this case
+        console.log("Not implemented");
     } else {  
         if (currentTables && currentTables.hasOwnProperty(variableSpec.numerator)) {
             returnTables.numeratorData = storedData[currentTables[variableSpec.numerator].file]?.data;
@@ -75,7 +76,6 @@ const getColumnData = (variableSpec, state, returnKeys=false, returnDataset=fals
     const {storedGeojson, currentData, cachedVariables} = state;
     if (!storedGeojson[currentData]) return []
     const {numeratorData, denominatorData, dataset} = getTables(variableSpec, state);
-    console.log("🚀 ~ file: widgets.js ~ line 80 ~ getColumnData ~ dataset", dataset);
     const columnData = (cachedVariables.hasOwnProperty(currentData) 
         && cachedVariables[currentData].hasOwnProperty(variableSpec.variable))
         ? Object.values(cachedVariables[currentData][variableSpec.variable])
@@ -101,6 +101,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
             (o) => o.variable === variableName
         )
         if (!variableSpec) return []
+        console.log(getColumnData(variableSpec, state, false, true))
         const {data, dataset} = getColumnData(variableSpec, state, false, true);
         if (!data) return []
         const binned = d3bin().thresholds(options.thresholds || 40)(data)
