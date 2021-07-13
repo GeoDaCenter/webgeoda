@@ -29,8 +29,13 @@ export default function WidgetLayer(){
   const widgetElementsLeft = mapWidgets({widgets, widgetLocations, side:"left"})
   const widgetElementsRight = mapWidgets({widgets, widgetLocations, side:"right"})
 
-  const onDragEnd = (result) => {
-    if(!result.destination) return;
+  const handleDragStart = () => dispatch({type:'SET_WIDGET_IS_DRAGGING', payload: true})
+
+  const handleDragEnd = (result) => {
+    if(!result.destination) {
+      dispatch({type:'SET_WIDGET_IS_DRAGGING', payload: false})
+      return;
+    }
     const newWidgetLocations = [...widgetLocations];
     const widgetIndex = parseInt(result.draggableId);
     const previousSide = widgetLocations[widgetIndex].side;
@@ -55,9 +60,7 @@ export default function WidgetLayer(){
       if(thisWidgetPrevIndex !== widget.index){
         widgets[i] = renderWidget(widgetConfig[i], i, widget.index);
       }
-    }
-    console.log(newWidgetLocations)
-    
+    }    
     dispatch({
       type: 'SET_WIDGET_LOCATIONS',
       payload: newWidgetLocations
@@ -66,7 +69,7 @@ export default function WidgetLayer(){
 
   return (
     <div className={styles.widgetLayer}>
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
         <div className={styles.widgetsContainer}>
           <Droppable droppableId="widgets-left">
             {(provided, snapshot) => (

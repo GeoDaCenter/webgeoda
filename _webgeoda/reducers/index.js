@@ -617,7 +617,14 @@ export default function reducer(state = INITIAL_STATE, action) {
     case "SET_WIDGET_LOCATIONS": {
       return {
         ...state,
-        widgetLocations: action.payload
+        widgetLocations: action.payload,
+        widgetIsDragging: false
+      }
+    }
+    case "SET_WIDGET_IS_DRAGGING":{
+      return {
+        ...state,
+        widgetIsDragging: action.payload
       }
     }
     case "CACHE_SCATTERPLOT_LISA": {
