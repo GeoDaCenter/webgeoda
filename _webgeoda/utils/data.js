@@ -369,3 +369,11 @@ export const handleLoadData = async (info, dateList) => {
     };
   }
 };
+
+
+export const zip = (keys, vals) => {
+  if (!keys || !vals) return null
+  let returnObj = {}
+  for (let i=0; i<keys.length; i++) returnObj[keys[i]] = vals[i]
+  return returnObj
+}

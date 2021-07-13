@@ -91,6 +91,7 @@ const lisaColors = [
 export default function useLoadData(dateLists = {}) {
   const geoda = useContext(GeodaContext);
   const currentData = useSelector((state) => state.currentData);
+  const cachedVariables = useSelector((state) => state.cachedVariables);
   const datasetToLoad = useSelector((state) => state.datasetToLoad);
   const dataPresets = useSelector((state) => state.dataPresets);
   const dataParams = useSelector((state) => state.dataParams);
@@ -181,7 +182,6 @@ export default function useLoadData(dateLists = {}) {
       ...dataParams,
       [dataParams.nIndex === null && 'nIndex']: numeratorData.dateIndices.length-1
     }
-    console.log(tempParams)
 
     const binData = tempParams.categorical 
       ? getUniqueVals(
@@ -237,7 +237,12 @@ export default function useLoadData(dateLists = {}) {
         variableParams: tempParams,
         initialViewState,
         id: currentDataPreset.id,
-      },
+        cachedVariable: {
+          variable: dataParams.variable,
+          data: binData,
+          geoidOrder: geojsonOrder
+        }
+      }
     });
 
     loadTables(dataPresets, datasetToLoad, dateLists, mapId);

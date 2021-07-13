@@ -1,4 +1,4 @@
-import { INITIAL_STATE } from "../constants/defaults";
+import { INITIAL_STATE } from "../constants/defaults";``
 
 import {
   mapFnNb,
@@ -7,11 +7,24 @@ import {
   getVarId,
   shallowEqual,
   find,
-} from "../utils/data";
+  zip
+} from "@webgeoda/utils/data";
+
+import {
+  formatWidgetData
+} from '@webgeoda/utils/widgets';
+
+import { 
+  findDatasetWithTable,
+  generateReport, 
+  parseTooltipData
+} from "../utils/summarize";
+
 import { 
   getCartogramCenter, 
   generateMapData 
 } from "../utils/map";
+
 import { 
   generateReport, 
   parseTooltipData, 
@@ -70,7 +83,19 @@ export default function reducer(state = INITIAL_STATE, action) {
                 ? action.payload.initialViewState
                 : null,
             currentId: action.payload.id
-          })
+          }),
+        cachedVariables: {
+          ...state.cachedVariables,
+          [action.payload.currentData]: {
+            ...(state.cachedVariables.hasOwnProperty(action.payload.currentData)
+              ? state.cachedVariables[action.payload.currentData]
+              : {}),
+            [action.payload.cachedVariable.variable]: zip(
+              action.payload.cachedVariable.geoidOrder, 
+              action.payload.cachedVariable.data
+            )
+          }
+        }
       };
     }
     case "CHANGE_VARIABLE": {
@@ -130,6 +155,16 @@ export default function reducer(state = INITIAL_STATE, action) {
           ...state,
           mapParams
         }),
+        cachedVariables: {
+          ...state.cachedVariables,
+          [state.currentData]: {
+              ...state.cachedVariables[state.currentData],
+              [action.payload.cachedVariable.variable]: zip(
+                action.payload.cachedVariable.geoidOrder, 
+                action.payload.cachedVariable.data
+            )
+          }
+        }
       };
     }
     case "UPDATE_LISA": {
@@ -162,6 +197,16 @@ export default function reducer(state = INITIAL_STATE, action) {
           bins: {
             breaks: action.payload.lisaResults.labels,
             bins: action.payload.lisaResults.labels
+          }
+        },
+        cachedVariables: {
+          ...state.cachedVariables,
+          [state.currentData]: {
+              ...state.cachedVariables[state.currentData],
+              [action.payload.cachedVariable.variable]: zip(
+                action.payload.cachedVariable.geoidOrder, 
+                action.payload.cachedVariable.data
+            )
           }
         }
       }
@@ -534,11 +579,48 @@ export default function reducer(state = INITIAL_STATE, action) {
       };
     }
     case "FORMAT_WIDGET_DATA": {
+      let cachedVariables = {...state.cachedVariables}
       const widgetData = {...state.widgetData};
-      for(const i of action.payload.widgetSpecs){
-        widgetData[i.id] = formatWidgetData(i.variable, state, i.type);
+
+      if("widgetSpec" in action.payload){
+        // Only loading one widget's data
+        widgetData[action.payload.widgetSpec.id] = formatWidgetData(action.payload.widgetSpec.variable, state, action.payload.widgetSpec.type, action.payload.widgetSpec.options);
+        if (cachedVariables.hasOwnProperty(state.currentData) 
+          && widgetData[i.id].hasOwnProperty('variableToCache')) {
+            for (let n=0; n<widgetData[i.id].variableToCache.length; n++){
+              cachedVariables = {
+                ...cachedVariables,
+                [state.currentData]: {
+                  ...(cachedVariables[state.currentData]||{}),
+                  [widgetData[i.id].variableToCache[n].variable]: zip(widgetData[i.id].variableToCache[n].order, widgetData[i.id].variableToCache[n].data)
+                }
+              }
+            }
+          }
+      } else {
+        // Loading multiple widget data
+        for(const i of action.payload.widgetSpecs){
+          widgetData[i.id] = formatWidgetData(i.variable, state, i.type, i.options);
+          if (cachedVariables.hasOwnProperty(state.currentData) 
+            && widgetData[i.id].hasOwnProperty('variableToCache')) {
+              for (let n=0; n<widgetData[i.id].variableToCache.length; n++){
+                cachedVariables = {
+                  ...cachedVariables,
+                  [state.currentData]: {
+                    ...(cachedVariables[state.currentData]||{}),
+                    [widgetData[i.id].variableToCache[n].variable]: zip(widgetData[i.id].variableToCache[n].order, widgetData[i.id].variableToCache[n].data)
+                  }
+                }
+              }
+            }
+        }
       }
-      return {...state, widgetData};
+      
+      return {
+        ...state, 
+        widgetData,
+        cachedVariables
+      };
     }
     default:
       return state;

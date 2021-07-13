@@ -28,6 +28,7 @@ export default function useLisa() {
     const storedData = useSelector((state) => state.storedData);
     const dataParams = useSelector((state) => state.dataParams);
     const dataPresets = useSelector((state) => state.dataPresets);
+    const cachedVariables = useSelector((state) => state.cachedVariables);
 
     const dispatch = useDispatch();
 
@@ -50,7 +51,10 @@ export default function useLisa() {
             dataParams.denominator
         )
 
-        const lisaData = parseColumnData({
+        const lisaData = cachedVariables.hasOwnProperty(currentData) && 
+                cachedVariables[currentData].hasOwnProperty(dataParams.variable)
+            ? Object.values(cachedVariables[currentData][dataParams.variable])
+            : parseColumnData({
             numeratorData: dataParams.numerator === "properties" ? storedGeojson[geographyName].properties : storedData[numeratorTable]?.data,
             denominatorData: dataParams.numerator === "properties" ? storedGeojson[geographyName].properties : storedData[denominatorTable]?.data,
             dataParams: dataParams,
@@ -80,12 +84,12 @@ export default function useLisa() {
             return { weights, lisaResults, scatterPlotData};
         }
 
-        return { weights, lisaResults }
+        return { weights, lisaResults, lisaData }
     }
 
   const updateLisa = async () => {
 
-    const { weights, lisaResults } = await getLisa ({
+    const { weights, lisaResults, lisaData } = await getLisa ({
         geographyName: currentData,
         dataParams
     })
@@ -96,6 +100,11 @@ export default function useLisa() {
             lisaResults,
             weights,
             colorScale: (dataParams.lisaColors||lisaResults.colors).map(c => hexToRgb(c)),
+            cachedVariable: {
+                variable: dataParams.variable,
+                data: lisaData,
+                geoidOrder: storedGeojson[currentData].order
+            }
         },
     });
   };
