@@ -62,16 +62,20 @@ const getTables = (variableSpec, state) => {
 }
 
 const getColumnData = (variableSpec, state, returnKeys=false) => {
-    const {storedGeojson, currentData} = state;
+    const {storedGeojson, currentData, cachedVariables} = state;
     if (!storedGeojson[currentData]) return []
     const {numeratorData, denominatorData} = getTables(variableSpec, state);
-    const columnData = parseColumnData({
-        numeratorData,
-        denominatorData,
-        dataParams: variableSpec
-    });
+    const columnData = (cachedVariables.hasOwnProperty(currentData) 
+        && cachedVariables[currentData].hasOwnProperty(variableSpec.variable))
+        ? Object.values(cachedVariables[currentData][variableSpec.variable])
+        : parseColumnData({
+            numeratorData,
+            denominatorData,
+            dataParams: variableSpec,
+            fixedOrder: storedGeojson[currentData].order
+        });
 
-    if (returnKeys) return [columnData, Object.keys(numeratorData)]
+    if (returnKeys) return [columnData, Object.keys(storedGeojson[currentData].order)]
     return [columnData]
 }
 
@@ -94,7 +98,13 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         }
         return {
             data: formattedData,
-            labels
+            labels,
+            binBounds,
+            variableToCache: [{
+                data,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName
+            }]
         }
     }
 
@@ -187,7 +197,16 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
             variableSpecs,
             isLisa,
             clusterLabels,
-            isCluster
+            isCluster,
+            variableToCache: [{
+                data: xData,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName[0]
+            },{
+                data: yData,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName[1]
+            }]
         };
     }
 
@@ -237,7 +256,20 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         })
         return {
             data: formattedData,
-            axesInfo: [scaledX, scaledY, scaledZ]
+            axesInfo: [scaledX, scaledY, scaledZ],
+            variableToCache: [{
+                data: xData,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName[0]
+            },{
+                data: yData,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName[1]
+            },{
+                data: zData,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName[2]
+            }]
         };
     }
 

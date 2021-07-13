@@ -72,7 +72,8 @@ export const generateBins = async ({
     currentData,
     dataParams, 
     storedData,
-    storedGeojson   
+    storedGeojson,
+    cachedVariables
 }) => {
     const numeratorTable = findTable(
         dataPresets.data,
@@ -86,14 +87,18 @@ export const generateBins = async ({
         dataParams.denominator
     )
 
-    const binData = dataParams.categorical 
+    const binData = cachedVariables.hasOwnProperty(currentData) && 
+            cachedVariables[currentData].hasOwnProperty(dataParams.variable)
+        ? Object.values(cachedVariables[currentData][dataParams.variable])
+        : dataParams.categorical 
         ? getUniqueVals(
             storedData[numeratorTable]?.data||storedGeojson[currentData].properties,
             dataParams)
         : parseColumnData({
             numeratorData: storedData[numeratorTable]?.data || storedGeojson[currentData].properties,
             denominatorData: storedData[denominatorTable]?.data || storedGeojson[currentData].properties,
-            dataParams: dataParams
+            dataParams: dataParams,
+            fixedOrder: storedGeojson[currentData].order
         });
     
     const bins = await getBins({
@@ -110,7 +115,8 @@ export const generateBins = async ({
 
     return {
         bins,
-        colorScale
+        colorScale,
+        binData
     }
 }
 

@@ -93,6 +93,7 @@ const lisaColors = [
 export default function useLoadData(dateLists = {}) {
   const geoda = useContext(GeodaContext);
   const currentData = useSelector((state) => state.currentData);
+  const cachedVariables = useSelector((state) => state.cachedVariables);
   const datasetToLoad = useSelector((state) => state.datasetToLoad);
   const dataPresets = useSelector((state) => state.dataPresets);
   const dataParams = useSelector((state) => state.dataParams);
@@ -164,7 +165,10 @@ export default function useLoadData(dateLists = {}) {
 
     if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
     
-    const binData = dataParams.categorical 
+    const binData = cachedVariables.hasOwnProperty(currentData) && 
+        cachedVariables[currentData].hasOwnProperty(dataParams.variable)
+      ? Objtect.values(cachedVariables[currentData][dataParams.variable])
+      : dataParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
         dataParams)
@@ -218,7 +222,12 @@ export default function useLoadData(dateLists = {}) {
         variableParams: dataParams,
         initialViewState,
         id: currentDataPreset.id,
-      },
+        cachedVariable: {
+          variable: dataParams.variable,
+          data: binData,
+          geoidOrder: geojsonOrder
+        }
+      }
     });
     await loadTables(dataPresets, datasetToLoad, dateLists);
     loadWidgets(dataPresets.widgets, dispatch); // TODO: Have useLoadWidgetData handle this?
