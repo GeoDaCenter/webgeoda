@@ -174,7 +174,7 @@ const widgets = [
     }
   },
   {
-    hidden: false,
+    hidden: true,
     type: "line",
     variable: "???",
     options: {
@@ -186,31 +186,31 @@ const widgets = [
   {
     hidden: false,
     type: "scatter",
-    xVariable: "Median age",
-    yVariable: "Median age",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
     options: {
-      header: "Median age",
+      header: "Household Income vs. Gross Rent",
       foregroundColor: "#000000",
-      numClusters: 5,
+      numClusters: 3,
       clusterColors: [
         "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF"
       ],
       pointSize: .2,
-      xAxisLabel: "Median age",
-      yAxisLabel: "Median age",
+      xAxisLabel: "Median Household Income",
+      yAxisLabel: "Median Gross Rent",
       removeZeroValues: true
     }
   },
   {
     hidden: false,
     type: "scatter3d",
-    xVariable: "Median age",
-    yVariable: "Median age",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
     zVariable: "Median age",
     options: {
       foregroundColor: "#00AAFF",
-      xAxisLabel: "Median age",
-      yAxisLabel: "Median age",
+      xAxisLabel: "Median Household Income",
+      yAxisLabel: "Median Gross Rent",
       zAxisLabel: "Median Age",
       gridlinesInterval: [50000, 500, 5]
     }

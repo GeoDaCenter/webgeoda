@@ -33,6 +33,7 @@ export default function MainMap() {
   const mapData = useSelector((state) => state.mapData);
   const mapStyle = useSelector((state) => state.mapStyle);
   const isLoading = useSelector((state) => state.isLoading);
+  const mapFilters = useSelector((state) => state.mapFilters);
   const [glContext, setGLContext] = useState();
   const dispatch = useDispatch();
   // const panToGeoid = usePanMap();
@@ -100,6 +101,25 @@ export default function MainMap() {
     );
   }, []);
 
+  // Apply map filters
+  const itemIsInFilter = (id) => {
+    // const d = ??? find a way to access current raw data
+    // if(d === null) return false;
+    for(const filter of mapFilters){
+      if(filter.type === "set"){
+        // TODO: Respect filter.field, not just id
+        if(!filter.values.includes(id.toString())) return false;
+        
+        // if(!filter.values.includes(d[filter.field])) return false;
+      } else if(filter.type === "range"){
+        // const val = d[filter.field];
+        // if(!(val >= filter.from && val <= filter.to)) return false;
+      }
+    }
+    return true;
+  }
+  // console.log(itemIsInFilter(481130143075));
+
   const layers = !mapData.params.includes(currentData)
     ? [new GeoJsonLayer({
       id: "choropleth",
@@ -121,7 +141,14 @@ export default function MainMap() {
       new GeoJsonLayer({
         id: "choropleth",
         data: currentMapGeography,
-        getFillColor: (d) => mapData.data[d.properties[currentId]]?.color,
+        getFillColor: (d) => {
+          const id = d.properties[currentId];
+          const baseColor = mapData.data[id]?.color;
+          if(itemIsInFilter(id)) {
+            return baseColor;
+          }
+          return [baseColor[0], baseColor[1], baseColor[2], 20];
+        },
         getLineColor: (d) => [
           0,
           0,
@@ -142,11 +169,8 @@ export default function MainMap() {
         onHover: handleMapHover,
         // onClick: handleMapClick,
         updateTriggers: {
-          getFillColor: mapData.params,
+          getFillColor: [mapData.params, mapFilters],
           getLineColor: [mapData.params, currentHoverId]
-        },
-        transitions: {
-          getFillColor: dataParams.nIndex === undefined ? 250 : 0
         }
       })];
 

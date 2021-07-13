@@ -2,7 +2,7 @@
   background: red;
   position: absolute;
   left: 0.5rem;
-  top: calc(0.5rem + 50px);
+  top: calc(0.5rem);
   background: hsla(0, 0%, 100%, 0.85);
   backdrop-filter: blur(5px) brightness(90%) contrast(100%);
   min-height: 10px;

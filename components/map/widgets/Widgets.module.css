@@ -63,7 +63,8 @@
 }
 
 #columnRight {
-  margin-right: 50px;
+  margin-right: 0;
+  background:white;
 }
 
 .widget {
@@ -76,6 +77,7 @@
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   z-index: 1;
   position: relative;
+  user-select: none;
 }
 .widgetContent {
   height: 90%;

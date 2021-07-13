@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import {Scatter} from 'react-chartjs-2';
-import pluginBoxSelect from '../../../TEMP_chartjs-plugin-boxselect';
+import pluginBoxSelect from './chartjs-plugins/boxselect';
 import useLisa from '@webgeoda/hooks/useLisa';
 import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
 import {useDispatch} from 'react-redux';
@@ -95,38 +95,38 @@ function ScatterWidgetUnwrapped(props) {
           }
         }
       },
-      boxselect: { // this was the boxselect.select etc that was throwing the error!
+      boxselect: {
         select: {
           enabled: true,
           direction: 'xy'
         },
-        callbacks: { // todo: these are not actually receiving arguments from the chart, but do get fired on the relevant event
+        callbacks: {
           beforeSelect: function(startX, endX, startY, endY) {
-              // return false to cancel selection
               return true;
           },
           afterSelect: (startX, endX, startY, endY, datasets) => {
-            console.log(startX);
-            console.log(endX);
-            return;
             if(datasets.length == 0) return;
             const dataset = datasets[0];
             if(dataset.data.length == 0) {
                 // Empty click; reset filter
                 dispatch({
-                    type: "SET_MAP_FILTER",
+                  type: "SET_MAP_FILTER",
+                  payload: {
                     widgetIndex: props.id,
                     filter: null
+                  }
                 });
             } else {
                 dispatch({
-                type: "SET_MAP_FILTER",
+                  type: "SET_MAP_FILTER",
+                  payload: {    
                     widgetIndex: props.id,
                     filter: {
-                        type: "set",
-                        field: "GEOID",
-                        values: dataset.indexes.map(index => props.data.data[index].id)
+                      type: "set",
+                      field: "GEOID",
+                      values: dataset.indexes.map(index => props.data.data[index].id)
                     }
+                  }
                 });
             }
           }
@@ -148,16 +148,6 @@ function ScatterWidgetUnwrapped(props) {
       }
     }
   };
-
-  // const dragPlugin = {
-  //   id: "custom-drag-selection",
-  //   afterEvent: (chart, e) => {
-  //     console.log(e.event.native?.buttons);
-  //     if(e.event.type === "click"){
-
-  //     }
-  //   }
-  // };
 
   return (
     <div>

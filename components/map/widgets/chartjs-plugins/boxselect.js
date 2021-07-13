@@ -13,14 +13,14 @@ var defaultOptions = {
 			return true;
 		},
 		afterSelect: function (startX, endX, startY, endY, datasets) {
-			// console.log(datasets)
+			
 		}
 	}
 }
 
 function getOption(chart, category, name) {
-	if(category in chart.options.plugins.boxselect && name in chart.options.plugins.boxselect[category]){
-		return chart.options.plugins.boxselect[category][name];
+	if(category in chart.config.options.plugins.boxselect && name in chart.config.options.plugins.boxselect[category]){
+		return chart.config.options.plugins.boxselect[category][name];
 	}
 	return defaultOptions[category][name];
 }
@@ -37,12 +37,12 @@ function getYScale(chart) {
 function doSelect(chart, startX, endX, startY, endY) {
 	// swap start/end if user dragged from right to left
 	if (startX > endX) {
-		var tmp = startX;
+		const tmp = startX;
 		startX = endX;
 		endX = tmp;
 	}
 	if (startY > endY) {
-		var tmp = startY;
+		const tmp = startY;
 		startY = endY;
 		endY = tmp;
 	}
@@ -56,7 +56,7 @@ function doSelect(chart, startX, endX, startY, endY) {
 
 	var datasets = [];
 	// filter dataset
-	for (var datasetIndex = 0; datasetIndex < chart.data.datasets.length; datasetIndex++) {
+	for (let datasetIndex = 0; datasetIndex < chart.data.datasets.length; datasetIndex++) {
 		const sourceDataset = chart.data.datasets[datasetIndex];
 
 		var selectedDataset = {
@@ -69,9 +69,9 @@ function doSelect(chart, startX, endX, startY, endY) {
 		}
 
 		// iterate data points
-		for (var dataIndex = 0; dataIndex < sourceDataset.data.length; dataIndex++) {
+		for (let dataIndex = 0; dataIndex < sourceDataset.data.length; dataIndex++) {
 
-			var dataPoint = sourceDataset.data[dataIndex];
+			const dataPoint = sourceDataset.data[dataIndex];
 
 			let filterOnX = true;
 			let inX = true;
@@ -105,25 +105,15 @@ function doSelect(chart, startX, endX, startY, endY) {
 	// chart.update();
 	// workaround - add the current datasets to the chart as a property, allowing access via Ref
 	chart.boxselect.selection = datasets
-	console.log("Getting option")
-	// TODO: afterSelectCallback fires, but is not receiving arguments
-	// Avoid using getOption here so ChartJS does not evaluate function as a scripted parameter
-	
-	console.log("🚀 ~ file: TEMP_chartjs-plugin-boxselect.js ~ line 115 ~ doSelect ~ chart.options.plugins.boxselect.callbacks", chart.options.plugins.boxselect.callbacks);
-	const afterSelectCallback = (
-		chart.options.plugins.boxselect.callbacks == null || chart.options.plugins.boxselect.callbacks.afterSelect == null ?
-		defaultOptions.callbacks.afterSelect :
-		chart.options.plugins.boxselect.callbacks.afterSelect
-	);
-	console.log("Got option")
+	const afterSelectCallback = getOption(chart, 'callbacks', 'afterSelect');
 	afterSelectCallback(startX, endX, startY, endY, datasets);
 }
 
 function drawSelectbox(chart) {
 
-	var borderColor = getOption(chart, 'select', 'selectboxBorderColor');
-	var fillColor = getOption(chart, 'select', 'selectboxBackgroundColor');
-	var direction = getOption(chart, 'select', 'direction');
+	const borderColor = getOption(chart, 'select', 'selectboxBorderColor');
+	const fillColor = getOption(chart, 'select', 'selectboxBackgroundColor');
+	const direction = getOption(chart, 'select', 'direction');
 
 	chart.ctx.beginPath();
 	// if direction == xy, rectangle
@@ -153,7 +143,7 @@ function drawSelectbox(chart) {
 	chart.ctx.closePath();
 }
 
-var boxselectPlugin = {
+const boxselectPlugin = {
 
 	id: 'boxselect',
 
@@ -179,15 +169,15 @@ var boxselectPlugin = {
 
 	afterEvent: function (chart, e) {
 
-		var chartType = chart.config.type;
-		if (chartType !== 'scatter' && chartType !== 'line') return;
+		const chartType = chart.config.type;
+		// if (chartType !== 'scatter' && chartType !== 'line') return;
 		
 		// fix for Safari
 		const buttons = e.event.native.buttons;
 		chart.boxselect.enabled = true;
 
 		// handle drag to select
-		var selectEnabled = getOption(chart, 'select', 'enabled');
+		const selectEnabled = getOption(chart, 'select', 'enabled');
 
 		if (buttons === 1 && !chart.boxselect.dragStarted && selectEnabled) {
 			chart.boxselect.dragStartX = e.event.x;
@@ -199,17 +189,17 @@ var boxselectPlugin = {
 		if (chart.boxselect.dragStarted && buttons === 0) {
 			chart.boxselect.dragStarted = false;
 
-			var direction = getOption(chart, 'select', 'direction');
+			const direction = getOption(chart, 'select', 'direction');
 			// if direction == xy, rectangle
 			// if direction == x, horizontal selection only
 			// if direction == y, vertical selection only
 
-			var xScale = getXScale(chart);
-			var yScale = getYScale(chart);
-			var startX = xScale.getValueForPixel(chart.boxselect.dragStartX);
-			var endX = xScale.getValueForPixel(chart.boxselect.x);
-			var startY = yScale.getValueForPixel(chart.boxselect.dragStartY);
-			var endY = yScale.getValueForPixel(chart.boxselect.y);
+			const xScale = getXScale(chart);
+			const yScale = getYScale(chart);
+			let startX = xScale.getValueForPixel(chart.boxselect.dragStartX);
+			let endX = xScale.getValueForPixel(chart.boxselect.x);
+			let startY = yScale.getValueForPixel(chart.boxselect.dragStartY);
+			let endY = yScale.getValueForPixel(chart.boxselect.y);
 			if (direction == 'x') {
 				startY = null;
 				endY = null;

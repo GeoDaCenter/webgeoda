@@ -3,11 +3,8 @@ import Head from "next/head";
 import styles from "../styles/Map.module.css";
 
 import MainNav from "../components/layout/MainNav";
-
 import WidgetLayer from "../components/map/widgets/WidgetLayer";
-import MainMap from "../components/map/MainMap";
-import VariablePanel from "../components/map/VariablePanel";
-import MapTooltip from "../components/map/MapTooltip";
+import MapContainer from '../components/map/MapContainer';
 
 // import useLoadData from '@webgeoda/hooks/useLoadData'
 // import useUpdateData from '@webgeoda/hooks/useUpdateData'
@@ -84,9 +81,7 @@ export default function Map() {
         {geodaReady && (
           <GeodaContext.Provider value={geoda}>
             <WidgetLayer />
-            <MainMap geoda={geoda} />
-            <VariablePanel />
-            <MapTooltip />
+            <MapContainer />
           </GeodaContext.Provider>
         )}
       </Provider>

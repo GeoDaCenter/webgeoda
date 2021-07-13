@@ -614,13 +614,26 @@ export default function reducer(state = INITIAL_STATE, action) {
         widgetConfig
       }
     }
+    case "SET_WIDGET_LOCATIONS": {
+      return {
+        ...state,
+        widgetLocations: action.payload,
+        widgetIsDragging: false
+      }
+    }
+    case "SET_WIDGET_IS_DRAGGING":{
+      return {
+        ...state,
+        widgetIsDragging: action.payload
+      }
+    }
     case "CACHE_SCATTERPLOT_LISA": {
       const cachedLisaScatterplotData = {...state.cachedLisaScatterplotData};
       cachedLisaScatterplotData[action.payload.variableName] = action.payload.data;
       return {...state, cachedLisaScatterplotData};
     }
     case "SET_MAP_FILTER": {
-      const mapFilters = {...state.mapFilters};
+      const mapFilters = [...state.mapFilters];
       const newFilter = action.payload.filter === null ? null : {
         ...action.payload.filter,
         source: action.payload.widgetIndex
