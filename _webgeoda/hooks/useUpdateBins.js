@@ -13,19 +13,21 @@ export default function useUpdateBins() {
   const storedData = useSelector((state) => state.storedData);
   const dataParams = useSelector((state) => state.dataParams);
   const dataPresets = useSelector((state) => state.dataPresets);
+  const cachedVariables = useSelector((state) => state.cachedVariables);
   
   const dispatch = useDispatch();
 
   const updateBins = async () => {
     if (!storedGeojson[currentData]) return;
     
-    const {bins, colorScale} = await generateBins({
+    const {bins, colorScale, binData} = await generateBins({
       geoda,
       dataPresets,
       currentData,
       dataParams, 
       storedData,
-      storedGeojson 
+      storedGeojson,
+      cachedVariables
     })
 
     if (!bins) return;
@@ -35,6 +37,11 @@ export default function useUpdateBins() {
       payload: {
         bins,
         colorScale,
+        cachedVariable: {
+          variable: dataParams.variable,
+          data: binData,
+          geoidOrder: storedGeojson[currentData].order
+        }
       },
     });
   };
