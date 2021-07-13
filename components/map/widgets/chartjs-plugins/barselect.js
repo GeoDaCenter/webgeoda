@@ -40,7 +40,6 @@ function doSelect(chart, startX, endX) {
 		startX = endX;
 		endX = tmp;
 	}
-
 	// notify delegate
 	var beforeSelectCallback = valueOrDefault(chart.options.plugins.barselect.callbacks ? chart.options.plugins.barselect.callbacks.beforeSelect : undefined, defaultOptions.callbacks.beforeSelect);
 	
@@ -52,37 +51,13 @@ function doSelect(chart, startX, endX) {
 	// filter dataset
 	for (let datasetIndex = 0; datasetIndex < chart.data.datasets.length; datasetIndex++) {
 		const sourceDataset = chart.data.datasets[datasetIndex];
-
-		var selectedDataset = {
-			data: [],
-			indexes: []
+		const min = Math.min(Math.max(startX, 0), sourceDataset.data.length);
+		const max = Math.min(Math.max(endX, 0), sourceDataset.data.length);
+		const selectedDataset = {
+			minIndex: min,
+			maxIndex: max,
+			data: sourceDataset.data.slice(min, max + 1)
 		};
-		// if the dataset has labels, get them too
-		if (sourceDataset.labels) {
-			selectedDataset.labels = [];
-		}
-
-		// iterate data points
-		for (let dataIndex = 0; dataIndex < sourceDataset.data.length; dataIndex++) {
-
-			const dataPoint = sourceDataset.data[dataIndex];
-
-			let filterOnX = true;
-			let inX = true;
-			if (startX == null) {
-				filterOnX = false;
-			} else {
-				inX = (dataPoint.x >= startX && dataPoint.x <= endX)
-			}
-
-			if (inX) {
-				selectedDataset.data.push({ ...dataPoint });
-				selectedDataset.indexes.push(dataIndex)
-				if (selectedDataset.labels) {
-					selectedDataset.labels.push(sourceDataset.labels[dataIndex]);
-				}
-			}
-		}
 		datasets.push(selectedDataset);
 	}
 
@@ -173,9 +148,7 @@ const barselectPlugin = {
 			let startX = xScale.getValueForPixel(chart.barselect.dragStartX);
 			let endX = xScale.getValueForPixel(chart.barselect.x);
 
-			if (Math.abs(chart.barselect.dragStartX - chart.barselect.x) > 1 && Math.abs(chart.barselect.dragStartY - chart.barselect.y) > 1) {
-				doSelect(chart, startX, endX);
-			}
+			doSelect(chart, startX, endX);
 		}
 
 		chart.barselect.x = e.event.x;

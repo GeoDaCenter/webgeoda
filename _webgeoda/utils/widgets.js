@@ -88,13 +88,16 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         const binned = d3bin().thresholds(options.thresholds || 40)(data)
         let formattedData = [];
         let labels = [];
+        let binBounds = [];
         for (let i=0; i<binned.length; i++) {
             formattedData.push(binned[i].length);
             labels.push(`${binned[i].x0}-${binned[i].x1}`);
+            binBounds.push([binned[i].x0, binned[i].x1]);
         }
         return {
             data: formattedData,
-            labels
+            labels,
+            binBounds
         }
     }
 

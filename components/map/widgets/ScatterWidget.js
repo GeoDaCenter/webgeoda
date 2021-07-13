@@ -122,9 +122,9 @@ function ScatterWidgetUnwrapped(props) {
                   payload: {    
                     widgetIndex: props.id,
                     filter: {
-                        type: "set",
-                        field: "GEOID",
-                        values: dataset.indexes.map(index => props.data.data[index].id)
+                      type: "set",
+                      field: "GEOID",
+                      values: dataset.indexes.map(index => props.data.data[index].id)
                     }
                   }
                 });
