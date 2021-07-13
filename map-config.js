@@ -157,9 +157,9 @@ const widgets = [
   {
     hidden: false,
     type: "lisaW",
-    variable: "Median Household Income",
+    variable: "Total Population",
     options: {
-      header: "Median Household Income LISA",
+      header: "Total Population LISA",
       foregroundColor: "#FF00FF",
     }
   },

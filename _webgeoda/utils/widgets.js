@@ -281,6 +281,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
 
 
         return {
+            dataColumn: data,
             mean: mean(data).toFixed(3),
             stdev: standardDeviation(data).toFixed(3),
             variable: variableSpec,

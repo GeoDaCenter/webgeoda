@@ -12,6 +12,7 @@ function LisaWidget(props) {
     const storedGeojson = useSelector((state) => state.storedGeojson);
     const storedData = useSelector((state) => state.storedData)
     const currentData = useSelector((state) => state.currentData)
+    //const cachedVariables = useSelector((state) => state.cachedVariabes[currentData][props.data.variable.variable])
     const [getLisa,] = useLisa();
     const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
 
@@ -27,26 +28,31 @@ function LisaWidget(props) {
     });
 
 
-    //TODO - how to access tx.geojson without manual
     const index = storedGeojson[currentData].order.findIndex((o) => o === currentHoverTarget.id)
     console.log(index)
 
   
-    let cl;
+    let cl, pval, numNeighbors, lisaVal;
     if (lisaData && index!=-1) {
         console.log(lisaData.lisaResults)
-        cl = lisaData.lisaResults.clusters[index]
+        cl = lisaData.lisaResults.labels[lisaData.lisaResults.clusters[index]]
+        pval = lisaData.lisaResults.pvalues[index]
+        numNeighbors = lisaData.lisaResults.neighbors[index]
+        lisaVal = lisaData.lisaResults.lisaValues[index]
     }
     else {cl='Undefined'}
 
     return (
     <div>
     <center>
+    <br /><b>ID: </b> {currentHoverTarget.id}
     <br /><b>Mean of all observations:</b> {props.data.mean}
-      <br /><b>Standard Dev: </b>{props.data.stdev}
-      <br /><b>ID: </b> {currentHoverTarget.id}
+    <br /><b> {dataParams.variable}: </b> {props.data.dataColumn[index]}
       <br /><b>Cluster: </b> {cl}
-    </center>
+      <br /><b>Lisa Value: </b> {lisaVal}
+      <br /><b>P-value: </b> {pval}
+      <br /><b>Number of Neighbors: </b> {numNeighbors}
+      </center>
     </div>
   );
 }
