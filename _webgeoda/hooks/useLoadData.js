@@ -183,7 +183,10 @@ export default function useLoadData(dateLists = {}) {
       [dataParams.nIndex === null && 'nIndex']: numeratorData.dateIndices.length-1
     }
 
-    const binData = tempParams.categorical 
+    const binData = cachedVariables.hasOwnProperty(currentData) && 
+        cachedVariables[currentData].hasOwnProperty(tempParams.variable)
+      ? Object.values(cachedVariables[currentData][tempParams.variable])
+      : tempParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
         tempParams)

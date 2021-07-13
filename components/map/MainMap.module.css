@@ -80,7 +80,7 @@
 
 /** Legend */
 .legendContainer {
-  position: fixed;
+  position: absolute;
   right: 0.5em;
   bottom: 2em;
   z-index: 1;
@@ -196,9 +196,7 @@ p.variableName {
   padding: 0;
 }
 
-.icon {
-
-}
+.icon {}
 
 /* Preloader */
 .preLoader {
@@ -208,4 +206,16 @@ p.variableName {
   background: hsla(0, 0%, 100%, 0.8);
   backdrop-filter: blur(5px) brightness(90%) contrast(100%);
   z-index:5;
+}
+
+/* Map Container */
+.mapContainer {
+  position: relative;
+  margin-right:auto;
+  width:100%;
+  transition:250ms width;
+}
+
+.mapContainerRightMargin {
+  width: calc(100% - 400px);
 }

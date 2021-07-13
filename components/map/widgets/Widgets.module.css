@@ -20,6 +20,32 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  overflow: auto;
+}
+
+#columnLeft {
+  margin-top: 175px;
+  width: 150px;
+  transition: width 0.5s;
+  padding-right: 15px; /* so shadows don't get cut off */
+}
+#columnLeft:hover, #columnLeft.dropping {
+  width: 425px;
+}
+#columnLeft .widget {
+  margin-left: 10px;
+  transition: opacity 0.5s;
+}
+#columnLeft .widget:not(.dragging) {
+  opacity: 0;
+}
+#columnLeft:hover .widget, #columnLeft.dropping .widget {
+  opacity: 1;
+}
+
+#columnRight {
+  margin-right: 0;
+  background:white;
 }
 
 .widget {

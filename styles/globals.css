@@ -80,3 +80,7 @@ div [data-reach-menu-item] {
 div [data-reach-menu-item][data-selected] {
   background: var(--selected-color);
 }
+
+div#view-default-view {
+  z-index:5;
+}
