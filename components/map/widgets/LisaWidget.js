@@ -12,7 +12,7 @@ function LisaWidget(props) {
     const storedGeojson = useSelector((state) => state.storedGeojson);
     const storedData = useSelector((state) => state.storedData)
     const currentData = useSelector((state) => state.currentData)
-    //const cachedVariables = useSelector((state) => state.cachedVariabes[currentData][props.data.variable.variable])
+    const cachedVariables = useSelector((state) => state.cachedVariables[currentData])
     const [getLisa,] = useLisa();
     const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
 
@@ -42,12 +42,15 @@ function LisaWidget(props) {
     }
     else {cl='Undefined'}
 
+    //    <br /><b> {dataParams.variable}: </b> {cachedVariables[currentHoverTarget.id]}
+
+    console.log(cachedVariables)
     return (
     <div>
     <center>
     <br /><b>ID: </b> {currentHoverTarget.id}
     <br /><b>Mean of all observations:</b> {props.data.mean}
-    <br /><b> {dataParams.variable}: </b> {props.data.dataColumn[index]}
+    <br /><b> {dataParams.variable}: </b> {cachedVariables[dataParams.variable][currentHoverTarget.id]}
       <br /><b>Cluster: </b> {cl}
       <br /><b>Lisa Value: </b> {lisaVal}
       <br /><b>P-value: </b> {pval}

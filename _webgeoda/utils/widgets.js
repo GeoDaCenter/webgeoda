@@ -99,7 +99,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         return {
             data: formattedData,
             labels,
-            binBounds,
+            //binBounds,
             variableToCache: [{
                 data,
                 order: state.storedGeojson[state.currentData].order,

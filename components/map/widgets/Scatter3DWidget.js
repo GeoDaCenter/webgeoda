@@ -22,7 +22,6 @@ const DEFAULT_VIEW_STATE = {
 export const TARGET_RANGE = 100;
 
 function Scatter3DWidgetUnwrapped(props) {
-  console.log(props)
   const [viewState, setViewState] = useState(DEFAULT_VIEW_STATE);
   // const mins = [0, 0, 0];
   // const maxs = [100, 100, 100];
