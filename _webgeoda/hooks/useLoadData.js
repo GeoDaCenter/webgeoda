@@ -176,7 +176,7 @@ export default function useLoadData(dateLists = {}) {
         numeratorData: dataParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
         denominatorData: dataParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
         dataParams,
-        geojsonOrder
+        fixedOrder: geojsonOrder
     });
 
     const bins = dataParams.lisa 
