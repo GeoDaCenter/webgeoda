@@ -6,8 +6,8 @@ import { useSelector } from "react-redux";
 
 
 export default function MapContainer(){
-    const widgetConfig = useSelector((state) => state.widgetConfig);
-    const widgetsOnRight = widgetConfig.some(o => o.hidden === true);
+    const widgetLocations = useSelector(state => state.widgetLocations);
+    const widgetsOnRight = widgetLocations.some(o => o.side === "right");
     
     return (
         <div className={`${styles.mapContainer} ${widgetsOnRight === true && styles.mapContainerRightMargin}`}>

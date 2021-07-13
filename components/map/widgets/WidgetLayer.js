@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styles from './Widgets.module.css';
 import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
@@ -12,26 +12,16 @@ const mapWidgets = ({widgets, widgetLocations, side}) => widgets
   .sort((a, b) => widgetLocations[a.index].index - widgetLocations[b.index].index)
   .map(i => i.elem);
 
+const renderWidget = (widget, trueIndex, columnIndex) => {
+  if(widget == undefined) return <div />;
+  return <Widget type={widget.type} options={widget.options} fullWidgetConfig={widget} key={`widget-${trueIndex}`} id={trueIndex} index={columnIndex} />
+};
+
 export default function WidgetLayer(){
   const widgetConfig = useSelector(state => state.widgetConfig);
-
-  const renderWidget = (widget, trueIndex, columnIndex) => {
-    if(widget == undefined) return <div />;
-    return <Widget type={widget.type} options={widget.options} fullWidgetConfig={widget} key={`widget-${trueIndex}`} id={trueIndex} index={columnIndex} />
-  };
-
-  const defaultWidgetLocations = [];
-  let leftIndex = 0;
-  let rightIndex = 0;
-  for(const i of widgetConfig){
-    defaultWidgetLocations.push({
-      side: i.hidden ? "left" : "right",
-      index: i.hidden ? leftIndex : rightIndex
-    });
-    if(i.hidden) { leftIndex++; }
-    else { rightIndex++; }
-  }
-  const [widgetLocations, setWidgetLocations] = useState(defaultWidgetLocations);
+  const widgetLocations = useSelector(state => state.widgetLocations);
+  const dispatch = useDispatch();
+  
   const widgets = widgetConfig.map((widget, trueIndex) => {
     return renderWidget(widget, trueIndex, widgetLocations[trueIndex].index);
   });
@@ -66,7 +56,12 @@ export default function WidgetLayer(){
         widgets[i] = renderWidget(widgetConfig[i], i, widget.index);
       }
     }
-    setWidgetLocations(newWidgetLocations);
+    console.log(newWidgetLocations)
+    
+    dispatch({
+      type: 'SET_WIDGET_LOCATIONS',
+      payload: newWidgetLocations
+    });
   }
 
   return (

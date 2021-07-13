@@ -614,6 +614,12 @@ export default function reducer(state = INITIAL_STATE, action) {
         widgetConfig
       }
     }
+    case "SET_WIDGET_LOCATIONS": {
+      return {
+        ...state,
+        widgetLocations: action.payload
+      }
+    }
     case "CACHE_SCATTERPLOT_LISA": {
       const cachedLisaScatterplotData = {...state.cachedLisaScatterplotData};
       cachedLisaScatterplotData[action.payload.variableName] = action.payload.data;

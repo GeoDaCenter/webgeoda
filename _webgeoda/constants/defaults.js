@@ -1,5 +1,20 @@
 import { dataPresets } from "../../map-config";
 
+const generateWidgetPresets = (widgetConfig) => {
+  const defaultWidgetLocations = [];
+  let leftIndex = 0;
+  let rightIndex = 0;
+  for(const i of widgetConfig){
+    defaultWidgetLocations.push({
+      side: i.hidden ? "left" : "right",
+      index: i.hidden ? leftIndex : rightIndex
+    });
+    if (i.hidden) { leftIndex++; }
+    else { rightIndex++; }
+  }
+  return defaultWidgetLocations
+}
+
 export const INITIAL_STATE = {
   storedGeojson: {},
   storedData: {},
@@ -69,6 +84,7 @@ export const INITIAL_STATE = {
   },
   widgetConfig: dataPresets.widgets,
   widgetData: {},
+  widgetLocations: generateWidgetPresets(dataPresets.widgets),
   cachedLisaScatterplotData: {},
   isLoading: true
 };
