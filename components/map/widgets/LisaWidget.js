@@ -1,12 +1,17 @@
 import React from 'react';
+import { useContext, useEffect } from "react";
 import PropTypes from 'prop-types';
 import { useSelector } from "react-redux";
 import useLisa from '@webgeoda/hooks/useLisa';
 import * as ss from 'simple-statistics';
 import { getLisaResults } from '@webgeoda/utils/geoda-helpers';
 import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
+import { standardize } from '@webgeoda/utils/stats';
+import { geoda } from '@webgeoda/utils/colors';
+import { GeodaContext } from '@webgeoda/contexts';
 
 function LisaWidget(props) {
+    const geoda = useContext(GeodaContext)
     const currentHoverTarget = useSelector((state) => state.currentHoverTarget);
     const dataParams = useSelector((state) => state.dataParams);
     const storedGeojson = useSelector((state) => state.storedGeojson);
@@ -27,16 +32,27 @@ function LisaWidget(props) {
     }
     });
 
+    console.log(lisaData)
+
+  
+    
 
     const index = storedGeojson[currentData].order.findIndex((o) => o === currentHoverTarget.id)
-    console.log(index)
 
+    let val;
+
+    if (lisaData)
+    {
+      const standardizedVals = standardize(props.data.dataColumn);
+      const spatialLags = geoda.spatialLag(lisaData.weights, standardizedVals)
+      index!=-1 ? val = standardizedVals[index].toFixed(3) : val = null;
+      console.log(spatialLags)
+    }
     
     // TODO: spatial lag
 
     let cl, pval, numNeighbors, lisaVal;
     if (lisaData && index!=-1) {
-        console.log(lisaData.lisaResults)
         cl = lisaData.lisaResults.labels[lisaData.lisaResults.clusters[index]]
         pval = lisaData.lisaResults.pvalues[index]
         numNeighbors = lisaData.lisaResults.neighbors[index]
@@ -51,6 +67,7 @@ function LisaWidget(props) {
     <br /><b>ID: </b> {currentHoverTarget.id}
     <br /><b>Mean of all observations:</b> {props.data.mean}
     <br /><b> {props.data.variable.variable}: </b> {cachedVariables[props.data.variable.variable][currentHoverTarget.id]}
+    <br /><b> {props.data.variable.variable} Standardized: </b> {val}
       <br /><b>Cluster: </b> {cl}
       <br /><b>Lisa Value: </b> {lisaVal}
       <br /><b>P-value: </b> {pval}
