@@ -25,6 +25,7 @@ export default function MainMap() {
   const dataParams = useSelector((state) => state.dataParams);
   const mapParams = useSelector((state) => state.mapParams);
   const currentData = useSelector((state) => state.currentData);
+  const cachedVariables = useSelector((state) => state.cachedVariables);
   const currentTiles = useSelector((state) => state.currentTiles);
   const currentId = useSelector((state) => state.currentId);
   const currentHoverId = useSelector((state) => state.currentHoverId);

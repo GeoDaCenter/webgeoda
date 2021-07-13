@@ -13,7 +13,11 @@ import {linearRegression, linearRegressionLine, kMeansCluster} from "simple-stat
 const findFirstTable = (tableName, storedData, dataPresets) => {
     for (let i=0; i<dataPresets.length; i++){
         if (dataPresets[i]?.tables.hasOwnProperty(tableName)) {
-            return storedData[dataPresets[i]?.tables[tableName].file].data
+            const dataset = dataPresets[i]?.tables[tableName].file;
+            return {
+                data: dataset == null ? null : storedData[dataset].data,
+                dataset
+            };
         }
     }
 }
@@ -31,7 +35,8 @@ const getTables = (variableSpec, state) => {
     // declare return object
     let returnTables = {
         numeratorData:null,
-        denominatorData:null
+        denominatorData:null,
+        dataset: null
     }
     // find current tables attached to dataset    
     const currentTables = find(
@@ -41,11 +46,15 @@ const getTables = (variableSpec, state) => {
     // look for numerator table
     if (numerator === "properties") { // default properties indicator
         returnTables.numeratorData = storedGeojson[currentData].properties
+        // TODO: Set returnTables.dataset in this case
     } else {  
         if (currentTables && currentTables.hasOwnProperty(variableSpec.numerator)) {
-            returnTables.numeratorData = storedData[currentTables[variableSpec.numerator].file]?.data
+            returnTables.numeratorData = storedData[currentTables[variableSpec.numerator].file]?.data;
+            returnTables.dataset = currentTables[variableSpec.numerator].file;
         } else {
-            returnTables.numeratorData = findFirstTable(variableSpec.numerator, storedData, dataPresets)
+            const data = findFirstTable(variableSpec.numerator, storedData, dataPresets);
+            returnTables.numeratorData = data.data;
+            returnTables.dataset = data.dataset;
         }
     }
     // look for denominator table
@@ -53,18 +62,20 @@ const getTables = (variableSpec, state) => {
         returnTables.denominatorData = storedGeojson[currentData].properties
     } else {
         if (currentTables && currentTables.hasOwnProperty(variableSpec.denominator)) {
-            returnTables.denominatorData = storedData[currentTables[variableSpec.denominator].file]?.data
+            returnTables.denominatorData = storedData[currentTables[variableSpec.denominator].file]?.data;
         } else {
-            returnTables.denominatorData = findFirstTable(variableSpec.denominator, storedData, dataPresets)
+            const data = findFirstTable(variableSpec.denominator, storedData, dataPresets);
+            returnTables.denominatorData = data?.data;
         }
     }
     return returnTables
 }
 
-const getColumnData = (variableSpec, state, returnKeys=false) => {
+const getColumnData = (variableSpec, state, returnKeys=false, returnDataset=false) => {
     const {storedGeojson, currentData, cachedVariables} = state;
     if (!storedGeojson[currentData]) return []
-    const {numeratorData, denominatorData} = getTables(variableSpec, state);
+    const {numeratorData, denominatorData, dataset} = getTables(variableSpec, state);
+    console.log("🚀 ~ file: widgets.js ~ line 80 ~ getColumnData ~ dataset", dataset);
     const columnData = (cachedVariables.hasOwnProperty(currentData) 
         && cachedVariables[currentData].hasOwnProperty(variableSpec.variable))
         ? Object.values(cachedVariables[currentData][variableSpec.variable])
@@ -74,9 +85,12 @@ const getColumnData = (variableSpec, state, returnKeys=false) => {
             dataParams: variableSpec,
             fixedOrder: storedGeojson[currentData].order
         });
-
-    if (returnKeys) return [columnData, Object.keys(storedGeojson[currentData].order)]
-    return [columnData]
+    const ret = {
+        data: columnData
+    };
+    if (returnKeys) ret.keys = Object.keys(storedGeojson[currentData].order);
+    if(returnDataset) ret.dataset = dataset;
+    return ret;
 }
 
 export const formatWidgetData = (variableName, state, widgetType, options) => {
@@ -87,7 +101,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
             (o) => o.variable === variableName
         )
         if (!variableSpec) return []
-        const [data] = getColumnData(variableSpec, state)
+        const {data, dataset} = getColumnData(variableSpec, state, false, true);
         if (!data) return []
         const binned = d3bin().thresholds(options.thresholds || 40)(data)
         let formattedData = [];
@@ -100,6 +114,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         }
         return {
             data: formattedData,
+            dataset,
             labels,
             binBounds,
             variableToCache: [{
@@ -133,7 +148,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
                 return null;
             }
             variableSpecs.push(variableSpec);
-            const [data, keys] = getColumnData(variableSpec, state, true);
+            const {data, keys} = getColumnData(variableSpec, state, true);
             if (!data){
                 console.warn("Scatter plot: could not find column data for " + variableName[i]);
                 return null;
@@ -223,7 +238,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
                 (o) => o.variable === variableName[i]
             )
             if (!variableSpec) return []
-            const [data, keys] = getColumnData(variableSpec, state, true)
+            const {data, keys} = getColumnData(variableSpec, state, true)
             if (!data) return []
             if (i===0) {
                 idKeys = keys;

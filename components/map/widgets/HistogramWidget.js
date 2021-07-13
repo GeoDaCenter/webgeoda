@@ -68,7 +68,7 @@ function HistogramWidget(props) {
       }
     }
   };
-  console.log(chartRef.current)
+  console.log(props.data.dataset)
   return (
     <div>
       <Bar data={dataProp} options={options} plugins={[pluginBarSelect]} ref={chartRef} />
