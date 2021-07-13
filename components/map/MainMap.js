@@ -171,9 +171,6 @@ export default function MainMap() {
         updateTriggers: {
           getFillColor: [mapData.params, mapFilters],
           getLineColor: [mapData.params, currentHoverId]
-        },
-        transitions: {
-          getFillColor: dataParams.nIndex === undefined ? 250 : 0
         }
       })];
 

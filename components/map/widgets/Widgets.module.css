@@ -63,7 +63,8 @@
 }
 
 #columnRight {
-  margin-right: 50px;
+  margin-right: 0;
+  background:white;
 }
 
 .widget {

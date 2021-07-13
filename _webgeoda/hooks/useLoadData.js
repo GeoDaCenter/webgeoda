@@ -167,7 +167,7 @@ export default function useLoadData(dateLists = {}) {
     
     const binData = cachedVariables.hasOwnProperty(currentData) && 
         cachedVariables[currentData].hasOwnProperty(dataParams.variable)
-      ? Objtect.values(cachedVariables[currentData][dataParams.variable])
+      ? Object.values(cachedVariables[currentData][dataParams.variable])
       : dataParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
