@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './Widgets.module.css';
 import { Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGripLines, faCog } from "@fortawesome/free-solid-svg-icons";
+import { faGripLines, faCog, faFilter, faSlash } from "@fortawesome/free-solid-svg-icons";
 import Loader from '../../layout/Loader';
 import WidgetSettings from './WidgetSettings';
 import HistogramWidget from './HistogramWidget';
@@ -16,13 +16,18 @@ import LineWidget from './LineWidget';
 export const WIDGET_WIDTH = 400;
 
 function Widget(props) {
+  const dispatch = useDispatch();
   const data = useSelector(state => state.widgetData[props.id]);
+  const mapFilters = useSelector(state => state.mapFilters);
   const [showSettings, setShowSettings] = React.useState(false);
   if(data == null){
     return (
       <div className={styles.widget}><Loader /></div>
     );
   }
+
+  const activeFilters = mapFilters.filter(i => i.source == props.id);
+  const hasActiveFilter = activeFilters.length > 0;
 
   let component;
   switch(props.type){
@@ -49,12 +54,32 @@ function Widget(props) {
   return (
     <Draggable draggableId={props.id.toString()} index={props.index}>
       {(provided, snapshot) => (
-        <div className={`${styles.widget} ${showSettings ? styles.showSettings : ""} ${snapshot.isDragging ? styles.dragging : ""}`} ref={provided.innerRef} {...provided.draggableProps}>
-          <button className={styles.settingsButton} onClick={() => {
+        <div className={`${styles.widget} ${showSettings ? styles.showSettings : ""} ${snapshot.isDragging ? styles.dragging : ""} ${hasActiveFilter ? styles.filter : ""}`} ref={provided.innerRef} {...provided.draggableProps}>
+          <button className={`${styles.floatingButton} ${styles.settingsButton}`} onClick={() => {
             setShowSettings(true);
           }}>
             <FontAwesomeIcon icon={faCog} />
           </button>
+          {
+            hasActiveFilter ? (
+              <button className={`${styles.floatingButton} ${styles.clearFilterButton}`} onClick={() => {
+                for(const filter of activeFilters){
+                  dispatch({
+                    type: "SET_MAP_FILTER",
+                    payload: {    
+                      filterId: filter.id,
+                      filter: null
+                    }
+                  });
+                }
+              }}>
+                <span className="fa-layers fa-fw">
+                  <FontAwesomeIcon icon={faSlash} />
+                  <FontAwesomeIcon icon={faFilter} />
+                </span>
+              </button>
+            ) : null
+          }
           {
             <h3 className={styles.widgetHeader} {...provided.dragHandleProps}>
               {
@@ -70,7 +95,8 @@ function Widget(props) {
                 options: props.options,
                 data: data,
                 fullWidgetConfig: props.fullWidgetConfig,
-                id: props.id
+                id: props.id,
+                activeFilters
               })
             }
           </div>

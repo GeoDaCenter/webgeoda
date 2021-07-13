@@ -107,8 +107,9 @@ function ScatterWidgetUnwrapped(props) {
           afterSelect: (startX, endX, startY, endY, datasets) => {
             dispatch({
               type: "SET_MAP_FILTER",
-              payload: {    
-                widgetIndex: `${props.id}-x`,
+              payload: {   
+                widgetIndex: props.id, 
+                filterId: `${props.id}-x`,
                 filter: {
                   type: "range",
                   field: props.fullWidgetConfig.xVariable,
@@ -120,7 +121,8 @@ function ScatterWidgetUnwrapped(props) {
             dispatch({
               type: "SET_MAP_FILTER",
               payload: {    
-                widgetIndex: `${props.id}-y`,
+                widgetIndex: props.id, 
+                filterId: `${props.id}-y`,
                 filter: {
                   type: "range",
                   field: props.fullWidgetConfig.yVariable,

@@ -55,6 +55,7 @@ function HistogramWidget(props) {
               type: "SET_MAP_FILTER",
               payload: {    
                 widgetIndex: props.id,
+                filterId: props.id,
                 filter: {
                   type: "range",
                   field: props.fullWidgetConfig.variable,
@@ -68,7 +69,6 @@ function HistogramWidget(props) {
       }
     }
   };
-  console.log(props.data.dataset)
   return (
     <div>
       <Bar data={dataProp} options={options} plugins={[pluginBarSelect]} ref={chartRef} />
