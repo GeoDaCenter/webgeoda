@@ -31,7 +31,9 @@ function LisaWidget(props) {
     const index = storedGeojson[currentData].order.findIndex((o) => o === currentHoverTarget.id)
     console.log(index)
 
-  
+    
+    // TODO: spatial lag
+
     let cl, pval, numNeighbors, lisaVal;
     if (lisaData && index!=-1) {
         console.log(lisaData.lisaResults)
@@ -42,15 +44,13 @@ function LisaWidget(props) {
     }
     else {cl='Undefined'}
 
-    //    <br /><b> {dataParams.variable}: </b> {cachedVariables[currentHoverTarget.id]}
 
-    console.log(cachedVariables)
     return (
     <div>
     <center>
     <br /><b>ID: </b> {currentHoverTarget.id}
     <br /><b>Mean of all observations:</b> {props.data.mean}
-    <br /><b> {dataParams.variable}: </b> {cachedVariables[dataParams.variable][currentHoverTarget.id]}
+    <br /><b> {props.data.variable.variable}: </b> {cachedVariables[props.data.variable.variable][currentHoverTarget.id]}
       <br /><b>Cluster: </b> {cl}
       <br /><b>Lisa Value: </b> {lisaVal}
       <br /><b>P-value: </b> {pval}
