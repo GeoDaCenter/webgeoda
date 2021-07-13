@@ -54,59 +54,10 @@ function doSelect(chart, startX, endX, startY, endY) {
 		return false;
 	}
 
-	var datasets = [];
-	// filter dataset
-	for (let datasetIndex = 0; datasetIndex < chart.data.datasets.length; datasetIndex++) {
-		const sourceDataset = chart.data.datasets[datasetIndex];
-
-		var selectedDataset = {
-			data: [],
-			indexes: []
-		};
-		// if the dataset has labels, get them too
-		if (sourceDataset.labels) {
-			selectedDataset.labels = [];
-		}
-
-		// iterate data points
-		for (let dataIndex = 0; dataIndex < sourceDataset.data.length; dataIndex++) {
-
-			const dataPoint = sourceDataset.data[dataIndex];
-
-			let filterOnX = true;
-			let inX = true;
-			if (startX == null) {
-				filterOnX = false;
-			} else {
-				inX = (dataPoint.x >= startX && dataPoint.x <= endX)
-			}
-			let filterOnY = true;
-			let inY = true;
-			if (startY == null) {
-				filterOnY = false;
-			} else {
-				inY = (dataPoint.y >= startY && dataPoint.y <= endY)
-			}
-
-			if (inX && inY) {
-				selectedDataset.data.push({ ...dataPoint });
-				selectedDataset.indexes.push(dataIndex)
-				if (selectedDataset.labels) {
-					selectedDataset.labels.push(sourceDataset.labels[dataIndex]);
-				}
-			}
-		}
-		datasets.push(selectedDataset);
-	}
-
 	chart.boxselect.start = startX;
 	chart.boxselect.end = endX;
-
-	// chart.update();
-	// workaround - add the current datasets to the chart as a property, allowing access via Ref
-	chart.boxselect.selection = datasets
 	const afterSelectCallback = getOption(chart, 'callbacks', 'afterSelect');
-	afterSelectCallback(startX, endX, startY, endY, datasets);
+	afterSelectCallback(startX, endX, startY, endY);
 }
 
 function drawSelectbox(chart) {

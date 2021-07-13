@@ -105,30 +105,30 @@ function ScatterWidgetUnwrapped(props) {
               return true;
           },
           afterSelect: (startX, endX, startY, endY, datasets) => {
-            if(datasets.length == 0) return;
-            const dataset = datasets[0];
-            if(dataset.data.length == 0) {
-                // Empty click; reset filter
-                dispatch({
-                  type: "SET_MAP_FILTER",
-                  payload: {
-                    widgetIndex: props.id,
-                    filter: null
-                  }
-                });
-            } else {
-                dispatch({
-                  type: "SET_MAP_FILTER",
-                  payload: {    
-                    widgetIndex: props.id,
-                    filter: {
-                      type: "set",
-                      field: "GEOID",
-                      values: dataset.indexes.map(index => props.data.data[index].id)
-                    }
-                  }
-                });
-            }
+            dispatch({
+              type: "SET_MAP_FILTER",
+              payload: {    
+                widgetIndex: `${props.id}-x`,
+                filter: {
+                  type: "range",
+                  field: props.fullWidgetConfig.xVariable,
+                  from: Math.min(startX, endX),
+                  to: Math.max(startX, endX)
+                }
+              }
+            });
+            dispatch({
+              type: "SET_MAP_FILTER",
+              payload: {    
+                widgetIndex: `${props.id}-y`,
+                filter: {
+                  type: "range",
+                  field: props.fullWidgetConfig.yVariable,
+                  from: Math.min(startY, endY),
+                  to: Math.max(startY, endY)
+                }
+              }
+            });
           }
         }
       }
@@ -164,7 +164,8 @@ function ScatterWidgetUnwrapped(props) {
 ScatterWidgetUnwrapped.propTypes = {
   options: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired,
-  id: PropTypes.number.isRequired
+  id: PropTypes.number.isRequired,
+  fullWidgetConfig: PropTypes.object.isRequired
 };
 
 const ScatterWidget = React.memo(ScatterWidgetUnwrapped);
