@@ -193,8 +193,8 @@ export default function useLoadData(dateLists = {}) {
       : parseColumnData({
         numeratorData: tempParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
         denominatorData: tempParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
-        dataParams: tempParams,
-        geojsonOrder
+        dataParams,
+        fixedOrder: geojsonOrder
     });
 
     const bins = tempParams.lisa 
