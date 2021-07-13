@@ -170,7 +170,7 @@ const boxselectPlugin = {
 	afterEvent: function (chart, e) {
 
 		const chartType = chart.config.type;
-		if (chartType !== 'scatter' && chartType !== 'line') return;
+		// if (chartType !== 'scatter' && chartType !== 'line') return;
 		
 		// fix for Safari
 		const buttons = e.event.native.buttons;
