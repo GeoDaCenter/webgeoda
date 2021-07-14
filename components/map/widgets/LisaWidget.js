@@ -27,40 +27,25 @@ function LisaWidget(props) {
       if(lisaData == null){
           const lisaData = await getLisa({
           dataParams: props.data.variable,
+          getScatterPlot: true
       });
       updateCachedLisa(props.data.variable, lisaData);
       }
-    });
-
-    React.useEffect(async () => {
-      if(lisaData == null) return;
-      const standardizedVals = standardize(props.data.dataColumn);
-      const spatialLags = await geoda.spatialLag(lisaData.weights, standardizedVals)
-      // index!=-1 ? val = standardizedVals[index].toFixed(3) : val = null;
-      const spatialLag = spatialLags[index]
-
-      // Probably the thing to do here is make a state variable with React.useState()
-      // then once the hook fires, add the result of the spatial lag calculation
-      // to react state. Or, even better, I have to store widget data in redux
-      // for the scatterplot (see reducer "CACHE_SCATTERPLOT_LISA") — you could
-      // probably modify this to also accomodate this widget.
     });
 
     console.log(lisaData)
 
     const index = storedGeojson[currentData].order.findIndex((o) => o === currentHoverTarget.id)
 
-    let val, spatialLag;
 
-    
-    // TODO: spatial lag
-
-    let cl, pval, numNeighbors, lisaVal;
+    let cl, pval, numNeighbors, lisaVal, spatialLag;
     if (lisaData && index!=-1) {
         cl = lisaData.lisaResults.labels[lisaData.lisaResults.clusters[index]]
-        pval = lisaData.lisaResults.pvalues[index]
+        pval = lisaData.lisaResults.pvalues[index].toFixed(3)
         numNeighbors = lisaData.lisaResults.neighbors[index]
         lisaVal = lisaData.lisaResults.lisaValues[index]
+        spatialLag = lisaData.scatterPlotData[index].y.toFixed(3)
+
     }
     else {cl='Undefined'}
 
@@ -71,10 +56,8 @@ function LisaWidget(props) {
     <br /><b>ID: </b> {currentHoverTarget.id}
     <br /><b>Mean of all observations:</b> {props.data.mean}
     <br /><b> {props.data.variable.variable}: </b> {cachedVariables[props.data.variable.variable][currentHoverTarget.id]}
-    <br /><b> {props.data.variable.variable} Standardized: </b> {val}
     <br /><b> Spatial Lag: </b> {spatialLag}
       <br /><b>Cluster: </b> {cl}
-      <br /><b>Lisa Value: </b> {lisaVal}
       <br /><b>P-value: </b> {pval}
       <br /><b>Number of Neighbors: </b> {numNeighbors}
       </center>
