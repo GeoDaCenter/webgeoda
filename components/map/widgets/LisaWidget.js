@@ -24,32 +24,33 @@ function LisaWidget(props) {
 
     const lisaData = getCachedLisa(props.data.variable);
     React.useEffect(async () => {
-    if(lisaData == null){
-        const lisaData = await getLisa({
-        dataParams: props.data.variable,
+      if(lisaData == null){
+          const lisaData = await getLisa({
+          dataParams: props.data.variable,
+      });
+      updateCachedLisa(props.data.variable, lisaData);
+      }
     });
-    updateCachedLisa(props.data.variable, lisaData);
-    }
+
+    React.useEffect(async () => {
+      if(lisaData == null) return;
+      const standardizedVals = standardize(props.data.dataColumn);
+      const spatialLags = await geoda.spatialLag(lisaData.weights, standardizedVals)
+      // index!=-1 ? val = standardizedVals[index].toFixed(3) : val = null;
+      const spatialLag = spatialLags[index]
+
+      // Probably the thing to do here is make a state variable with React.useState()
+      // then once the hook fires, add the result of the spatial lag calculation
+      // to react state. Or, even better, I have to store widget data in redux
+      // for the scatterplot (see reducer "CACHE_SCATTERPLOT_LISA") — you could
+      // probably modify this to also accomodate this widget.
     });
 
     console.log(lisaData)
 
-  
-    
-
     const index = storedGeojson[currentData].order.findIndex((o) => o === currentHoverTarget.id)
 
     let val, spatialLag;
-
-    if (lisaData)
-    {
-      const standardizedVals = standardize(props.data.dataColumn);
-      React.useEffect(async () => {
-      const spatialLags = await geoda.spatialLag(lisaData.weights, standardizedVals)
-      })
-      index!=-1 ? val = standardizedVals[index].toFixed(3) : val = null;
-      const spatialLag = spatialLags[index]
-    }
 
     
     // TODO: spatial lag
