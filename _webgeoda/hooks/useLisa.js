@@ -72,7 +72,7 @@ export default function useLisa() {
         if (getScatterPlot) {
             let scatterPlotData = [];
             const standardizedVals = standardize(lisaData);
-            const spatialLags = await geoda.spatialLag(weights, standardizedVals);
+            const spatialLags = await geoda.spatialLag(weights, lisaData);
             for (let i=0; i<lisaData.length; i++){
                 scatterPlotData.push({
                     x: lisaData[i],
