@@ -15,6 +15,23 @@ import LineWidget from './LineWidget';
 // As defined in CSS
 export const WIDGET_WIDTH = 400;
 
+// Suggestion - ParentWidget with object might be slightly cleaner 
+const widgetTypes = {
+  'histogram': HistogramWidget,
+  'scatter':ScatterWidget,
+  'scatter3d': Scatter3DWidget,
+  'line': LineWidget
+}
+
+const ParentWidget = (props) => {
+  if (!widgetTypes.hasOwnProperty(props.type)) return (
+    <div className={styles.widget}>
+      <h3>Error: Invalid widget type {props.type}</h3>
+    </div>
+  )
+  let Component = widgetTypes[props.type]
+  return <Component {...props}/>
+}
 function Widget(props) {
   const dispatch = useDispatch();
   const data = useSelector(state => state.widgetData[props.id]);
@@ -90,6 +107,14 @@ function Widget(props) {
             </h3>
           }
           <div className={styles.widgetContent}>
+            {/* <ParentWidget 
+              type={props.type}
+              options={props.options}
+              data={data}
+              fullWidgetConfig={props.fullWidgetConfig}
+              id={props.id}
+              activeFilters={activeFilters}
+            /> */}
             {
               React.createElement(component, {
                 options: props.options,
