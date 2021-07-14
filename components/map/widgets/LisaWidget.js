@@ -39,15 +39,18 @@ function LisaWidget(props) {
 
     const index = storedGeojson[currentData].order.findIndex((o) => o === currentHoverTarget.id)
 
-    let val;
+    let val, spatialLag;
 
     if (lisaData)
     {
       const standardizedVals = standardize(props.data.dataColumn);
-      const spatialLags = geoda.spatialLag(lisaData.weights, standardizedVals)
+      React.useEffect(async () => {
+      const spatialLags = await geoda.spatialLag(lisaData.weights, standardizedVals)
+      })
       index!=-1 ? val = standardizedVals[index].toFixed(3) : val = null;
-      console.log(spatialLags)
+      const spatialLag = spatialLags[index]
     }
+
     
     // TODO: spatial lag
 
@@ -68,6 +71,7 @@ function LisaWidget(props) {
     <br /><b>Mean of all observations:</b> {props.data.mean}
     <br /><b> {props.data.variable.variable}: </b> {cachedVariables[props.data.variable.variable][currentHoverTarget.id]}
     <br /><b> {props.data.variable.variable} Standardized: </b> {val}
+    <br /><b> Spatial Lag: </b> {spatialLag}
       <br /><b>Cluster: </b> {cl}
       <br /><b>Lisa Value: </b> {lisaVal}
       <br /><b>P-value: </b> {pval}
@@ -76,6 +80,7 @@ function LisaWidget(props) {
     </div>
   );
 }
+
 
 LisaWidget.propTypes = {
   options: PropTypes.object.isRequired,
