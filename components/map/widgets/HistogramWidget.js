@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux';
 function HistogramWidget(props) {
   const chartRef = React.useRef();
   const dispatch = useDispatch();
+
+  const filter = props.activeFilters.find(i => i.id == props.id);
   const dataProp = {
     labels: props.data.labels,
     datasets: [
@@ -17,6 +19,7 @@ function HistogramWidget(props) {
       }
     ]
   };
+  
   const options = {
     events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
     maintainAspectRatio: false,
@@ -43,6 +46,11 @@ function HistogramWidget(props) {
         select: {
           enabled: true
         },
+        state: {
+          display: filter != undefined,
+          xMin: filter?.minIndex,
+          xMax: filter?.maxIndex
+        },
         callbacks: {
           beforeSelect: function(startX, endX) {
               return true;
@@ -60,7 +68,9 @@ function HistogramWidget(props) {
                   type: "range",
                   field: props.fullWidgetConfig.variable,
                   from: min,
-                  to: max
+                  to: max,
+                  minIndex: datasets[0].minIndex,
+                  maxIndex: datasets[0].maxIndex
                 }
               }
             });

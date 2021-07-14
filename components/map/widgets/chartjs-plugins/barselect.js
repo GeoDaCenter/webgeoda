@@ -76,16 +76,22 @@ function drawSelectbox(chart) {
 	const borderColor = getOption(chart, 'select', 'selectboxBorderColor');
 	const fillColor = getOption(chart, 'select', 'selectboxBackgroundColor');
 	const direction = getOption(chart, 'select', 'direction');
-
 	chart.ctx.beginPath();
-	// if direction == xy, rectangle
-	// if direction == x, horizontal selection only
-	// if direction == y, vertical selection only
-	let xStart = chart.barselect.dragStartX;
-	let xSize = chart.barselect.x - chart.barselect.dragStartX;
-	let yScale = getYScale(chart);
-	let yStart = yScale.getPixelForValue(yScale.max);
-	let ySize = yScale.getPixelForValue(yScale.min) - yScale.getPixelForValue(yScale.max);
+	let xStart, xSize;
+	const xScale = getXScale(chart);
+	const yScale = getYScale(chart);
+	const yStart = yScale.getPixelForValue(yScale.max);
+	const ySize = yScale.getPixelForValue(yScale.min) - yScale.getPixelForValue(yScale.max);
+
+	if(chart.barselect.dragStarted){
+		xStart = chart.barselect.dragStartX;
+		xSize = chart.barselect.x - chart.barselect.dragStartX;
+	} else {
+		if(!getOption(chart, 'state', 'display')) return;
+		xStart = xScale.getPixelForValue(getOption(chart, 'state', 'xMin'));
+		const xMax = xScale.getPixelForValue(getOption(chart, 'state', 'xMax'));
+		xSize = xMax - xStart;
+	}
 
 	// x y width height
 	chart.ctx.rect(xStart, yStart, xSize, ySize);
@@ -163,10 +169,7 @@ const barselectPlugin = {
 			return;
 		}
 
-		if (chart.barselect.dragStarted) {
-			drawSelectbox(chart);
-		}
-
+		drawSelectbox(chart);
 		return true;
 	},
 

@@ -26,6 +26,8 @@ function ScatterWidgetUnwrapped(props) {
     }
   });
 
+  const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
+  const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
   let dataProp;
   if(props.data.isLisa){
     if(lisaData == null){
@@ -100,6 +102,13 @@ function ScatterWidgetUnwrapped(props) {
           enabled: true,
           direction: 'xy'
         },
+        state: {
+          display: xFilter != undefined && yFilter != undefined,
+          xMin: xFilter?.from,
+          xMax: xFilter?.to,
+          yMin: yFilter?.from,
+          yMax: yFilter?.to
+        },
         callbacks: {
           beforeSelect: function(startX, endX, startY, endY) {
               return true;
@@ -167,7 +176,8 @@ ScatterWidgetUnwrapped.propTypes = {
   options: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,
-  fullWidgetConfig: PropTypes.object.isRequired
+  fullWidgetConfig: PropTypes.object.isRequired,
+  activeFilters: PropTypes.array.isRequired
 };
 
 const ScatterWidget = React.memo(ScatterWidgetUnwrapped);

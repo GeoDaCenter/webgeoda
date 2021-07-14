@@ -65,25 +65,32 @@ function drawSelectbox(chart) {
 	const borderColor = getOption(chart, 'select', 'selectboxBorderColor');
 	const fillColor = getOption(chart, 'select', 'selectboxBackgroundColor');
 	const direction = getOption(chart, 'select', 'direction');
-
 	chart.ctx.beginPath();
-	// if direction == xy, rectangle
-	// if direction == x, horizontal selection only
-	// if direction == y, vertical selection only
-	let xStart = chart.boxselect.dragStartX;
-	let yStart = chart.boxselect.dragStartY;
-	let xSize = chart.boxselect.x - chart.boxselect.dragStartX;
-	let ySize = chart.boxselect.y - chart.boxselect.dragStartY;
-	if (direction == 'x') {
-		var yScale = getYScale(chart);
-		yStart = yScale.getPixelForValue(yScale.max);
-		ySize = yScale.getPixelForValue(yScale.min) - yScale.getPixelForValue(yScale.max);
-	} else if (direction == 'y') {
-		var xScale = getXScale(chart);
-		xStart = xScale.getPixelForValue(xScale.max);
-		xSize = xScale.getPixelForValue(xScale.min) - xScale.getPixelForValue(xScale.max);
+	let xStart, yStart, xSize, ySize;
+	const xScale = getXScale(chart);
+	const yScale = getYScale(chart);
+
+	if(chart.boxselect.dragStarted){
+		xStart = chart.boxselect.dragStartX;
+		yStart = chart.boxselect.dragStartY;
+		xSize = chart.boxselect.x - chart.boxselect.dragStartX;
+		ySize = chart.boxselect.y - chart.boxselect.dragStartY;
+		if (direction == 'x') {
+			yStart = yScale.getPixelForValue(yScale.max);
+			ySize = yScale.getPixelForValue(yScale.min) - yScale.getPixelForValue(yScale.max);
+		} else if (direction == 'y') {
+			xStart = xScale.getPixelForValue(xScale.max);
+			xSize = xScale.getPixelForValue(xScale.min) - xScale.getPixelForValue(xScale.max);
+		}
+	} else {
+		if(!getOption(chart, 'state', 'display')) return;
+		xStart = xScale.getPixelForValue(getOption(chart, 'state', 'xMin'));
+		yStart = yScale.getPixelForValue(getOption(chart, 'state', 'yMin'));
+		const xMax = xScale.getPixelForValue(getOption(chart, 'state', 'xMax'));
+		const yMax = yScale.getPixelForValue(getOption(chart, 'state', 'yMax'));
+		xSize = xMax - xStart;
+		ySize = yMax - yStart;
 	}
-	// x y width height
 	chart.ctx.rect(xStart, yStart, xSize, ySize);
 	chart.ctx.lineWidth = 1;
 	chart.ctx.strokeStyle = borderColor;
@@ -176,10 +183,7 @@ const boxselectPlugin = {
 			return;
 		}
 
-		if (chart.boxselect.dragStarted) {
-			drawSelectbox(chart);
-		}
-
+		drawSelectbox(chart);
 		return true;
 	},
 
