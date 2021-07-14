@@ -15,21 +15,20 @@ import LineWidget from './LineWidget';
 // As defined in CSS
 export const WIDGET_WIDTH = 400;
 
-// Suggestion - ParentWidget with object might be slightly cleaner 
 const widgetTypes = {
   'histogram': HistogramWidget,
-  'scatter':ScatterWidget,
+  'scatter': ScatterWidget,
   'scatter3d': Scatter3DWidget,
   'line': LineWidget
 }
 
 const ParentWidget = (props) => {
-  if (!widgetTypes.hasOwnProperty(props.type)) return (
+  if (!(props.type in widgetTypes)) return (
     <div className={styles.widget}>
       <h3>Error: Invalid widget type {props.type}</h3>
     </div>
   )
-  let Component = widgetTypes[props.type]
+  let Component = widgetTypes[props.type];
   return <Component {...props}/>
 }
 function Widget(props) {
@@ -45,28 +44,6 @@ function Widget(props) {
 
   const activeFilters = mapFilters.filter(i => i.source == props.id);
   const hasActiveFilter = activeFilters.length > 0;
-
-  let component;
-  switch(props.type){
-    case 'histogram':
-      component = HistogramWidget;
-      break;
-    case 'scatter':
-      component = ScatterWidget;
-      break;
-    case 'scatter3d':
-      component = Scatter3DWidget;
-      break;
-    case 'line':
-      component = LineWidget;
-      break;
-    default:
-      return (
-        <div className={styles.widget}>
-          <h3>Error: Invalid widget type {props.type}</h3>
-        </div>
-      );
-  }
 
   return (
     <Draggable draggableId={props.id.toString()} index={props.index}>
@@ -107,23 +84,14 @@ function Widget(props) {
             </h3>
           }
           <div className={styles.widgetContent}>
-            {/* <ParentWidget 
+            <ParentWidget 
               type={props.type}
               options={props.options}
               data={data}
               fullWidgetConfig={props.fullWidgetConfig}
               id={props.id}
               activeFilters={activeFilters}
-            /> */}
-            {
-              React.createElement(component, {
-                options: props.options,
-                data: data,
-                fullWidgetConfig: props.fullWidgetConfig,
-                id: props.id,
-                activeFilters
-              })
-            }
+            />
           </div>
           <div className={styles.widgetSettings}>
             <WidgetSettings config={props.fullWidgetConfig} id={props.id} onSave={() => {
