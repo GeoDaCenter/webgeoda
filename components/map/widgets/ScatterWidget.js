@@ -28,6 +28,17 @@ function ScatterWidgetUnwrapped(props) {
 
   const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
   const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
+
+  if(chartRef.current){
+    chartRef.current.boxselect.state = {
+      display: xFilter != undefined && yFilter != undefined,
+      xMin: xFilter?.from,
+      xMax: xFilter?.to,
+      yMin: yFilter?.from,
+      yMax: yFilter?.to
+    };
+  }
+
   let dataProp;
   if(props.data.isLisa){
     if(lisaData == null){
@@ -101,13 +112,6 @@ function ScatterWidgetUnwrapped(props) {
         select: {
           enabled: true,
           direction: 'xy'
-        },
-        state: {
-          display: xFilter != undefined && yFilter != undefined,
-          xMin: xFilter?.from,
-          xMax: xFilter?.to,
-          yMin: yFilter?.from,
-          yMax: yFilter?.to
         },
         callbacks: {
           beforeSelect: function(startX, endX, startY, endY) {

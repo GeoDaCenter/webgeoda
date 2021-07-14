@@ -87,9 +87,9 @@ function drawSelectbox(chart) {
 		xStart = chart.barselect.dragStartX;
 		xSize = chart.barselect.x - chart.barselect.dragStartX;
 	} else {
-		if(!getOption(chart, 'state', 'display')) return;
-		xStart = xScale.getPixelForValue(getOption(chart, 'state', 'xMin'));
-		const xMax = xScale.getPixelForValue(getOption(chart, 'state', 'xMax'));
+		if(!("state" in chart.barselect)) return;
+		xStart = xScale.getPixelForValue(chart.barselect.state.xMin);
+		const xMax = xScale.getPixelForValue(chart.barselect.state.xMax);
 		xSize = xMax - xStart;
 	}
 

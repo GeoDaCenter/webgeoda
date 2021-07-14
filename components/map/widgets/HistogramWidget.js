@@ -9,6 +9,14 @@ function HistogramWidget(props) {
   const dispatch = useDispatch();
 
   const filter = props.activeFilters.find(i => i.id == props.id);
+  if(chartRef.current){
+    chartRef.current.barselect.state = {
+      display: filter != undefined,
+      xMin: filter?.minIndex,
+      xMax: filter?.maxIndex
+    };
+  }
+
   const dataProp = {
     labels: props.data.labels,
     datasets: [
@@ -45,11 +53,6 @@ function HistogramWidget(props) {
       barselect: {
         select: {
           enabled: true
-        },
-        state: {
-          display: filter != undefined,
-          xMin: filter?.minIndex,
-          xMax: filter?.maxIndex
         },
         callbacks: {
           beforeSelect: function(startX, endX) {

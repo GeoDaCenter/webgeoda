@@ -83,11 +83,11 @@ function drawSelectbox(chart) {
 			xSize = xScale.getPixelForValue(xScale.min) - xScale.getPixelForValue(xScale.max);
 		}
 	} else {
-		if(!getOption(chart, 'state', 'display')) return;
-		xStart = xScale.getPixelForValue(getOption(chart, 'state', 'xMin'));
-		yStart = yScale.getPixelForValue(getOption(chart, 'state', 'yMin'));
-		const xMax = xScale.getPixelForValue(getOption(chart, 'state', 'xMax'));
-		const yMax = yScale.getPixelForValue(getOption(chart, 'state', 'yMax'));
+		if(!("state" in chart.boxselect)) return;
+		xStart = xScale.getPixelForValue(chart.boxselect.state.xMin);
+		yStart = yScale.getPixelForValue(chart.boxselect.state.yMin);
+		const xMax = xScale.getPixelForValue(chart.boxselect.state.xMax);
+		const yMax = yScale.getPixelForValue(chart.boxselect.state.yMax);
 		xSize = xMax - xStart;
 		ySize = yMax - yStart;
 	}
