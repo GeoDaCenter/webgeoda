@@ -104,6 +104,7 @@ export default function MainMap() {
 
   // Apply map filters
   const itemIsInFilter = (id) => {
+    // TODO: Instead of currentData, store `dataset` index with filter, use here
     const cachedData = cachedVariables[currentData];
     if(cachedData === null) return false;
     for(const filter of mapFilters){

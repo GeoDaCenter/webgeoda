@@ -46,8 +46,7 @@ const getTables = (variableSpec, state) => {
     // look for numerator table
     if (numerator === "properties") { // default properties indicator
         returnTables.numeratorData = storedGeojson[currentData].properties
-        // TODO: Set returnTables.dataset in this case
-        console.log("Not implemented");
+        returnTables.dataset = "properties";
     } else {  
         if (currentTables && currentTables.hasOwnProperty(variableSpec.numerator)) {
             returnTables.numeratorData = storedData[currentTables[variableSpec.numerator].file]?.data;
