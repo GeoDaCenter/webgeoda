@@ -9,9 +9,16 @@ const WIDGET_OPTION_TYPES = [
     {
         displayName: "Variable",
         datatype: "variable",
-        supportedTypes: ["histogram", "summary", 'lisaW'],
+        supportedTypes: ["histogram", "summary"],
         get: (w) => w.variable,
         set: (w, v) => { w.variable = v , w.options.header = v}
+    },
+    {
+        displayName: "Variable",
+        datatype: "variable",
+        supportedTypes: ["lisaW"],
+        get: (w) => w.variable,
+        set: (w, v) => { w.variable = v , w.options.header = v + " LISA"}
     },
     {
         displayName: "X Variable",
