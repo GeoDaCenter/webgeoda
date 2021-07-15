@@ -141,6 +141,13 @@ const barselectPlugin = {
 		const selectEnabled = getOption(chart, 'select', 'enabled');
 
 		if (buttons === 1 && !chart.barselect.dragStarted && selectEnabled) {
+			// Stop chart.js from triggering an event on mouseup (click)
+			// There is a single frame where dragStarted is false, since the
+			// interaction ended, but it draws one last frame, to see:
+			// console.log(e.event)
+			// console.log(e.event.x === chart.barselect.x)
+			// console.log(chart.barselect.dragStartX, chart.barselect.x)
+			if (chart.barselect.x === e.event.x) return;
 			chart.barselect.dragStartX = e.event.x;
 			chart.barselect.dragStartY = e.event.y;
 			chart.barselect.dragStarted = true;
