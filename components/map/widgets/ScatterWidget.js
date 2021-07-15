@@ -80,7 +80,7 @@ function ScatterWidgetUnwrapped(props) {
       }
     }
     return dataProp;
-  }, [props.data, props.options, lisaData]);
+  }, [props.data, props.options.header, props.options.foregroundColor, props.options.clusterColors, lisaData]);
 
   const options = React.useMemo(() => {
     return {
@@ -167,7 +167,7 @@ function ScatterWidgetUnwrapped(props) {
         }
       }
     };
-  }, [props.options, props.data, props.fullWidgetConfig]);
+  }, [props.options, props.options.pointSize, props.data, props.fullWidgetConfig.xVariable, props.fullWidgetConfig.yVariable]);
 
   const chart = React.useMemo(() => {
     return (

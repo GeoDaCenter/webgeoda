@@ -28,7 +28,7 @@ function HistogramWidget(props) {
         }
       ]
     };
-  }, [props.data, props.options]);
+  }, [props.data, props.options, props.options.header, props.options.foregroundColor]);
 
   const options = React.useMemo(() => {
     return {
@@ -85,13 +85,13 @@ function HistogramWidget(props) {
         }
       }
     };
-  }, [props.data, props.options, props.fullWidgetConfig]);
+  }, [props.data, props.options, props.fullWidgetConfig, props.fullWidgetConfig.variable, props.options.xAxisLabel, props.options.yAxisLabel, props.options.foregroundColor, props.options.header]);
 
   const chart = React.useMemo(() => {
     return (
       <Bar data={dataProp} options={options} plugins={[pluginBarSelect]} ref={chartRef} />
     );
-  });
+  }, [dataProp, options]);
 
   return (
     <div>{chart}</div>
