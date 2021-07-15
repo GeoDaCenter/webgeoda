@@ -636,9 +636,10 @@ export default function reducer(state = INITIAL_STATE, action) {
       const mapFilters = [...state.mapFilters];
       const newFilter = action.payload.filter === null ? null : {
         ...action.payload.filter,
-        source: action.payload.widgetIndex
+        source: action.payload.widgetIndex,
+        id: action.payload.filterId
       };
-      const index = mapFilters.findIndex(i => i.source == action.payload.widgetIndex);
+      const index = mapFilters.findIndex(i => i.id == action.payload.filterId);
 
       // Append, replace, or delete
       if(index === -1) { mapFilters.push(newFilter); }

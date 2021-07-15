@@ -76,16 +76,22 @@ function drawSelectbox(chart) {
 	const borderColor = getOption(chart, 'select', 'selectboxBorderColor');
 	const fillColor = getOption(chart, 'select', 'selectboxBackgroundColor');
 	const direction = getOption(chart, 'select', 'direction');
-
 	chart.ctx.beginPath();
-	// if direction == xy, rectangle
-	// if direction == x, horizontal selection only
-	// if direction == y, vertical selection only
-	let xStart = chart.barselect.dragStartX;
-	let xSize = chart.barselect.x - chart.barselect.dragStartX;
-	let yScale = getYScale(chart);
-	let yStart = yScale.getPixelForValue(yScale.max);
-	let ySize = yScale.getPixelForValue(yScale.min) - yScale.getPixelForValue(yScale.max);
+	let xStart, xSize;
+	const xScale = getXScale(chart);
+	const yScale = getYScale(chart);
+	const yStart = yScale.getPixelForValue(yScale.max);
+	const ySize = yScale.getPixelForValue(yScale.min) - yScale.getPixelForValue(yScale.max);
+
+	if(chart.barselect.dragStarted){
+		xStart = chart.barselect.dragStartX;
+		xSize = chart.barselect.x - chart.barselect.dragStartX;
+	} else {
+		if(!("state" in chart.barselect)) return;
+		xStart = xScale.getPixelForValue(chart.barselect.state.xMin);
+		const xMax = xScale.getPixelForValue(chart.barselect.state.xMax);
+		xSize = xMax - xStart;
+	}
 
 	// x y width height
 	chart.ctx.rect(xStart, yStart, xSize, ySize);
@@ -135,6 +141,13 @@ const barselectPlugin = {
 		const selectEnabled = getOption(chart, 'select', 'enabled');
 
 		if (buttons === 1 && !chart.barselect.dragStarted && selectEnabled) {
+			// Stop chart.js from triggering an event on mouseup (click)
+			// There is a single frame where dragStarted is false, since the
+			// interaction ended, but it draws one last frame, to see:
+			// console.log(e.event)
+			// console.log(e.event.x === chart.barselect.x)
+			// console.log(chart.barselect.dragStartX, chart.barselect.x)
+			if (chart.barselect.x === e.event.x) return;
 			chart.barselect.dragStartX = e.event.x;
 			chart.barselect.dragStartY = e.event.y;
 			chart.barselect.dragStarted = true;
@@ -163,10 +176,7 @@ const barselectPlugin = {
 			return;
 		}
 
-		if (chart.barselect.dragStarted) {
-			drawSelectbox(chart);
-		}
-
+		drawSelectbox(chart);
 		return true;
 	},
 

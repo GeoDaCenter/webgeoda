@@ -54,59 +54,10 @@ function doSelect(chart, startX, endX, startY, endY) {
 		return false;
 	}
 
-	var datasets = [];
-	// filter dataset
-	for (let datasetIndex = 0; datasetIndex < chart.data.datasets.length; datasetIndex++) {
-		const sourceDataset = chart.data.datasets[datasetIndex];
-
-		var selectedDataset = {
-			data: [],
-			indexes: []
-		};
-		// if the dataset has labels, get them too
-		if (sourceDataset.labels) {
-			selectedDataset.labels = [];
-		}
-
-		// iterate data points
-		for (let dataIndex = 0; dataIndex < sourceDataset.data.length; dataIndex++) {
-
-			const dataPoint = sourceDataset.data[dataIndex];
-
-			let filterOnX = true;
-			let inX = true;
-			if (startX == null) {
-				filterOnX = false;
-			} else {
-				inX = (dataPoint.x >= startX && dataPoint.x <= endX)
-			}
-			let filterOnY = true;
-			let inY = true;
-			if (startY == null) {
-				filterOnY = false;
-			} else {
-				inY = (dataPoint.y >= startY && dataPoint.y <= endY)
-			}
-
-			if (inX && inY) {
-				selectedDataset.data.push({ ...dataPoint });
-				selectedDataset.indexes.push(dataIndex)
-				if (selectedDataset.labels) {
-					selectedDataset.labels.push(sourceDataset.labels[dataIndex]);
-				}
-			}
-		}
-		datasets.push(selectedDataset);
-	}
-
 	chart.boxselect.start = startX;
 	chart.boxselect.end = endX;
-
-	// chart.update();
-	// workaround - add the current datasets to the chart as a property, allowing access via Ref
-	chart.boxselect.selection = datasets
 	const afterSelectCallback = getOption(chart, 'callbacks', 'afterSelect');
-	afterSelectCallback(startX, endX, startY, endY, datasets);
+	afterSelectCallback(startX, endX, startY, endY);
 }
 
 function drawSelectbox(chart) {
@@ -114,25 +65,32 @@ function drawSelectbox(chart) {
 	const borderColor = getOption(chart, 'select', 'selectboxBorderColor');
 	const fillColor = getOption(chart, 'select', 'selectboxBackgroundColor');
 	const direction = getOption(chart, 'select', 'direction');
-
 	chart.ctx.beginPath();
-	// if direction == xy, rectangle
-	// if direction == x, horizontal selection only
-	// if direction == y, vertical selection only
-	let xStart = chart.boxselect.dragStartX;
-	let yStart = chart.boxselect.dragStartY;
-	let xSize = chart.boxselect.x - chart.boxselect.dragStartX;
-	let ySize = chart.boxselect.y - chart.boxselect.dragStartY;
-	if (direction == 'x') {
-		var yScale = getYScale(chart);
-		yStart = yScale.getPixelForValue(yScale.max);
-		ySize = yScale.getPixelForValue(yScale.min) - yScale.getPixelForValue(yScale.max);
-	} else if (direction == 'y') {
-		var xScale = getXScale(chart);
-		xStart = xScale.getPixelForValue(xScale.max);
-		xSize = xScale.getPixelForValue(xScale.min) - xScale.getPixelForValue(xScale.max);
+	let xStart, yStart, xSize, ySize;
+	const xScale = getXScale(chart);
+	const yScale = getYScale(chart);
+
+	if(chart.boxselect.dragStarted){
+		xStart = chart.boxselect.dragStartX;
+		yStart = chart.boxselect.dragStartY;
+		xSize = chart.boxselect.x - chart.boxselect.dragStartX;
+		ySize = chart.boxselect.y - chart.boxselect.dragStartY;
+		if (direction == 'x') {
+			yStart = yScale.getPixelForValue(yScale.max);
+			ySize = yScale.getPixelForValue(yScale.min) - yScale.getPixelForValue(yScale.max);
+		} else if (direction == 'y') {
+			xStart = xScale.getPixelForValue(xScale.max);
+			xSize = xScale.getPixelForValue(xScale.min) - xScale.getPixelForValue(xScale.max);
+		}
+	} else {
+		if(!("state" in chart.boxselect)) return;
+		xStart = xScale.getPixelForValue(chart.boxselect.state.xMin);
+		yStart = yScale.getPixelForValue(chart.boxselect.state.yMin);
+		const xMax = xScale.getPixelForValue(chart.boxselect.state.xMax);
+		const yMax = yScale.getPixelForValue(chart.boxselect.state.yMax);
+		xSize = xMax - xStart;
+		ySize = yMax - yStart;
 	}
-	// x y width height
 	chart.ctx.rect(xStart, yStart, xSize, ySize);
 	chart.ctx.lineWidth = 1;
 	chart.ctx.strokeStyle = borderColor;
@@ -225,10 +183,7 @@ const boxselectPlugin = {
 			return;
 		}
 
-		if (chart.boxselect.dragStarted) {
-			drawSelectbox(chart);
-		}
-
+		drawSelectbox(chart);
 		return true;
 	},
 

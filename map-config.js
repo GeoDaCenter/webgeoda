@@ -166,11 +166,11 @@ const widgets = [
   {
     hidden: true,
     type: "histogram",
-    variable: "Median age",
+    variable: "Median Household Income",
     options: {
-      header: "Median age",
+      header: "Median Household Income",
       foregroundColor: "#FF00FF",
-      yAxisLabel: "Median age"
+      yAxisLabel: "Median Household Income"
     }
   },
   {
