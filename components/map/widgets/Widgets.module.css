@@ -25,13 +25,24 @@
   margin-bottom: 25px;
   position: sticky;
   top: 0;
+  cursor: pointer;
+}
+#columnLeft:not(.active) .widgetDropdownHandle p {
+  margin-right: 20px;
 }
 .widgetDropdownHandle .caret {
-  margin-left: 5px;
-  transition: transform 0.5s;
+  margin: auto 0;
+  position: absolute;
+  right: 20px;
+  top: 0px;
+  bottom: 0px;
+  transition: transform 0.5s, right 0.3s;
 }
-#columnLeft:hover .widgetDropdownHandle .caret, #columnLeft.dropping .widgetDropdownHandle .caret {
+#columnLeft.active .widgetDropdownHandle .caret, #columnLeft.dropping .widgetDropdownHandle .caret {
   transform: rotate(90deg);
+}
+#columnLeft:hover:not(.active) .widgetDropdownHandle .caret {
+  right: 10px;
 }
 
 .widgetColumn {
@@ -48,7 +59,7 @@
   transition: width 0.5s;
   padding-right: 15px; /* so shadows don't get cut off */
 }
-#columnLeft:hover, #columnLeft.dropping {
+#columnLeft.active, #columnLeft.dropping {
   width: 425px;
 }
 #columnLeft .widget {
@@ -58,13 +69,16 @@
 #columnLeft .widget:not(.dragging) {
   opacity: 0;
 }
-#columnLeft:hover .widget, #columnLeft.dropping .widget {
+#columnLeft.active .widget, #columnLeft.dropping .widget {
   opacity: 1;
 }
 
 #columnRight {
-  margin-right: 0;
+  margin: 10px 0;
+  padding: 0 10px;
   background:white;
+  overflow-x: hidden;
+  box-sizing: content-box;
 }
 
 .widget {
@@ -78,9 +92,14 @@
   z-index: 1;
   position: relative;
   user-select: none;
+  border: #77777700 1px solid; /* Invisible border for transition */
+  transition: border-color 0.5s;
+}
+#columnRight .widget:not(.dragging) {
+  border: #777777 1px solid;
 }
 .widget.filter {
-  border: #0099FF 2px solid;
+  border: #0099FF 2px solid !important;
 }
 .widgetContent {
   height: 90%;

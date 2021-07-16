@@ -21,6 +21,7 @@ export default function WidgetLayer(){
   const widgetConfig = useSelector(state => state.widgetConfig);
   const widgetLocations = useSelector(state => state.widgetLocations);
   const dispatch = useDispatch();
+  const [columnLeftActive, setColumnLeftActive] = React.useState(false);
   
   const widgets = widgetConfig.map((widget, trueIndex) => {
     return renderWidget(widget, trueIndex, widgetLocations[trueIndex].index);
@@ -73,9 +74,11 @@ export default function WidgetLayer(){
         <div className={styles.widgetsContainer}>
           <Droppable droppableId="widgets-left">
             {(provided, snapshot) => (
-              <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""}`} id={styles.columnLeft}>
-                <div className={styles.widgetDropdownHandle}>
-                  <p>Widgets <FontAwesomeIcon icon={faAngleRight} className={styles.caret} /></p>
+              <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""} ${columnLeftActive ? styles.active : ""}`} id={styles.columnLeft}>
+                <div className={styles.widgetDropdownHandle} onClick={() => {
+                  setColumnLeftActive(!columnLeftActive);
+                }}>
+                  <p>Pinned <FontAwesomeIcon icon={faAngleRight} className={styles.caret} /></p>
                 </div>
                 {widgetElementsLeft}
               </div>
