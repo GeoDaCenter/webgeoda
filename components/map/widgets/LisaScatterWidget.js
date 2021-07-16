@@ -9,6 +9,8 @@ import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
 import { useDispatch } from 'react-redux';
 import usePanMap from '@webgeoda/hooks/usePanMap';
 import * as ss from 'simple-statistics';
+import { getVarId } from '@webgeoda/utils/data';
+
 
 function LisaScatterWidgetUnwrapped(props) {
     const chartRef = React.useRef();
@@ -16,20 +18,37 @@ function LisaScatterWidgetUnwrapped(props) {
     const storedGeojson = useSelector((state) => state.storedGeojson);
     const currentData = useSelector((state) => state.currentData);
     const panToGeoid = usePanMap();
-    //const allLisaData = useSelector((state) => state.cachedLisaScatterplotData);
-    const [getLisa,] = useLisa();
+    const allLisaData = useSelector((state) => state.cachedLisaScatterplotData);
+    //const variableId = getVarId(currentData, props.data.variableSpec)
+    const [getLisa,cacheLisa,] = useLisa();
     const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
     const lisaData = getCachedLisa(props.data.variableSpec);
 
+    // console.log(allLisaData)
+    // const prelimLisaData = allLisaData[props.data.variableSpec.variable]
+
+    // React.useEffect(async () => {
+    //     if (prelimLisaData === undefined || prelimLisaData == null) {
+    //        cacheLisa({
+    //            dataParams: props.data.variableSpec.variable,
+    //            geographyName: currentData,
+    //        })
+    //     }
+    // },[]);
+
+    // const lisaData = allLisaData[props.data.variableSpec.variable]
+
     React.useEffect(async () => {
-        if (lisaData == null) {
-            const lisaData = await getLisa({
-                dataParams: props.data.variableSpec,
-                getScatterPlot: true
-            });
-            updateCachedLisa(props.data.variableSpec, lisaData);
+        if(lisaData == null){
+          const lisaData = await getLisa({
+            dataParams: props.data.variableSpec,
+            getScatterPlot: true
+          });
+          updateCachedLisa(props.data.variableSpec, lisaData);
         }
-    });
+      },[]);
+
+
 
     //const lisaData = allLisaData[props.data.variableSpec]
 
@@ -51,7 +70,6 @@ function LisaScatterWidgetUnwrapped(props) {
         if (lisaData == null) {
             dataProp = { datasets: [] };
         } else {
-            console.log(lisaData.scatterPlotDataStan)
             dataProp = {
                 datasets: [
                     {
@@ -63,7 +81,6 @@ function LisaScatterWidgetUnwrapped(props) {
                 ]
             };
         }
-        let formattedData = [];
 
         if (lisaData) {
 
@@ -78,13 +95,7 @@ function LisaScatterWidgetUnwrapped(props) {
                 statisticsFormattedData.push(
                     [x, y]
                 )
-                formattedData.push({
-                    x: x,
-                    y: y,
-                    id: i
-                })
             }
-            console.log(formattedData)
             //   let fittedLine = null;
             //   let fittedLineEquation = null;
             //   // TODO: Zero values influence k-means cluster algo, but need to be
@@ -110,7 +121,24 @@ function LisaScatterWidgetUnwrapped(props) {
         return dataProp;
     }, [props.data, props.options, lisaData]);
 
+
+
+
+
     const options = React.useMemo(() => {
+        let formattedData =[];
+        if (lisaData){
+            for (let i = 0; i < lisaData.scatterPlotDataStan.length; i++) {
+                let x = lisaData.scatterPlotDataStan[i].x
+                let y = lisaData.scatterPlotDataStan[i].y
+                formattedData.push({
+                    x: x,
+                    y: y,
+                    id: i
+                })
+            }
+        }
+
         return {
             events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
             maintainAspectRatio: false,
@@ -122,7 +150,7 @@ function LisaScatterWidgetUnwrapped(props) {
             },
             onClick: (e, items) => {
                 if (items.length == 0) return;
-                const point = formattedData[items[0].index];
+                const point = props.data.data[items[0].index];
                 panToGeoid(point.id);
             },
             plugins: {
@@ -135,8 +163,11 @@ function LisaScatterWidgetUnwrapped(props) {
                 tooltip: {
                     callbacks: {
                         label: (tooltipItem) => { //data
-                            const point = formattedData[tooltipItem.dataIndex];
-                            return `${point.id} (${point.x}, ${point.y})`; // TODO: point.y is null for LISA scatterplots
+                            console.log(props.data.data)
+                            const point = props.data.data[tooltipItem.dataIndex];
+                            console.log(point)
+                            if (point!=undefined){return `${point.id}`} // TODO: point.y is null for LISA scatterplots
+                            else {return "undefined"};
                         }
                     }
                 },

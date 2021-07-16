@@ -4,7 +4,8 @@ import { GeodaContext } from "../contexts";
 
 import {
   parseColumnData,
-  findTable
+  findTable,
+  getVarId
 } from "../utils/data";
 
 import {
@@ -35,7 +36,6 @@ export default function useLisa() {
     const getLisa = async ({
         dataParams,
         geographyName=currentData,
-        getScatterPlot=false
     }) => {
         if (!storedGeojson[geographyName]) return;
         // TODO: load data if missing
@@ -69,7 +69,6 @@ export default function useLisa() {
             lisaData
         })
 
-        if (getScatterPlot) {
             let scatterPlotData = [];
             let scatterPlotDataStan = [];
             const standardizedVals = standardize(lisaData);
@@ -92,14 +91,28 @@ export default function useLisa() {
             })
         }
             return { weights, lisaResults, scatterPlotData, scatterPlotDataStan};
-        }
-
-        return { weights, lisaResults, lisaData }
     }
 
+    const cacheLisa = async ({
+        dataParams,
+        geographyName=currentData,
+        getScatterPlot=true
+    }) => {
+        const lisaResults = await getLisa ({
+            dataParams,
+            geographyName: currentData,
+        })
+        dispatch({
+            type: "CACHE_SCATTERPLOT_LISA",
+            payload: {
+                data: lisaResults,
+                id: getVarId(geographyName, dataParams)
+            }
+        });
+    }
   const updateLisa = async () => {
 
-    const { weights, lisaResults, lisaData } = await getLisa ({
+    const { weights, lisaResults, scatterPlotData, scatterPlotDataStan} = await getLisa ({
         geographyName: currentData,
         dataParams
     })
@@ -119,5 +132,5 @@ export default function useLisa() {
     });
   };
 
-  return [getLisa, updateLisa];
+  return [getLisa, cacheLisa, updateLisa];
 }

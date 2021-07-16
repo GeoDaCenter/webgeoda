@@ -201,7 +201,7 @@ const widgets = [
     hidden: false,
     type: "scatter",
     xVariable: "Median Household Income",
-    yVariable: "LISA",
+    yVariable: "Median Gross Rent",
     options: {
       header: "Gross Rent vs. Household Income",
       foregroundColor: "#000000",

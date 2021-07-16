@@ -16,7 +16,7 @@ const WIDGET_OPTION_TYPES = [
     {
         displayName: "Variable",
         datatype: "variable",
-        supportedTypes: ["lisaW"],
+        supportedTypes: ["lisaW", "lisaScatter"],
         get: (w) => w.variable,
         set: (w, v) => { w.variable = v , w.options.header = v + " LISA"}
     },
@@ -44,7 +44,7 @@ const WIDGET_OPTION_TYPES = [
     {
         displayName: "Header",
         datatype: "string",
-        supportedTypes: ["line", "scatter3d"],
+        supportedTypes: ["line", "scatter3d", "lisaScatter"],
         get: (w) => w.options.header,
         set: (w, v) => { w.options.header = v }
     },
