@@ -33,8 +33,6 @@ function LisaWidget(props) {
       }
     });
 
-    console.log(lisaData)
-
     const index = storedGeojson[currentData].order.findIndex((o) => o === currentHoverTarget.id)
 
 

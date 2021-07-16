@@ -13,6 +13,7 @@ import Scatter3DWidget from './Scatter3DWidget';
 import LineWidget from './LineWidget';
 import SummaryWidget from './SummaryWidget';
 import LisaWidget from './LisaWidget';
+import LisaScatterWidget from './LisaScatterWidget';
 
 // As defined in CSS
 export const WIDGET_WIDTH = 400;
@@ -21,7 +22,10 @@ const widgetTypes = {
   'histogram': HistogramWidget,
   'scatter': ScatterWidget,
   'scatter3d': Scatter3DWidget,
-  'line': LineWidget
+  'line': LineWidget,
+  'summary': SummaryWidget,
+  'lisaW': LisaWidget,
+  'lisaScatter': LisaScatterWidget, 
 }
 
 const ParentWidget = (props) => {
@@ -108,7 +112,7 @@ function Widget(props) {
 }
 
 Widget.propTypes = {
-  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d","summary", "lisaW"]).isRequired,
+  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d","summary", "lisaW", "lisaScatter"]).isRequired,
   options: PropTypes.object.isRequired,
   fullWidgetConfig: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,

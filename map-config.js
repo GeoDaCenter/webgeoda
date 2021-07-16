@@ -134,6 +134,7 @@ const mapModes = {
   BubbleCartogram: false,
 };
 
+
 const widgets = [
   {
     hidden: true,
@@ -164,6 +165,19 @@ const widgets = [
     }
   },
   {
+    hidden: false,
+    type: "lisaScatter",
+    variable: "Total Population",
+    options: {
+      header: "Total Population LISA Scatter",
+      foregroundColor: "#000000",
+      pointSize: .2,
+      xAxisLabel: "Total Population",
+      yAxisLabel: "Spatial Lag",
+      removeZeroValues: true
+    }
+  },
+  {
     hidden: true,
     type: "histogram",
     variable: "Median Household Income",
@@ -187,9 +201,9 @@ const widgets = [
     hidden: false,
     type: "scatter",
     xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
+    yVariable: "LISA",
     options: {
-      header: "Household Income vs. Gross Rent",
+      header: "Gross Rent vs. Household Income",
       foregroundColor: "#000000",
       numClusters: 3,
       clusterColors: [

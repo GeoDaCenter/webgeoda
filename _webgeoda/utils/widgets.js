@@ -8,6 +8,8 @@ import {
 import {TARGET_RANGE} from "../../components/map/widgets/Scatter3DWidget";
 
 import { bin as d3bin } from "d3-array";
+import useLisa from '@webgeoda/hooks/useLisa';
+import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
 import {linearRegression, linearRegressionLine, kMeansCluster, min, max, standardDeviation, median, mean} from "simple-statistics";
 
 const findFirstTable = (tableName, storedData, dataPresets) => {
@@ -171,7 +173,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         for(let i = 0; i < idKeys.length; i++){
 
             // TODO: Find a smarter way to remove zero values
-            if(options.removeZeroValues === true && (xData[i] === 0 || yData[i] === 0)) continue;
+            //if(options.removeZeroValues === true && (xData[i] === 0 || yData[i] === 0)) continue;
             if(xData[i] < min) min = xData[i];
             if(xData[i] > max) max = xData[i];
             formattedData.push({
@@ -215,6 +217,87 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
             isLisa,
             clusterLabels,
             isCluster,
+            variableToCache: [{
+                data: xData,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName[0]
+            },{
+                data: yData,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName[1]
+            }]
+        };
+    }
+
+    if (widgetType === "lisaScatter"){
+        //const isCluster = options.foregroundColor === "cluster";
+        let xData;
+        let yData;
+        let idKeys;
+        //let isLisa = false;
+        const lisaData = state.cachedLisaScatterplotData;
+        const variableSpec = find(
+            dataPresets.variables,
+            (o) => o.variable === variableName
+        );
+        if (!variableSpec){
+            console.warn("Scatter plot: could not find variableSpec for " + variableName[i]);
+            return null;
+        }
+        const {data, keys} = getColumnData(variableSpec, state, true);
+        if (!data){
+            console.warn("Scatter plot: could not find column data for " + variableName[i]);
+        return null;
+        }
+        idKeys = keys;
+        xData = data;
+        yData = data;
+        if(xData.length == 0){
+            console.warn("Scatter plot: xData length is 0");
+            return null;
+        }
+        const formattedData = [];
+        const statisticsFormattedData = [];
+        for(let i = 0; i < idKeys.length; i++){
+
+            // TODO: Find a smarter way to remove zero values
+            if (options.removeZeroValues === true && (xData[i] === 0 || yData[i] === 0)) continue;
+            formattedData.push({
+                x: xData[i],
+                y: yData[i],
+                id: idKeys[i]
+            });
+            if (options.showBestFitLine === true) {
+                statisticsFormattedData.push([
+                    xData[i], yData[i]
+                ])
+            }
+        }
+        let fittedLine = null;
+        let fittedLineEquation = null;
+            // TODO: Zero values influence k-means cluster algo, but need to be
+            // excluded in a way that preserves OG indices of data
+            const bestFitInfo = linearRegression(statisticsFormattedData);
+            const bestFit = linearRegressionLine(bestFitInfo);
+            fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
+                {x: min, y: bestFit(min(xData))},
+                {x: max, y: bestFit(max(yData))}
+            ];
+            fittedLineEquation = `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
+        // let clusterLabels = null;
+        // if(isCluster){
+        //     try {
+        //         clusterLabels = kMeansCluster(statisticsFormattedData, options.numClusters || 2).labels;
+        //     } catch(e) {
+        //         console.warn(e);
+        //         return;
+        //     }
+        // }
+        return {
+            data: data,
+            fittedLine,
+            fittedLineEquation,
+            variableSpec,
             variableToCache: [{
                 data: xData,
                 order: state.storedGeojson[state.currentData].order,
@@ -307,7 +390,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
             (o) => o.variable === variableName
         )
         if (!variableSpec) return []
-        const [data] = getColumnData(variableSpec, state)
+        const {data, keys} = getColumnData(variableSpec, state, true);
         if (!data) return []
         return {
             median: median(data).toFixed(3),
@@ -325,7 +408,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
             (o) => o.variable === variableName
         )
         if (!variableSpec) return []
-        const [data] = getColumnData(variableSpec, state)
+        const {data, keys} = getColumnData(variableSpec, state, true)
         if (!data) return []
 
 
