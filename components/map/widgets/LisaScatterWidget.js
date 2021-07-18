@@ -52,8 +52,8 @@ function LisaScatterWidgetUnwrapped(props) {
 
 
     //const lisaData = allLisaData[props.data.variableSpec]
+    //TODO: box select filtering
 
-    if (lisaData) {
         const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
         const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
 
@@ -66,7 +66,6 @@ function LisaScatterWidgetUnwrapped(props) {
                 yMax: yFilter?.to
             };
         }
-    }
 
     const dataProp = React.useMemo(() => {
         let dataProp;
@@ -243,7 +242,14 @@ function LisaScatterWidgetUnwrapped(props) {
             );
         }
         else {
-            return (<div><Loader /></div>)
+            return (
+            <div>
+                <Loader /> 
+                <br />
+                <br />
+                <center><small><i>LISA data generating...</i></small></center>
+            </div>
+            )
         }
     }, [dataProp, options, pluginBoxSelect]);
 
