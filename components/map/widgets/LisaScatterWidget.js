@@ -171,45 +171,45 @@ function LisaScatterWidgetUnwrapped(props) {
                         }
                     }
                 },
-                // boxselect: {
-                //     select: {
-                //         enabled: true,
-                //         direction: 'xy'
-                //     },
-                //     callbacks: {
-                //         beforeSelect: function (startX, endX, startY, endY) {
-                //             return true;
-                //         },
-                //         afterSelect: (startX, endX, startY, endY, datasets) => {
-                //             dispatch({
-                //                 type: "SET_MAP_FILTER",
-                //                 payload: {
-                //                     widgetIndex: props.id,
-                //                     filterId: `${props.id}-x`,
-                //                     filter: {
-                //                         type: "range",
-                //                         field: props.fullWidgetConfig.xVariable,
-                //                         from: Math.min(startX, endX),
-                //                         to: Math.max(startX, endX)
-                //                     }
-                //                 }
-                //             });
-                //             dispatch({
-                //                 type: "SET_MAP_FILTER",
-                //                 payload: {
-                //                     widgetIndex: props.id,
-                //                     filterId: `${props.id}-y`,
-                //                     filter: {
-                //                         type: "range",
-                //                         field: props.fullWidgetConfig.yVariable,
-                //                         from: Math.min(startY, endY),
-                //                         to: Math.max(startY, endY)
-                //                     }
-                //                 }
-                //             });
-                //         }
-                //     }
-                // }
+                boxselect: {
+                    select: {
+                        enabled: true,
+                        direction: 'xy'
+                    },
+                    callbacks: {
+                        beforeSelect: function (startX, endX, startY, endY) {
+                            return true;
+                        },
+                        afterSelect: (startX, endX, startY, endY, datasets) => {
+                            dispatch({
+                                type: "SET_MAP_FILTER",
+                                payload: {
+                                    widgetIndex: props.id,
+                                    filterId: `${props.id}-x`,
+                                    filter: {
+                                        type: "range",
+                                        field: props.fullWidgetConfig.xVariable,
+                                        from: Math.min(startX, endX),
+                                        to: Math.max(startX, endX)
+                                    }
+                                }
+                            });
+                            dispatch({
+                                type: "SET_MAP_FILTER",
+                                payload: {
+                                    widgetIndex: props.id,
+                                    filterId: `${props.id}-y`,
+                                    filter: {
+                                        type: "range",
+                                        field: props.fullWidgetConfig.yVariable,
+                                        from: Math.min(startY, endY),
+                                        to: Math.max(startY, endY)
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
             },
             scales: { // TODO: Support gridlinesInterval option
                 x: {

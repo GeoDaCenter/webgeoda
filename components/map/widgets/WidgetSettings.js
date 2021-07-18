@@ -44,7 +44,7 @@ const WIDGET_OPTION_TYPES = [
     {
         displayName: "Header",
         datatype: "string",
-        supportedTypes: ["line", "scatter3d", "lisaScatter"],
+        supportedTypes: ["line", "scatter3d"],
         get: (w) => w.options.header,
         set: (w, v) => { w.options.header = v }
     },

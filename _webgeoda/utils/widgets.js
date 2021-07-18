@@ -294,7 +294,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         //     }
         // }
         return {
-            data: data,
+            data: formattedData,
             fittedLine,
             fittedLineEquation,
             variableSpec,
