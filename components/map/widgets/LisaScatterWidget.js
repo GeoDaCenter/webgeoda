@@ -20,7 +20,7 @@ function LisaScatterWidgetUnwrapped(props) {
     const panToGeoid = usePanMap();
     const allLisaData = useSelector((state) => state.cachedLisaScatterplotData);
     //const variableId = getVarId(currentData, props.data.variableSpec)
-    const [getLisa,cacheLisa,] = useLisa();
+    const [getLisa, cacheLisa,] = useLisa();
     const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
     const lisaData = getCachedLisa(props.data.variableSpec);
 
@@ -39,30 +39,32 @@ function LisaScatterWidgetUnwrapped(props) {
     // const lisaData = allLisaData[props.data.variableSpec.variable]
 
     React.useEffect(async () => {
-        if(lisaData == null){
-          const lisaData = await getLisa({
-            dataParams: props.data.variableSpec,
-            getScatterPlot: true
-          });
-          updateCachedLisa(props.data.variableSpec, lisaData);
+        if (lisaData == null) {
+            const lisaData = await getLisa({
+                dataParams: props.data.variableSpec,
+                getScatterPlot: true
+            });
+            updateCachedLisa(props.data.variableSpec, lisaData);
         }
-      },[]);
+    });
 
 
 
     //const lisaData = allLisaData[props.data.variableSpec]
 
-    const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
-    const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
+    if (lisaData) {
+        const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
+        const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
 
-    if (chartRef.current) {
-        chartRef.current.boxselect.state = {
-            display: xFilter != undefined && yFilter != undefined,
-            xMin: xFilter?.from,
-            xMax: xFilter?.to,
-            yMin: yFilter?.from,
-            yMax: yFilter?.to
-        };
+        if (chartRef.current) {
+            chartRef.current.boxselect.state = {
+                display: xFilter != undefined && yFilter != undefined,
+                xMin: xFilter?.from,
+                xMax: xFilter?.to,
+                yMin: yFilter?.from,
+                yMax: yFilter?.to
+            };
+        }
     }
 
     const dataProp = React.useMemo(() => {
@@ -102,8 +104,8 @@ function LisaScatterWidgetUnwrapped(props) {
             //   // excluded in a way that preserves OG indices of data
             //   const bestFitInfo = ss.linearRegression(statisticsFormattedData);
             //   const bestFit = ss.linearRegressionLine(bestFitInfo);
-                // minX = ss.min(arrayXData)
-                // minY = ss.min(arrayYData)
+            // minX = ss.min(arrayXData)
+            // minY = ss.min(arrayYData)
             //   fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
             //       { x: minX, y: bestFit(minX) },
             //       { x: minY, y: bestFit(minY) }
@@ -126,18 +128,18 @@ function LisaScatterWidgetUnwrapped(props) {
 
 
     const options = React.useMemo(() => {
-        let formattedData =[];
-        if (lisaData){
-            for (let i = 0; i < lisaData.scatterPlotDataStan.length; i++) {
-                let x = lisaData.scatterPlotDataStan[i].x
-                let y = lisaData.scatterPlotDataStan[i].y
-                formattedData.push({
-                    x: x,
-                    y: y,
-                    id: i
-                })
-            }
-        }
+        // let formattedData =[];
+        // if (lisaData){
+        //     for (let i = 0; i < lisaData.scatterPlotDataStan.length; i++) {
+        //         let x = lisaData.scatterPlotDataStan[i].x
+        //         let y = lisaData.scatterPlotDataStan[i].y
+        //         formattedData.push({
+        //             x: x,
+        //             y: y,
+        //             id: i
+        //         })
+        //     }
+        //}
 
         return {
             events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
@@ -166,8 +168,8 @@ function LisaScatterWidgetUnwrapped(props) {
                             console.log(props.data.data)
                             const point = props.data.data[tooltipItem.dataIndex];
                             console.log(point)
-                            if (point!=undefined){return `${point.id}`} // TODO: point.y is null for LISA scatterplots
-                            else {return "undefined"};
+                            if (point != undefined) { return `${point.id}` } // TODO: point.y is null for LISA scatterplots
+                            else { return "undefined" };
                         }
                     }
                 },
@@ -229,14 +231,16 @@ function LisaScatterWidgetUnwrapped(props) {
     }, [props.options, props.data, props.fullWidgetConfig]);
 
     const chart = React.useMemo(() => {
-        return (
-            <Scatter
-                data={dataProp}
-                options={options}
-                plugins={[pluginBoxSelect]}
-                ref={chartRef}
-            />
-        );
+        if (lisaData) {
+            return (
+                <Scatter
+                    data={dataProp}
+                    options={options}
+                    plugins={[pluginBoxSelect]}
+                    ref={chartRef}
+                />
+            );
+        }
     }, [dataProp, options, pluginBoxSelect]);
 
     return (
