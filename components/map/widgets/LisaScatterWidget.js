@@ -7,6 +7,7 @@ import pluginBoxSelect from './chartjs-plugins/boxselect';
 import useLisa from '@webgeoda/hooks/useLisa';
 import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
 import { useDispatch } from 'react-redux';
+import Loader from '../../layout/Loader';
 import usePanMap from '@webgeoda/hooks/usePanMap';
 import * as ss from 'simple-statistics';
 import { getVarId } from '@webgeoda/utils/data';
@@ -240,6 +241,9 @@ function LisaScatterWidgetUnwrapped(props) {
                     ref={chartRef}
                 />
             );
+        }
+        else {
+            return (<div><Loader /></div>)
         }
     }, [dataProp, options, pluginBoxSelect]);
 
