@@ -4,6 +4,7 @@ import styles from './Widgets.module.css';
 import {useDispatch, useSelector} from 'react-redux';
 import useLoadWidgetData from '@webgeoda/hooks/useLoadWidgetData';
 import {shallowEqual} from '@webgeoda/utils/data';
+import { updateLisaVariable } from '@webgeoda/utils/widgets';
 
 const WIDGET_OPTION_TYPES = [
     {
@@ -14,8 +15,8 @@ const WIDGET_OPTION_TYPES = [
         set: (w, v) => { w.variable = v , w.options.header = v}
     },
     {
-        displayName: "Variable",
-        datatype: "variable",
+        displayName: "LISA Variable",
+        datatype: "lisaVariable",
         supportedTypes: ["lisaW", "lisaScatter"],
         get: (w) => w.variable,
         set: (w, v) => { w.variable = v , w.options.header = v + " LISA"}
@@ -122,6 +123,22 @@ function WidgetSettings(props){
                     <select value={i.get(data)} onChange={(e) => {
                         modifyData(data, i.set, e.target.value);
                         setDoesWidgetNeedRefresh(true);
+                    }}>
+                        {
+                            variableOptions.map(v => (
+                                <option value={v} key={`variable-choice-${v}`}>{v}</option>
+                            ))
+                        }
+                    </select>
+                )
+                break;
+            }
+            case "lisaVariable": {
+                elem = (
+                        <select value={i.get(data)} onChange={(e) => {
+                        modifyData(data, i.set, e.target.value);
+                        setDoesWidgetNeedRefresh(true);
+                        updateLisaVariable(e.target.value, dispatch);
                     }}>
                         {
                             variableOptions.map(v => (

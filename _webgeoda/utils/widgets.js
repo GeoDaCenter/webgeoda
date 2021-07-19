@@ -73,7 +73,7 @@ const getTables = (variableSpec, state) => {
     return returnTables
 }
 
-const getColumnData = (variableSpec, state, returnKeys=false, returnDataset=false) => {
+export const getColumnData = (variableSpec, state, returnKeys=false, returnDataset=false) => {
     const {storedGeojson, currentData, cachedVariables} = state;
     if (!storedGeojson[currentData]) return []
     const {numeratorData, denominatorData, dataset} = getTables(variableSpec, state);
@@ -229,87 +229,6 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         };
     }
 
-    if (widgetType === "lisaScatter"){
-        //const isCluster = options.foregroundColor === "cluster";
-        let xData;
-        let yData;
-        let idKeys;
-        //let isLisa = false;
-        const lisaData = state.cachedLisaScatterplotData;
-        const variableSpec = find(
-            dataPresets.variables,
-            (o) => o.variable === variableName
-        );
-        if (!variableSpec){
-            console.warn("Scatter plot: could not find variableSpec for " + variableName[i]);
-            return null;
-        }
-        const {data, keys} = getColumnData(variableSpec, state, true);
-        if (!data){
-            console.warn("Scatter plot: could not find column data for " + variableName[i]);
-        return null;
-        }
-        idKeys = keys;
-        xData = data;
-        yData = data;
-        if(xData.length == 0){
-            console.warn("Scatter plot: xData length is 0");
-            return null;
-        }
-        const formattedData = [];
-        const statisticsFormattedData = [];
-        for(let i = 0; i < idKeys.length; i++){
-
-            // TODO: Find a smarter way to remove zero values
-            if (options.removeZeroValues === true && (xData[i] === 0 || yData[i] === 0)) continue;
-            formattedData.push({
-                x: xData[i],
-                y: yData[i],
-                id: idKeys[i]
-            });
-            if (options.showBestFitLine === true) {
-                statisticsFormattedData.push([
-                    xData[i], yData[i]
-                ])
-            }
-        }
-        let fittedLine = null;
-        let fittedLineEquation = null;
-            // TODO: Zero values influence k-means cluster algo, but need to be
-            // excluded in a way that preserves OG indices of data
-            const bestFitInfo = linearRegression(statisticsFormattedData);
-            const bestFit = linearRegressionLine(bestFitInfo);
-            fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
-                {x: min, y: bestFit(min(xData))},
-                {x: max, y: bestFit(max(yData))}
-            ];
-            fittedLineEquation = `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
-        // let clusterLabels = null;
-        // if(isCluster){
-        //     try {
-        //         clusterLabels = kMeansCluster(statisticsFormattedData, options.numClusters || 2).labels;
-        //     } catch(e) {
-        //         console.warn(e);
-        //         return;
-        //     }
-        // }
-        return {
-            data: formattedData,
-            fittedLine,
-            fittedLineEquation,
-            variableSpec,
-            variableToCache: [{
-                data: xData,
-                order: state.storedGeojson[state.currentData].order,
-                variable: variableName[0]
-            },{
-                data: yData,
-                order: state.storedGeojson[state.currentData].order,
-                variable: variableName[1]
-            }]
-        };
-    }
-
     if (widgetType === "scatter3d"){
         let xData;
         let yData;
@@ -405,7 +324,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         
         const variableSpec = find(
             dataPresets.variables,
-            (o) => o.variable === variableName
+            (o) => o.variable === state.lisaVariable
         )
         if (!variableSpec) return []
         const {data, keys} = getColumnData(variableSpec, state, true)
@@ -418,6 +337,67 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
             stdev: standardDeviation(data).toFixed(3),
             variable: variableSpec,
         }
+    }
+    if (widgetType === "lisaScatter"){
+
+        //const isCluster = options.foregroundColor === "cluster";
+        let xData;
+        let yData;
+        let idKeys;
+        //let isLisa = false;
+        const lisaData = state.cachedLisaScatterplotData;
+        const variableSpec = find(
+            dataPresets.variables,
+            (o) => o.variable === state.lisaVariable
+        );
+        if (!variableSpec){
+            console.warn("Scatter plot: could not find variableSpec for " + variableName[i]);
+            return null;
+        }
+        const {data, keys} = getColumnData(variableSpec, state, true);
+        if (!data){
+            console.warn("Scatter plot: could not find column data for " + variableName[i]);
+        return null;
+        }
+        idKeys = keys;
+        xData = data;
+        yData = data;
+        if(xData.length == 0){
+            console.warn("Scatter plot: xData length is 0");
+            return null;
+        }
+        const formattedData = [];
+        const statisticsFormattedData = [];
+        for(let i = 0; i < idKeys.length; i++){
+
+            // TODO: Find a smarter way to remove zero values
+            if (options.removeZeroValues === true && (xData[i] === 0 || yData[i] === 0)) continue;
+            formattedData.push({
+                x: xData[i],
+                y: yData[i],
+                id: idKeys[i]
+            });
+            if (options.showBestFitLine === true) {
+                statisticsFormattedData.push([
+                    xData[i], yData[i]
+                ])
+            }
+        }
+       
+
+        return {
+            data: formattedData,
+            variableSpec,
+            variableToCache: [{
+                data: xData,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName[0]
+            },{
+                data: yData,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName[1]
+            }]
+        };
     }
 }
 
@@ -437,6 +417,13 @@ export const getWidgetSpec = (widget, i) => {
         variable
     };
 };
+
+export const updateLisaVariable = async (newLisa, dispatch) => {
+    dispatch({
+        type: "SET_LISA_VARIABLE",
+        payload: newLisa
+    })
+}
 
 export const loadWidget = async (widgetConfig, widgetIndex, dispatch) => {
     const config = widgetConfig[widgetIndex];

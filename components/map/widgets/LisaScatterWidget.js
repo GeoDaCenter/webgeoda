@@ -23,7 +23,9 @@ function LisaScatterWidgetUnwrapped(props) {
     //const variableId = getVarId(currentData, props.data.variableSpec)
     const [getLisa, cacheLisa,] = useLisa();
     const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
-    const lisaData = getCachedLisa(props.data.variableSpec);
+    const lisaVariable = useSelector((state) => state.lisaVariable)
+    const lisaData = getCachedLisa({variable: lisaVariable});
+
 
     // console.log(allLisaData)
     // const prelimLisaData = allLisaData[props.data.variableSpec.variable]
@@ -42,13 +44,12 @@ function LisaScatterWidgetUnwrapped(props) {
     React.useEffect(async () => {
         if (lisaData == null) {
             const lisaData = await getLisa({
-                dataParams: props.data.variableSpec,
+                dataParams: {variable: lisaVariable},
                 getScatterPlot: true
             });
-            updateCachedLisa(props.data.variableSpec, lisaData);
+            updateCachedLisa({variable: lisaVariable}, lisaData);
         }
-    });
-
+    },[]);
 
 
     //const lisaData = allLisaData[props.data.variableSpec]
@@ -98,26 +99,46 @@ function LisaScatterWidgetUnwrapped(props) {
                     [x, y]
                 )
             }
-            //   let fittedLine = null;
-            //   let fittedLineEquation = null;
-            //   // TODO: Zero values influence k-means cluster algo, but need to be
-            //   // excluded in a way that preserves OG indices of data
-            //   const bestFitInfo = ss.linearRegression(statisticsFormattedData);
-            //   const bestFit = ss.linearRegressionLine(bestFitInfo);
-            // minX = ss.min(arrayXData)
-            // minY = ss.min(arrayYData)
-            //   fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
-            //       { x: minX, y: bestFit(minX) },
-            //       { x: minY, y: bestFit(minY) }
-            //   ];
-            //   fittedLineEquation = `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
+
+            //Axes lines
+            const minX = ss.min(arrayXData)
+            const minY = ss.min(arrayYData)
+            const maxX = ss.max(arrayXData)
+            const maxY = ss.max(arrayYData)
+
+            // dataProp.datasets.push({
+            //     type: "line",
+            //     label: false,
+            //     data: [{x:minX, y:0}, {x:maxX, y:0}],
+            //     borderColor: "black",
+            //   })
 
             //   dataProp.datasets.push({
             //     type: "line",
-            //     label: "Global Moran's " + bestFitInfo.m.toFixed(3),
-            //     data: fittedLine,
-            //     borderColor: "#000000"
-            //   });
+            //     label: false,
+            //     data: [{x:0, y:minY}, {x:0, y:maxY}],
+            //     borderColor: "black",
+            //   })
+
+              let fittedLine = null;
+              let fittedLineEquation = null;
+              // TODO: Zero values influence k-means cluster algo, but need to be
+              // excluded in a way that preserves OG indices of data
+              const bestFitInfo = ss.linearRegression(statisticsFormattedData);
+              const bestFit = ss.linearRegressionLine(bestFitInfo);
+              fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
+                  { x: minX-2, y: bestFit(minX-2) },
+                  { x: maxX+2, y: bestFit(maxX+2) }
+              ];
+              fittedLineEquation = `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
+
+              dataProp.datasets.push({
+                type: "line",
+                label: "Global Moran's: " + bestFitInfo.m.toFixed(3),
+                data: fittedLine,
+                borderColor: "purple",
+                borderWidth: 0.5,
+              });
         }
 
         return dataProp;
@@ -165,9 +186,7 @@ function LisaScatterWidgetUnwrapped(props) {
                 tooltip: {
                     callbacks: {
                         label: (tooltipItem) => { //data
-                            console.log(props.data.data)
                             const point = props.data.data[tooltipItem.dataIndex];
-                            console.log(point)
                             if (point != undefined) { return `${point.id}` } // TODO: point.y is null for LISA scatterplots
                             else { return "undefined" };
                         }

@@ -543,6 +543,9 @@ export default function reducer(state = INITIAL_STATE, action) {
       widgetConfig[action.payload.widgetIndex] = action.payload.newConfig;
       return {...state, widgetConfig};
     }
+    case "SET_LISA_VARIABLE": {
+      return {...state, lisaVariable: action.payload};
+    }
     case "FORMAT_WIDGET_DATA": {
       let cachedVariables = {...state.cachedVariables}
       const widgetData = {...state.widgetData};

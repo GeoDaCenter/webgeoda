@@ -9,6 +9,7 @@ import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
 import { standardize } from '@webgeoda/utils/stats';
 import { geoda } from '@webgeoda/utils/colors';
 import { GeodaContext } from '@webgeoda/contexts';
+import { getColumnData } from '@webgeoda/utils/widgets';
 
 function LisaWidget(props) {
     const geoda = useContext(GeodaContext)
@@ -17,24 +18,29 @@ function LisaWidget(props) {
     const storedGeojson = useSelector((state) => state.storedGeojson);
     const storedData = useSelector((state) => state.storedData)
     const currentData = useSelector((state) => state.currentData)
+    const lisaVariable = useSelector((state) => state.lisaVariable)
     const cachedVariables = useSelector((state) => state.cachedVariables[currentData])
     const [getLisa,] = useLisa();
     const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
 
 
-    const lisaData = getCachedLisa(props.data.variable);
+    const lisaData = getCachedLisa({variable: lisaVariable});
     React.useEffect(async () => {
       if(lisaData == null){
           const lisaData = await getLisa({
-          dataParams: props.data.variable,
+          dataParams: {variable: lisaVariable},
           getScatterPlot: true
       });
-      updateCachedLisa(props.data.variable, lisaData);
+      updateCachedLisa({variable: lisaVariable}, lisaData);
       }
     });
 
     const index = storedGeojson[currentData].order.findIndex((o) => o === currentHoverTarget.id)
 
+    let arrayData = [];
+    for (const num in cachedVariables[lisaVariable]){
+      arrayData.push(cachedVariables[lisaVariable][num])
+    }
 
     let cl, pval, numNeighbors, lisaVal, spatialLag;
     if (lisaData && index!=-1) {
@@ -52,8 +58,8 @@ function LisaWidget(props) {
     <div>
     <center>
     <br /><b>ID: </b> {currentHoverTarget.id}
-    <br /><b>Mean of all observations:</b> {props.data.mean}
-    <br /><b> {props.data.variable.variable}: </b> {cachedVariables[props.data.variable.variable][currentHoverTarget.id]}
+    <br /><b>Mean of all observations:</b> {ss.mean(arrayData).toFixed(3)}
+    <br /><b> {lisaVariable}: </b> {cachedVariables[lisaVariable][currentHoverTarget.id]}
     <br /><b> Spatial Lag: </b> {spatialLag}
       <br /><b>Cluster: </b> {cl}
       <br /><b>P-value: </b> {pval}
