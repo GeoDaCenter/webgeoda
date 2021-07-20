@@ -84,6 +84,7 @@ export const INITIAL_STATE = {
   },
   widgetConfig: dataPresets.widgets,
   widgetData: {},
+  showWidgetTray: true,
   widgetLocations: generateWidgetPresets(dataPresets.widgets),
   cachedLisaScatterplotData: {},
   isLoading: true,

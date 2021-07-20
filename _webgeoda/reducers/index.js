@@ -630,6 +630,12 @@ export default function reducer(state = INITIAL_STATE, action) {
         widgetIsDragging: action.payload
       }
     }
+    case "SET_SHOW_WIDGET_TRAY": {
+      return {
+        ...state,
+        showWidgetTray: action.payload
+      };
+    }
     case "CACHE_SCATTERPLOT_LISA": {
       const cachedLisaScatterplotData = {...state.cachedLisaScatterplotData};
       cachedLisaScatterplotData[action.payload.variableName] = action.payload.data;

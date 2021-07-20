@@ -6,12 +6,11 @@ import { useSelector } from "react-redux";
 
 
 export default function MapContainer(){
-    const widgetLocations = useSelector(state => state.widgetLocations);
     const widgetIsDragging = useSelector(state => state.widgetIsDragging);
-    const widgetsOnRight = widgetLocations.some(o => o.side === "right");
+    const showWidgetTray = useSelector(state => state.showWidgetTray);
     
     return (
-        <div className={`${styles.mapContainer} ${(widgetsOnRight || widgetIsDragging) && styles.mapContainerRightMargin}`}>
+        <div className={`${styles.mapContainer} ${(showWidgetTray || widgetIsDragging) && styles.mapContainerRightMargin}`}>
             <MainMap />
             <VariablePanel />
             <MapTooltip />

@@ -1,0 +1,232 @@
+$WIDGET_COLUMN_WIDTH: 400px;
+
+.widgetLayer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 50px;
+}
+
+.widgetsContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.widget {
+  width: $WIDGET_COLUMN_WIDTH;
+  min-height: 250px;
+  background-color: #FFFFFF;
+  padding: 0.75em;
+  margin-bottom: 15px;
+  border-radius: 0.25em;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  z-index: 1;
+  opacity: 1;
+  position: relative;
+  user-select: none;
+  border: #77777700 1px solid; /* Invisible border for transition */
+  transition: border-color 0.5s, opacity 0.5s;
+  &.filter {
+    border: #0099FF 2px solid !important;
+  }
+  .widgetContent {
+    height: 90%;
+    position: relative;
+  }
+  .widgetContent div {
+    height: 100%;
+  }
+  .widgetSettings {
+    display: none;
+    overflow-y: auto;
+    height: 100%;
+
+    .widgetSettingItem {
+      margin-bottom: 15px;
+    }
+  }
+  .widgetHeader {
+    height: 10%;
+    margin: 0;
+    font-size: 13px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .widgetSettingsHeader {
+    height: 10%;
+    margin: 0;
+    font-size: 13px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  &.showSettings {
+    animation: cardFlip 1s;
+    .widgetHeader, .settingsButton, .clearFilterButton, .widgetContent {
+      display: none;
+      animation: hideContentOnFlip 1s;
+    }
+    .widgetSettings {
+      display: block;
+      animation: hideContentOnFlip 1s;
+    }
+  }
+  &:hover {
+    .settingsButton {
+      opacity: 33%;
+    }
+  }
+}
+
+.widgetDropdownHandle {
+  z-index: 2;
+  background-color: #FFFFFF;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  text-align: center;
+  width: 135px;
+  cursor: pointer;
+  .caret {
+    margin: auto 0;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    transition: transform 0.5s, right 0.3s, left 0.3s;
+  }
+  #columnLeft & { // Left
+    position: sticky;
+    top: 0;
+    border-top-right-radius: 5em;
+    border-bottom-right-radius: 5em;
+    margin-bottom: 25px;
+    .caret {
+      right: 20px;
+    }
+  }
+  #widgetTray & { // Right
+    position: absolute;
+    left: -135px;
+    top: 150px;
+    border-top-left-radius: 5em;
+    border-bottom-left-radius: 5em;
+    p {
+      margin-left: 20px;
+    }
+    .caret {
+      left: 20px;
+    }
+  }
+  #widgetTray:has(#columnRight.hidden) & { // TODO: :has is experimental
+    left: unset;
+    right: 135px;
+  }
+}
+#widgetTray {
+  position: relative;
+  height: 100%;
+}
+
+.widgetColumn {
+  display: flex;
+  width: $WIDGET_COLUMN_WIDTH; /* Ensure there is always an area to drop */
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: auto;
+
+  &#columnLeft {
+    margin-top: 175px;
+    width: 150px;
+    transition: width 0.5s;
+    padding-right: 15px; /* so shadows don't get cut off */
+
+    .widget {
+      margin-left: 10px;
+      &:not(.dragging){
+        opacity: 0;
+      }
+    }
+
+    &.active, &.dropping {
+      width: 425px;
+      .widget {
+        opacity: 1;
+      }
+      .widgetDropdownHandle .caret {
+        transform: rotate(90deg);
+      }
+    }
+
+    &:not(.active) {
+      .widgetDropdownHandle p {
+        margin-right: 20px;
+      }
+      &:hover {
+        .widgetDropdownHandle .caret {
+          right: 10px;
+        }
+      }
+    }
+  }
+
+  &#columnRight {
+    margin: 10px 0;
+    padding: 0 10px;
+    height: 100%;
+    background:white;
+    overflow-x: hidden;
+    box-sizing: content-box;
+    .widget:not(.dragging) {
+      border: #777777 1px solid;
+    }
+    &.hidden {
+      .widget {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+@keyframes cardFlip {
+  0% {
+    transform: rotate3d(0, 1, 0, 0deg);
+  }
+  100% {
+    transform: rotate3d(0, 1, 0, 180deg);
+  }
+}
+@keyframes hideContentOnFlip {
+  from {visibility: hidden;}
+  to {visibility: hidden;}
+}
+
+.floatingButton {
+  position: absolute;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-size: 15px;
+  color: #000000;
+  opacity: 0%;
+  transition: opacity .2s, transform .2s, color .2s;
+  &:hover {
+    opacity: 100% !important;
+  }
+  &.settingsButton {
+    right: 7px;
+    top: 7px;
+    &:hover {
+      transform: rotate(60deg);
+    }
+  }
+  &.clearFilterButton {
+    left: 7px;
+    top: 7px;
+    color: #0099FF;
+    opacity: 100% !important;
+  }
+}
