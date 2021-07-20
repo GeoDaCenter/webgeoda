@@ -81,15 +81,17 @@ export default function WidgetLayer(){
                 <div className={styles.widgetDropdownHandle} onClick={() => {
                   setColumnLeftActive(!columnLeftActive);
                 }}>
-                  <p>Pinned <FontAwesomeIcon icon={faAngleRight} className={styles.caret} /></p>
+                  <FontAwesomeIcon icon={faAngleRight} className={styles.caret} />
+                  <p>Pinned</p>
                 </div>
                 {widgetElementsLeft}
               </div>
             )}
           </Droppable>
           <div id={styles.widgetTray}>
-            <div className={styles.widgetDropdownHandle} onClick={handleWidgetTrayClick}>
-              <p><FontAwesomeIcon icon={faAngleLeft} className={styles.caret} /> Widgets</p>
+            <div className={`${styles.widgetDropdownHandle} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden}`} onClick={handleWidgetTrayClick}>
+              <FontAwesomeIcon icon={faAngleRight} className={styles.caret} />
+              <p>Widgets</p>
             </div>
             <Droppable droppableId="widgets-right">
               {(provided, snapshot) => (
