@@ -47,7 +47,7 @@ export default function MainMap() {
 
   const deckRef = useRef();
   const mapRef = useRef();
-  
+
   useEffect(() => {
     if (initialViewState.longitude)
       setViewport({

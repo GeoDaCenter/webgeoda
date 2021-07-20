@@ -347,7 +347,7 @@ export const fileLoader = {
  *  data (object, keyed to ID column with tabular data)
  * }
  */
-export const handleLoadData = async (info, dateList) => {
+export const handleLoadData = async (info) => {
   const { file, type, join, dateCol, valueCol, accumulate, schema } = info;
   const fetchUrl =
     file.slice(0, 4) === "http" ? file : `${window.location.origin}/${file.slice(-3)}/${file}`;

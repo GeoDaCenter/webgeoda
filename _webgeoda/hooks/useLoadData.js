@@ -193,7 +193,7 @@ export default function useLoadData(dateLists = {}) {
       : parseColumnData({
         numeratorData: tempParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
         denominatorData: tempParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
-        dataParams,
+        dataParams: tempParams,
         fixedOrder: geojsonOrder
     });
 
@@ -258,7 +258,6 @@ export default function useLoadData(dateLists = {}) {
       (o) => o.geodata === datasetToLoad
     )
     const tablesToFetch = currentDataPreset.tables;
-
     const tableNames = Object.keys(tablesToFetch);
     const tableDetails = Object.values(tablesToFetch);
     const tablePromises = tableDetails.map((table) =>

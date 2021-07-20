@@ -15,12 +15,6 @@ import {
 } from '@webgeoda/utils/widgets';
 
 import { 
-  findDatasetWithTable,
-  generateReport, 
-  parseTooltipData
-} from "../utils/summarize";
-
-import { 
   getCartogramCenter, 
   generateMapData 
 } from "../utils/map";
@@ -615,12 +609,21 @@ export default function reducer(state = INITIAL_STATE, action) {
             }
         }
       }
-      
       return {
         ...state, 
         widgetData,
         cachedVariables
       };
+    }
+    case "CACHE_TIME_SERIES": {
+      const cachedTimeSeries = {
+        ...state.cachedTimeSeries,
+        [action.payload.id]:action.payload.data
+      }
+      return {
+        ...state,
+        cachedTimeSeries
+      }
     }
     default:
       return state;
