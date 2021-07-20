@@ -58,7 +58,7 @@ const variables = [
     variable: "Covid April",
     numerator: "covid_data",
     nIndex: null,
-    nRange: null,
+    nRange: 7,
     binning: "naturalBreaks",
     numberOfBins: 5,
     colorScale: colors.colorbrewer.YlOrBr,

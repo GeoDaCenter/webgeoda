@@ -18,6 +18,7 @@ button {
   --selected-color: #1816cc77;
   --selected-color-light: #acaccc;
   --medium-gray: rgb(156, 156, 156);
+  --dark-gray: rgb(40, 40, 40);
   --orange: #e27213;
   --green: #06cd57;
   --sky: #0bbedb;

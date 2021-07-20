@@ -1,35 +1,39 @@
-// import { useSelector, useDispatch } from 'react-redux';
-// import { useState, useEffect} from 'react';
-// import { incrementDate } from '../actions';
+import { useState, useEffect} from 'react';
 
-// export default function useTickUpdate(){
-//     const nIndex = useSelector(state => state.dataParams.nIndex);
-//     const mapType = useSelector(state => state.mapParams.mapType);
-//     const [isTicking, setIsTicking] = useState(false);
-//     const [tickTimer, setTickTimer] = useState(100);
-//     const [tickTimeout, setTickTimeout] = useState()
-//     const [resetTimeout, setResetTimeout] = useState()
+export default function useTickUpdate({
+    tickFunction,
+    updateTrigger,
+    resetTriggers
+}){
+    const [isTicking, setIsTicking] = useState(false);
+    const [tickTimer, setTickTimer] = useState(100);
+    const [tickTimeout, setTickTimeout] = useState()
+    const [resetTimeout, setResetTimeout] = useState()
+    
+    useEffect(() => {
+        if (isTicking) {
+            clearTimeout(tickTimeout)
+            setTickTimeout(setTimeout(tickFunction, 1))
+        }
+    },[isTicking])
 
-//     const dispatch = useDispatch();
+    useEffect(() => {
+        if (isTicking) {
+            clearTimeout(tickTimeout)
+            setTickTimeout(setTimeout(tickFunction, tickTimer))
+            clearTimeout(resetTimeout)
+            setResetTimeout(setTimeout(() => setIsTicking(false), 1500))
+        } else if (isTicking) {
+            clearTimeout(resetTimeout)
+            setResetTimeout(setTimeout(() => setIsTicking(false), 1500))
+        }
+    },[updateTrigger])
 
-//     useEffect(() => {
-//         if (isTicking) dispatch(incrementDate(1))
-//     },[isTicking])
+    useEffect(() => {
+        clearTimeout(resetTimeout)
+        clearTimeout(tickTimeout)
+        setIsTicking(false)
+    }, resetTriggers)
 
-//     useEffect(() => {
-//         if (isTicking) {
-//             clearTimeout(tickTimeout)
-//             setTickTimeout(setTimeout(() => dispatch(incrementDate(1)), tickTimer))
-//             clearTimeout(resetTimeout)
-//             setResetTimeout(setTimeout(() => setIsTicking(false), 1500))
-//         }
-//     },[nIndex])
-
-//     useEffect(() => {
-//         clearTimeout(resetTimeout)
-//         clearTimeout(tickTimeout)
-//         setIsTicking(false)
-//     }, [mapType])
-
-//     return [isTicking, setIsTicking, tickTimer, setTickTimer]
-// }
+    return [isTicking, setIsTicking, tickTimer, setTickTimer]
+}
