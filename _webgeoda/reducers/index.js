@@ -328,6 +328,21 @@ export default function reducer(state = INITIAL_STATE, action) {
           : state.sidebarData,
       };
     }
+    case "CHANGE_NINDEX": {
+      const dataParams = {
+        ...state.dataParams,
+        nIndex: action.payload,
+      };
+
+      return {
+        ...state,
+        dataParams,
+        mapData: generateMapData({
+          ...state,
+          dataParams
+        })
+      }
+    }
     case "SET_VARIABLE_PARAMS_AND_DATASET": {
       const dataParams = {
         ...state.dataParams,

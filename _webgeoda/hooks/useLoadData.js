@@ -118,9 +118,7 @@ export default function useLoadData(dateLists = {}) {
       dataPresets.data,
       (o) => o.geodata === currentData
     )
-    alert(`${window.location.origin}/geojson/${currentDataPreset.geodata}`)
     const secondMapId = await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentDataPreset.geodata}`) 
-    alert(secondMapId)
     setShouldRetryLoadGeoJSON(false)
   }
 
@@ -179,29 +177,35 @@ export default function useLoadData(dateLists = {}) {
 
     if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
     
-    const binData = dataParams.categorical 
+    const tempParams = {
+      ...dataParams,
+      [dataParams.nIndex === null && 'nIndex']: numeratorData.dateIndices.length-1
+    }
+    console.log(tempParams)
+
+    const binData = tempParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
-        dataParams)
+        tempParams)
       : parseColumnData({
-        numeratorData: dataParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
-        denominatorData: dataParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
-        dataParams,
+        numeratorData: tempParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
+        denominatorData: tempParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
+        dataParams: tempParams,
         geojsonOrder
     });
 
-    const bins = dataParams.lisa 
+    const bins = tempParams.lisa 
       ? lisaBins
       : await getBins({
         geoda,
-        dataParams,
+        dataParams: tempParams,
         binData
       })    
       
-    const colorScale = dataParams.lisa 
+    const colorScale = tempParams.lisa 
       ? lisaColors
       : getColorScale({
-        dataParams,
+        dataParams: tempParams,
         bins
       })
     dispatch({
@@ -230,7 +234,7 @@ export default function useLoadData(dateLists = {}) {
           bins,
           colorScale: colorScale || colors.colorbrewer.YlGnBu[5],
         },
-        variableParams: dataParams,
+        variableParams: tempParams,
         initialViewState,
         id: currentDataPreset.id,
       },
