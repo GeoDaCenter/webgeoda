@@ -44,6 +44,7 @@
     "react-map-gl": "^6.1.15",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
+    "sass": "^1.35.2",
     "simple-statistics": "^7.7.0"
   },
   "devDependencies": {

@@ -425,6 +425,13 @@ export const updateLisaVariable = async (newLisa, dispatch) => {
     })
 }
 
+export const updateHoverId = async (newId, dispatch) => {
+    dispatch({
+        type: "SET_HOVER_ID",
+        payload: newId
+    })
+}
+
 export const loadWidget = async (widgetConfig, widgetIndex, dispatch) => {
     const config = widgetConfig[widgetIndex];
     const widgetSpec = getWidgetSpec(config, widgetIndex);

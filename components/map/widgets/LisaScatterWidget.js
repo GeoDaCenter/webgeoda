@@ -187,7 +187,13 @@ function LisaScatterWidgetUnwrapped(props) {
                     callbacks: {
                         label: (tooltipItem) => { //data
                             const point = props.data.data[tooltipItem.dataIndex];
-                            if (point != undefined) { return `${point.id}` } // TODO: point.y is null for LISA scatterplots
+                            if (point != undefined) { 
+                                dispatch({
+                                    type: "SET_HOVER_ID",
+                                    payload: storedGeojson[currentData].order[point.id]
+                                })
+                                return `${point.id}` 
+                            } // TODO: point.y is null for LISA scatterplots
                             else { return "undefined" };
                         }
                     }

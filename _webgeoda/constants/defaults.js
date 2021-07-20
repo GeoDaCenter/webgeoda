@@ -88,5 +88,6 @@ export const INITIAL_STATE = {
   widgetLocations: generateWidgetPresets(dataPresets.widgets),
   cachedLisaScatterplotData: {},
   isLoading: true,
-  lisaVariable: "Total Population" // TODO: should be blank
+  lisaVariable: "Total Population", // TODO: should be blank
+  currentHoverId: 0,
 };

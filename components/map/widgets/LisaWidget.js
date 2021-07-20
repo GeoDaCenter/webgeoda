@@ -14,6 +14,7 @@ import { getColumnData } from '@webgeoda/utils/widgets';
 function LisaWidget(props) {
     const geoda = useContext(GeodaContext)
     const currentHoverTarget = useSelector((state) => state.currentHoverTarget);
+    const currentHoverId = useSelector ((state) => state.currentHoverId)
     const dataParams = useSelector((state) => state.dataParams);
     const storedGeojson = useSelector((state) => state.storedGeojson);
     const storedData = useSelector((state) => state.storedData)
@@ -34,7 +35,7 @@ function LisaWidget(props) {
       }
     });
 
-    const index = storedGeojson[currentData].order.findIndex((o) => o === currentHoverTarget.id)
+    const index = storedGeojson[currentData].order.findIndex((o) => o === currentHoverId)
 
     let arrayData = [];
     for (const num in cachedVariables[lisaVariable]){
@@ -56,12 +57,12 @@ function LisaWidget(props) {
     let avg = null;
     let lisaVal = null;
     arrayData.length==0 ? avg = 'N/A' : avg = ss.mean(arrayData).toFixed(3)
-    cachedVariables=='undefined' ? lisaVal = 'N/A' : lisaVal = cachedVariables[lisaVariable][currentHoverTarget.id]
+    cachedVariables=='undefined' ? lisaVal = 'N/A' : lisaVal = cachedVariables[lisaVariable][currentHoverId]
 
     return (
     <div>
     <center>
-    <br /><b>ID: </b> {currentHoverTarget.id}
+    <br /><b>ID: </b> {currentHoverId}
     <br /><b>Mean of all observations:</b> {avg}
     <br /><b> {lisaVariable}: </b> {lisaVal}
     <br /><b> Spatial Lag: </b> {spatialLag}

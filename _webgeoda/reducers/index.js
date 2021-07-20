@@ -538,6 +538,11 @@ export default function reducer(state = INITIAL_STATE, action) {
         currentHoverId: action.payload.layer?.includes("tiles") ? null : +action.payload.id
       };
     }
+
+    case "SET_HOVER_ID": {
+      return {...state, currentHoverId: action.payload};
+    }
+
     case "SET_WIDGET_CONFIG": {
       const widgetConfig = [...state.widgetConfig];
       widgetConfig[action.payload.widgetIndex] = action.payload.newConfig;
