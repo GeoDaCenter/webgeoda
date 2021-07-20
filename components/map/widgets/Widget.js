@@ -41,6 +41,7 @@ function Widget(props) {
   const dispatch = useDispatch();
   const data = useSelector(state => state.widgetData[props.id]);
   const mapFilters = useSelector(state => state.mapFilters);
+  const lisaVariable = useSelector(state => state.lisaVariable)
   const [showSettings, setShowSettings] = React.useState(false);
   if(data == null){
     return (
@@ -50,6 +51,13 @@ function Widget(props) {
 
   const activeFilters = mapFilters.filter(i => i.source == props.id);
   const hasActiveFilter = activeFilters.length > 0;
+  let header = '';
+  if (props.type=='lisaW' || props.type=='lisaScatter'){
+    header = lisaVariable + " LISA"
+  }
+  else {
+    header = props.options.header
+  }
 
   return (
     <Draggable draggableId={props.id.toString()} index={props.index}>
@@ -81,13 +89,13 @@ function Widget(props) {
             ) : null
           }
           {
-            <h3 className={styles.widgetHeader} {...provided.dragHandleProps}>
+                  <h3 className={styles.widgetHeader} {...provided.dragHandleProps}>
               {
-                props.options.header == null ? 
+                header == null ? 
                   <FontAwesomeIcon icon={faGripLines} style={{color: "#00000055"}} /> :
-                  props.options.header
-              }
-            </h3>
+                  header
+                }
+                </h3>
           }
           <div className={styles.widgetContent}>
             <ParentWidget 

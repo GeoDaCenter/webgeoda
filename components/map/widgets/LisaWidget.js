@@ -23,7 +23,6 @@ function LisaWidget(props) {
     const [getLisa,] = useLisa();
     const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
 
-
     const lisaData = getCachedLisa({variable: lisaVariable});
     React.useEffect(async () => {
       if(lisaData == null){
@@ -42,24 +41,29 @@ function LisaWidget(props) {
       arrayData.push(cachedVariables[lisaVariable][num])
     }
 
-    let cl, pval, numNeighbors, lisaVal, spatialLag;
+    let cl, pval, numNeighbors, spatialLag;
     if (lisaData && index!=-1) {
         cl = lisaData.lisaResults.labels[lisaData.lisaResults.clusters[index]]
         pval = lisaData.lisaResults.pvalues[index].toFixed(3)
         numNeighbors = lisaData.lisaResults.neighbors[index]
-        lisaVal = lisaData.lisaResults.lisaValues[index]
+        //lisaVal = lisaData.lisaResults.lisaValues[index]
         spatialLag = lisaData.scatterPlotData[index].y.toFixed(3)
 
     }
     else {cl='Undefined'}
 
 
+    let avg = null;
+    let lisaVal = null;
+    arrayData.length==0 ? avg = 'N/A' : avg = ss.mean(arrayData).toFixed(3)
+    cachedVariables=='undefined' ? lisaVal = 'N/A' : lisaVal = cachedVariables[lisaVariable][currentHoverTarget.id]
+
     return (
     <div>
     <center>
     <br /><b>ID: </b> {currentHoverTarget.id}
-    <br /><b>Mean of all observations:</b> {ss.mean(arrayData).toFixed(3)}
-    <br /><b> {lisaVariable}: </b> {cachedVariables[lisaVariable][currentHoverTarget.id]}
+    <br /><b>Mean of all observations:</b> {avg}
+    <br /><b> {lisaVariable}: </b> {lisaVal}
     <br /><b> Spatial Lag: </b> {spatialLag}
       <br /><b>Cluster: </b> {cl}
       <br /><b>P-value: </b> {pval}

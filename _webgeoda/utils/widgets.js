@@ -414,7 +414,7 @@ export const getWidgetSpec = (widget, i) => {
         id: i,
         type: widget.type,
         options: widget.options,
-        variable
+        variable,
     };
 };
 

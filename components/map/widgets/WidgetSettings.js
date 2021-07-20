@@ -19,7 +19,8 @@ const WIDGET_OPTION_TYPES = [
         datatype: "lisaVariable",
         supportedTypes: ["lisaW", "lisaScatter"],
         get: (w) => w.variable,
-        set: (w, v) => { w.variable = v , w.options.header = v + " LISA"}
+        set: (w, v) => { w.variable = v , w.options.header = v + " LISA"},
+        //setHeader: (w, v) => {w.options.header = v + " LISA"}
     },
     {
         displayName: "X Variable",
@@ -89,6 +90,7 @@ const WIDGET_OPTION_TYPES = [
 function WidgetSettings(props){
     const dispatch = useDispatch();
     const variableConfig = useSelector(state => state.dataPresets.variables);
+    const lisaVariable = useSelector(state => state.lisaVariable)
     const variableOptions = variableConfig.filter(config => config.categorical !== true).map(config => config.variable);
 
     const [data, setData] = React.useState(props.config);
@@ -115,6 +117,12 @@ function WidgetSettings(props){
         setData(newData);
     }
 
+    // const modifyHeader = (data, mutation, value) => {
+    //     const newData = {...data}; // TODO: This only does a shallow clone
+    //     mutation(newData, value);
+    //     setData(newData);
+    // }
+
     const elems = WIDGET_OPTION_TYPES.filter(i => i.supportedTypes.includes(props.config.type)).map((i, idx) => {
         let elem = null;
         switch(i.datatype){
@@ -135,10 +143,11 @@ function WidgetSettings(props){
             }
             case "lisaVariable": {
                 elem = (
-                        <select value={i.get(data)} onChange={(e) => {
+                        <select value={lisaVariable} onChange={(e) => {
                         modifyData(data, i.set, e.target.value);
                         setDoesWidgetNeedRefresh(true);
                         updateLisaVariable(e.target.value, dispatch);
+                        //modifyHeader(data, i.setHeader, lisaVariable);
                     }}>
                         {
                             variableOptions.map(v => (
