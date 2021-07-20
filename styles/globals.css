@@ -83,3 +83,11 @@ div [data-reach-menu-item][data-selected] {
 div#view-default-view {
   z-index:5;
 }
+
+.hideScrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hideScrollbar::-webkit-scrollbar {
+  display: none;
+}

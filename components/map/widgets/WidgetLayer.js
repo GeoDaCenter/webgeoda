@@ -4,7 +4,7 @@ import styles from './Widgets.module.scss';
 import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleLeft, faAngleRight, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 
 const mapWidgets = ({widgets, widgetLocations, side}) => widgets
   .map((elem, index) => ({elem, index}))
@@ -29,8 +29,9 @@ export default function WidgetLayer(){
     return renderWidget(widget, trueIndex, widgetLocations[trueIndex].index);
   });
 
-  const widgetElementsLeft = mapWidgets({widgets, widgetLocations, side:"left"})
-  const widgetElementsRight = mapWidgets({widgets, widgetLocations, side:"right"})
+  const widgetElementsLeft = mapWidgets({widgets, widgetLocations, side: "pinned"});
+  const widgetElementsRight = mapWidgets({widgets, widgetLocations, side: "tray"});
+  const widgetElementsHidden = mapWidgets({widgets, widgetLocations, side: "hidden"});
 
   const handleDragStart = () => dispatch({type:'SET_WIDGET_IS_DRAGGING', payload: true})
 
@@ -47,8 +48,7 @@ export default function WidgetLayer(){
 
     newWidgetLocations[widgetIndex].side = 
       result.destination.droppableId == "widgets-left"
-      ? "left"
-      : "right"
+      ? "pinned" : (result.destination.droppableId == "widgets-right" ? "tray" : "hidden");
     
     for(let i = 0; i < newWidgetLocations.length; i++) {
       const widget = newWidgetLocations[i];
@@ -93,13 +93,23 @@ export default function WidgetLayer(){
               <FontAwesomeIcon icon={faAngleRight} className={styles.caret} />
               <p>Widgets</p>
             </div>
-            <Droppable droppableId="widgets-right">
-              {(provided, snapshot) => (
-                <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden}`} id={styles.columnRight}>
-                  {widgetElementsRight}
-                </div>
-              )}
-            </Droppable>
+            <div id={styles.widgetTrayContent} className={"hideScrollbar"}>
+              <Droppable droppableId="widgets-right">
+                {(provided, snapshot) => (
+                  <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden}`} id={styles.columnRight}>
+                    {widgetElementsRight}
+                  </div>
+                )}
+              </Droppable>
+              <Droppable droppableId="widgets-hidden">
+                {(provided, snapshot) => (
+                  <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden} ${widgetIsDragging ? styles.widgetIsDragging : ""}`} id={styles.columnHidden}>
+                    <p id={styles.hidingMenuTitle}>Hidden <FontAwesomeIcon icon={faAngleUp} className={styles.caret} /></p>
+                    {widgetElementsHidden}
+                  </div>
+                )}
+              </Droppable>
+            </div>
           </div>
         </div>
       </DragDropContext>

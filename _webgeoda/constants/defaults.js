@@ -4,13 +4,12 @@ const generateWidgetPresets = (widgetConfig) => {
   const defaultWidgetLocations = [];
   let leftIndex = 0;
   let rightIndex = 0;
+  let hiddenIndex = 0;
   for(const i of widgetConfig){
     defaultWidgetLocations.push({
-      side: i.hidden ? "left" : "right",
-      index: i.hidden ? leftIndex : rightIndex
+      side: i.display,
+      index: i.display === "pinned" ? leftIndex++ : (i.display === "tray" ? rightIndex++ : hiddenIndex++)
     });
-    if (i.hidden) { leftIndex++; }
-    else { rightIndex++; }
   }
   return defaultWidgetLocations
 }
