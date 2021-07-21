@@ -10,15 +10,14 @@ import { useSetViewport } from '@webgeoda/contexts';
 export default function StoryOverlay(){
     const dispatch = useDispatch();
     const dataPresets = useSelector((state) => state.dataPresets);
-    const currentData = useSelector((state) => state.currentData);
+    // const currentData = useSelector((state) => state.currentData);
     const setViewport = useSetViewport();
 
     const handleStep = (step) => {
-        console.log(step)
-        if (step.hasOwnProperty('map')){
-            if (step.map.hasOwnProperty('variable') && step.map.hasOwnProperty('dataset')){
+        if ('map' in step){
+            if ('variable' in step.map && 'dataset' in step.map){
                 // todo
-            } else if (step.map.hasOwnProperty('variable')) {
+            } else if ('variable' in step.map) {
                 dispatch({
                     type:'CHANGE_VARIABLE',
                     payload:step.map.variable
@@ -29,7 +28,7 @@ export default function StoryOverlay(){
                     payload:step.map.dataset
                 })
             }
-            if (step.map.hasOwnProperty('bounds') || step.map.hasOwnProperty('viewState')){
+            if ('bounds' in step.map || 'viewState' in step.map){
                 let boundsView = fitBounds({
                     width: window.innerWidth,
                     height: window.innerHeight,
@@ -66,7 +65,7 @@ export default function StoryOverlay(){
     },[])
 
     return <div className={styles.storyContainer}>
-        {dataPresets.story.map(step => <section className={`${step.layout} step`}>
+        {dataPresets.story.map((step, idx) => <section className={`${styles[`.${step.layout}`]} step`} key={'step'+idx}>
             <div className={styles.inner}>
                 {step.text}
             </div>
