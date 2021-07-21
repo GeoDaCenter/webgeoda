@@ -173,8 +173,7 @@ function LisaScatterWidgetUnwrapped(props) {
             },
             onClick: (e, items) => {
                 if (items.length == 0) return;
-                const point = props.data.data[items[0].index];
-                panToGeoid(point.id);
+                panToGeoid(items[0].element.$context.raw.id);
             },
             onHover: (e, items) => {
                 if (items.length == 0) {

@@ -94,8 +94,7 @@ function ScatterWidgetUnwrapped(props) {
       },
       onClick: (e, items) => {
         if(items.length == 0) return;
-        const point = props.data.data[items[0].index];
-        panToGeoid(point.id);
+        panToGeoid(items[0].element.$context.raw.id);
       },
       plugins: {
         legend: {
@@ -107,7 +106,7 @@ function ScatterWidgetUnwrapped(props) {
         tooltip: {
           callbacks: {
             label: (tooltipItem) => { //data
-              const point = props.data.data[tooltipItem.dataIndex];
+              const point = tooltipItem.raw;
               return `${point.id} (${point.x}, ${point.y})`; // TODO: point.y is null for LISA scatterplots
             }
           }
