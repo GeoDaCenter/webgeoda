@@ -110,7 +110,7 @@ const story = [
     layout: 'centered',
     map: {
       variable: 'Total Population',
-      dataset: 'tx.geojson',
+      // dataset: 'tx.geojson',
       bounds: [[-102.411182,27.642991],[-94.621875,31.154848]],
       viewState: {}
     }

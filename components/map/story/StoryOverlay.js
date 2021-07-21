@@ -54,11 +54,10 @@ export default function StoryOverlay(){
             step: ".step",
         })
         .onStepEnter((response) => {
-            console.log(dataPresets.story[response.index])
             handleStep(dataPresets.story[response.index])
         })
         .onStepExit((response) => {
-            console.log(response)
+            // console.log(response)
         })
         // setup resize event
         window.addEventListener("resize", scroller.resize);
