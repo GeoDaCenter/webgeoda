@@ -89,7 +89,7 @@ export const getColumnData = (variableSpec, state, returnKeys=false, returnDatas
     const ret = {
         data: columnData
     };
-    if (returnKeys) ret.keys = Object.keys(storedGeojson[currentData].order);
+    if (returnKeys) ret.keys = Object.values(storedGeojson[currentData].order);
     if(returnDataset) ret.dataset = dataset;
     return ret;
 }

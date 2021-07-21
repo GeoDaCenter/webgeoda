@@ -161,7 +161,7 @@ function LisaScatterWidgetUnwrapped(props) {
         //         })
         //     }
         //}
-
+        
         return {
             events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
             maintainAspectRatio: false,
@@ -176,6 +176,19 @@ function LisaScatterWidgetUnwrapped(props) {
                 const point = props.data.data[items[0].index];
                 panToGeoid(point.id);
             },
+            onHover: (e, items) => {
+                if (items.length == 0) {
+                    dispatch({
+                        type: "SET_HOVER_ID",
+                        payload: 0
+                    });
+                    return;
+                };
+                dispatch({
+                    type: "SET_HOVER_ID",
+                    payload: items[0].element.$context.raw.id
+                })
+            },
             plugins: {
                 legend: {
                     display: true,
@@ -185,15 +198,11 @@ function LisaScatterWidgetUnwrapped(props) {
                 },
                 tooltip: {
                     callbacks: {
-                        label: (tooltipItem) => { //data
-                            const point = props.data.data[tooltipItem.dataIndex];
+                        label: (tooltipItem) => { 
+                            const point = tooltipItem.raw.id;
                             if (point != undefined) { 
-                                dispatch({
-                                    type: "SET_HOVER_ID",
-                                    payload: storedGeojson[currentData].order[point.id]
-                                })
-                                return `${point.id}` 
-                            } // TODO: point.y is null for LISA scatterplots
+                                return `${tooltipItem.raw.id}` 
+                            }
                             else { return "undefined" };
                         }
                     }
