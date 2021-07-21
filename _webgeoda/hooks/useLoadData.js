@@ -251,7 +251,7 @@ export default function useLoadData(dateLists = {}) {
     });
 
     loadTables(dataPresets, datasetToLoad, dateLists, mapId);
-    // loadWidgets(dataPresets);
+    loadWidgets(dataPresets);
   };
 
   const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
