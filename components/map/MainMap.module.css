@@ -22,6 +22,13 @@
   height: calc(100vh - 50px);
   overflow:hidden;
 }
+.storyMapContainer {
+  pointer-events: none;
+  user-select: none;
+  position: fixed;
+  top: 50px;
+  z-index:0; 
+}
 
 .footer {
   width: 100%;

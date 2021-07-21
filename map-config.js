@@ -102,11 +102,58 @@ const mapModes = {
 //   mapboxStyle: 'mapbox://styles/dhalpern/ckpkalk6o2me517kvlgz1eo7r',
 //   underLayerId: 'hillshade copy'
 // }
-
+const story = [
+  {
+    text: <>
+      <h1>The Story of Texas</h1>
+    </>,
+    layout: 'centered',
+    map: {
+      variable: 'Total Population',
+      dataset: 'tx.geojson',
+      bounds: [[-102.411182,27.642991],[-94.621875,31.154848]],
+      viewState: {}
+    }
+  },
+  {
+    text: <>
+      <p>Test</p>
+    </>,
+    layout: 'full-width',
+    map: {
+      variable: 'Population Density',
+      bounds: [[-106.956325,28.828734],[-91.377711,35.642510]],
+      viewState: {}
+    }
+  },
+  {
+    text: <>
+      <p>Test</p>
+    </>,
+    layout: 'full-width',
+    map: {
+      variable: 'Count No Internet Access',
+      bounds: [[-114.558821,23.893921],[-83.401594,37.690816]],
+      viewState: {}
+    }
+  },
+  {
+    text: <>
+      <p>Test</p>
+    </>,
+    layout: 'full-width',
+    map: {
+      variable: 'Hotspot: Pct No Internet',
+      bounds: [[-103.744787,34.198998],[-99.850134,35.849796]],
+      viewState: {}
+    }
+  },
+]
 // 🦺 exports below -- you can safely ignore! 🦺 //
 export const dataPresets = {
   data,
   variables,
   mapModes,
+  story
   // style
 };

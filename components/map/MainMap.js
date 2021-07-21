@@ -19,7 +19,7 @@ import useUpdateMap from "@webgeoda/hooks/useUpdateMap";
 import Legend from "./Legend";
 import MapControls from "./MapControls";
 
-export default function MainMap() {
+export default function MainMap(props) {
   const initialViewState = useSelector((state) => state.initialViewState);
   const dataParams = useSelector((state) => state.dataParams);
   const mapParams = useSelector((state) => state.mapParams);
@@ -145,13 +145,13 @@ export default function MainMap() {
           getLineColor: [mapData.params, currentHoverId]
         },
         transitions: {
-          getFillColor: dataParams.nIndex === undefined ? 250 : 0
+          getFillColor: props.storyMap ? 1000 : 0
         }
       })];
 
     // h
   return (
-    <div className={styles.mapContainer}>
+    <div className={`${styles.mapContainer} ${props.storyMap && styles.storyMapContainer}`}>
       
       {isLoading && <div className={styles.preLoader}><Loader globe={true} /></div>}
       <DeckGL
@@ -184,9 +184,9 @@ export default function MainMap() {
         variableName={dataParams.variable}
         ordinal={dataParams.categorical||dataParams.lisa}
       />
-      <MapControls
+      {!props.storyMap && <MapControls
         deck={deckRef}
-      />
+      />}
     </div>
   );
 }
