@@ -31,13 +31,12 @@
     "@visx/scale": "^1.11.1",
     "axios": "^0.21.1",
     "chart.js": "^3.3.2",
-    "chartjs-plugin-boxselect": "github:yummypasta/chartjs-plugin-boxselect",
+    "chartjs-plugin-boxselect": "https://github.com/yummypasta/chartjs-plugin-boxselect.git",
     "colorbrewer": "^1.5.1",
     "comlink": "^4.3.1",
     "d3-array": "^2.12.1",
     "dayjs": "^1.10.6",
     "next": "^11.0.0",
-    "node-sass": "^4.14.1",
     "react": "17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-chartjs-2": "^3.0.3",
@@ -45,6 +44,7 @@
     "react-map-gl": "^6.1.15",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
+    "sass": "^1.35.2",
     "simple-statistics": "^7.7.0"
   },
   "devDependencies": {

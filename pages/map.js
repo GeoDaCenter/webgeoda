@@ -6,12 +6,7 @@ import MainNav from "../components/layout/MainNav";
 import WidgetLayer from "../components/map/widgets/WidgetLayer";
 import MapContainer from '../components/map/MapContainer';
 
-import MainMap from "../components/map/MainMap";
-import VariablePanel from "../components/map/VariablePanel";
-import MapTooltip from "../components/map/MapTooltip";
-import TimeSlider from '../components/map/slider/TimeSlider';
 // import WidgetLayer from "../components/map/widgets/WidgetLayer";
-import MapContainer from '../components/map/MapContainer';
 
 // import useLoadData from '@webgeoda/hooks/useLoadData'
 // import useUpdateData from '@webgeoda/hooks/useUpdateData'
@@ -87,10 +82,6 @@ export default function Map() {
       <Provider store={store}>
         {geodaReady && (
           <GeodaContext.Provider value={geoda}>
-            <MainMap geoda={geoda} />
-            <VariablePanel />
-            <MapTooltip />
-            <TimeSlider />
             <WidgetLayer />
             <MapContainer />
           </GeodaContext.Provider>

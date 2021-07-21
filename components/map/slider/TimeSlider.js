@@ -35,10 +35,9 @@ export default function TimeSlider() {
     updateTrigger: nIndex,
     resetTriggers: [dataParams.variable]
   })
-
   const handleChangeDate = (newVal) => newVal !== nIndex && dispatch({type:'CHANGE_NINDEX', payload: newVal})
 
-  if (nIndex === undefined || dateIndices === undefined) return null;
+  if (nIndex === undefined || nIndex === null || dateIndices === undefined || !dateIndices.length) return null;
   
   const dateString = `${dateIndices[nIndex]['$y']+1}-${dateIndices[nIndex]['$M']+1}-${dateIndices[nIndex]['$D']}`
   return (
