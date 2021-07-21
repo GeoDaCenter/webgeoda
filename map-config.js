@@ -154,68 +154,69 @@ const mapModes = {
 };
 
 const widgets = [
-  {
-    display: "pinned",
-    type: "histogram",
-    variable: "Median age",
-    options: {
-      header: "Median Age",
-      foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Age"
-    }
-  },
-  {
-    display: "hidden",
-    type: "histogram",
-    variable: "Median Household Income",
-    options: {
-      header: "Median Household Income",
-      foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Household Income"
-    }
-  },
+  // {
+  //   display: "pinned",
+  //   type: "histogram",
+  //   variable: "Median age",
+  //   options: {
+  //     header: "Median Age",
+  //     foregroundColor: "#FF00FF",
+  //     yAxisLabel: "Median Age"
+  //   }
+  // },
+  // {
+  //   display: "hidden",
+  //   type: "histogram",
+  //   variable: "Median Household Income",
+  //   options: {
+  //     header: "Median Household Income",
+  //     foregroundColor: "#FF00FF",
+  //     yAxisLabel: "Median Household Income"
+  //   }
+  // },
   {
     display: "tray",
     type: "line",
-    variable: "???",
+    variable: "Covid April",
     options: {
       header: "Time Series Data",
       foregroundColor: "#AAAA00",
-      yAxisLabel: "Y Axis"
+      yAxisLabel: "Y Axis",
+      dateFormat: "MM/DD/YYYY"
     }
   },
-  {
-    display: "tray",
-    type: "scatter",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
-    options: {
-      header: "Household Income vs. Gross Rent",
-      foregroundColor: "#000000",
-      numClusters: 3,
-      clusterColors: [
-        "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF"
-      ],
-      pointSize: .2,
-      xAxisLabel: "Median Household Income",
-      yAxisLabel: "Median Gross Rent",
-      removeZeroValues: true
-    }
-  },
-  {
-    display: "hidden",
-    type: "scatter3d",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
-    zVariable: "Median age",
-    options: {
-      foregroundColor: "#00AAFF",
-      xAxisLabel: "Median Household Income",
-      yAxisLabel: "Median Gross Rent",
-      zAxisLabel: "Median Age",
-      gridlinesInterval: [50000, 500, 5]
-    }
-  }
+  // {
+  //   display: "tray",
+  //   type: "scatter",
+  //   xVariable: "Median Household Income",
+  //   yVariable: "Median Gross Rent",
+  //   options: {
+  //     header: "Household Income vs. Gross Rent",
+  //     foregroundColor: "#000000",
+  //     numClusters: 3,
+  //     clusterColors: [
+  //       "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF"
+  //     ],
+  //     pointSize: .2,
+  //     xAxisLabel: "Median Household Income",
+  //     yAxisLabel: "Median Gross Rent",
+  //     removeZeroValues: true
+  //   }
+  // },
+  // {
+  //   display: "hidden",
+  //   type: "scatter3d",
+  //   xVariable: "Median Household Income",
+  //   yVariable: "Median Gross Rent",
+  //   zVariable: "Median age",
+  //   options: {
+  //     foregroundColor: "#00AAFF",
+  //     xAxisLabel: "Median Household Income",
+  //     yAxisLabel: "Median Gross Rent",
+  //     zAxisLabel: "Median Age",
+  //     gridlinesInterval: [50000, 500, 5]
+  //   }
+  // }
 ];
 
 // const style = {

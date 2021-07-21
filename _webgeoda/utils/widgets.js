@@ -1,6 +1,3 @@
-// DELETE ME
-import TEMP_DATA from "../../TEMP_time-series-data.json";
-
 import {
     parseColumnData,
     find,
@@ -291,14 +288,8 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
     }
 
     if(widgetType === "line"){
-        console.log(TEMP_DATA);
-        const data = TEMP_DATA.data.map((val, i) => {
-            return val.count;
-        });
-        const labels = TEMP_DATA.data.map((val, i) => {
-            return val.date;
-        })
-        return {data, labels};
+        // Time series data is handled by useGetTimeSeriesData
+        return {};
     }
 }
 
