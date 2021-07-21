@@ -16,15 +16,16 @@ import {
 } from '@webgeoda/utils/widgets';
 
 import { 
-  findDatasetWithTable,
-  generateReport, 
-  parseTooltipData
-} from "../utils/summarize";
-
-import { 
   getCartogramCenter, 
   generateMapData 
 } from "../utils/map";
+
+import { 
+  generateReport, 
+  parseTooltipData, 
+  findDatasetTable,
+  findDatasetWithTable
+} from "../utils/summarize";
 
 import { dataPresets } from "../../map-config";
 const [defaultTables, dataPresetsRedux, tooltipTables] = [{}, {}, []];
@@ -373,6 +374,40 @@ export default function reducer(state = INITIAL_STATE, action) {
           : state.sidebarData,
       };
     }
+    case "CHANGE_NINDEX": {
+      const dataParams = {
+        ...state.dataParams,
+        nIndex: action.payload,
+      };
+
+      return {
+        ...state,
+        dataParams,
+        mapData: generateMapData({
+          ...state,
+          dataParams
+        })
+      }
+    }
+    case "INCREMENT_DATE": {
+      const currFile = findDatasetTable(state.currentData, state.dataParams.numerator, state.dataPresets.data)?.file;
+      const max = state.storedData[currFile]?.dateIndices?.length
+      const dataParams = {
+        ...state.dataParams,
+        nIndex: state.dataParams.nIndex + action.payload < max 
+          ? state.dataParams.nIndex + action.payload 
+          : state.dataParams.nIndex,
+      };
+
+      return {
+        ...state,
+        dataParams,
+        mapData: generateMapData({
+          ...state,
+          dataParams
+        })
+      }
+    }
     case "SET_VARIABLE_PARAMS_AND_DATASET": {
       const dataParams = {
         ...state.dataParams,
@@ -655,6 +690,16 @@ export default function reducer(state = INITIAL_STATE, action) {
       }
 
       return {...state, mapFilters};
+    }
+    case "CACHE_TIME_SERIES": {
+      const cachedTimeSeries = {
+        ...state.cachedTimeSeries,
+        [action.payload.id]:action.payload.data
+      }
+      return {
+        ...state,
+        cachedTimeSeries
+      }
     }
     default:
       return state;

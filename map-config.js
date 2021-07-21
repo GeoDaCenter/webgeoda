@@ -1,6 +1,34 @@
 import * as colors from "@webgeoda/utils/colors";
 const data = [
   {
+    name: 'US States', // Plain english name for dataset
+    geodata: 'states.geojson', // geospatial data to join to
+    id: 'GEOID', // fid / geoid join column
+    bounds: [-125.109215,-66.925621,25.043926,49.295128],
+    tables: {
+      acs_data: {
+        file: 'state_acs.csv',
+        type: 'characteristic',
+        join: 'FIPS',
+      },
+      household_data: {
+        file: 'texas_heating.csv',
+        type:'characteristic',
+        join: 'FIPS'
+      },
+      income_data: {
+        file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
+        type:'characteristic',
+        join: 'FIPS'
+      },
+      covid_data: {
+        file: 'nyt_covid_state.csv',
+        type: 'time-series',
+        join: 'fips',
+      }
+    },
+  },
+  {
     name: 'Texas Block Groups', // Plain english name for dataset
     geodata: 'tx.geojson', // geospatial data to join to
     id: 'GEOID', // fid / geoid join column
@@ -15,24 +43,6 @@ const data = [
         file: 'texas_heating.csv',
         type:'characteristic',
         join: 'FIPS'
-      },
-      income_data: {
-        file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
-        type:'characteristic',
-        join: 'FIPS'
-      }
-    },
-  },
-  {
-    name: 'US States', // Plain english name for dataset
-    geodata: 'states.geojson', // geospatial data to join to
-    id: 'GEOID', // fid / geoid join column
-    bounds: [-125.109215,-66.925621,25.043926,49.295128],
-    tables: {
-      acs_data: {
-        file: 'state_acs.csv',
-        type: 'characteristic',
-        join: 'FIPS',
       }
     },
   },
@@ -53,6 +63,15 @@ const data = [
 ];
 
 const variables = [
+  {
+    variable: "Covid April",
+    numerator: "covid_data",
+    nIndex: null,
+    nRange: 7,
+    binning: "naturalBreaks",
+    numberOfBins: 5,
+    colorScale: colors.colorbrewer.YlOrBr,
+  },
   {
     variable: "Total Population",
     numerator: "acs_data",

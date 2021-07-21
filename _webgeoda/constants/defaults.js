@@ -18,6 +18,7 @@ export const INITIAL_STATE = {
   storedGeojson: {},
   storedData: {},
   cachedVariables: {},
+  cachedTimeSeries: {},
   currentData: dataPresets.data[0].geodata,
   currentMethod: "natural_breaks",
   currentOverlay: "",

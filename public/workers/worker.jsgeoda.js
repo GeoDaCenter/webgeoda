@@ -47,7 +47,7 @@ class GeodaWorkerProxy {
   async loadGeoJSON(url, geoIdColumn) {
     if (this.geoda === null) await this.New();
     var response = await fetch(url);
-    var responseClone = response.clone();
+    var responseClone = await response.clone();
     var [geojsonData, ab] = await Promise.all([
       response.json(),
       responseClone.arrayBuffer(),
@@ -61,9 +61,24 @@ class GeodaWorkerProxy {
         geojsonData.features[i].properties[geoIdColumn] = +geojsonData.features[i].properties[geoIdColumn]
       }
     }
+    try {
+      var id = this.readGeoJSON(ab);
+      return [id, geojsonData];
+    } catch {
+      return [null, geojsonData]
+    }
+  }
 
-    var id = this.readGeoJSON(ab);
-    return [id, geojsonData];
+  async attemptSecondGeojsonLoad(url){
+    if (this.geoda === null) await this.New();
+    var response = await fetch(url);
+    var ab = await response.arrayBuffer();
+    try {
+      var id = this.readGeoJSON(ab);
+      return id;
+    } catch {
+      return null;
+    }
   }
 
   /**
