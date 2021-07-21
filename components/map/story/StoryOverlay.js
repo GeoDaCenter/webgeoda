@@ -65,7 +65,7 @@ export default function StoryOverlay(){
     },[])
 
     return <div className={styles.storyContainer}>
-        {dataPresets.story.map((step, idx) => <section className={`${styles[`.${step.layout}`]} step`} key={'step'+idx}>
+        {dataPresets.story.map((step, idx) => <section className={`${styles[step.layout]} step`} key={'step'+idx}>
             <div className={styles.inner}>
                 {step.text}
             </div>
