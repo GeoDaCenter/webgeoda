@@ -8,14 +8,13 @@ import {MVTLayer} from '@deck.gl/geo-layers';
 import {MapboxLayer} from '@deck.gl/mapbox';
 import MapboxGLMap from "react-map-gl";
 import { useDispatch, useSelector } from "react-redux";
-import {FlyToInterpolator} from '@deck.gl/core';
 
 import Loader from "../layout/Loader";
 
 import { useViewport, useSetViewport } from '@webgeoda/contexts';
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateMap from "@webgeoda/hooks/useUpdateMap";
-import usePanMap from "@webgeoda/hooks/usePanMap";
+// import usePanMap from "@webgeoda/hooks/usePanMap";
 
 import Legend from "./Legend";
 import MapControls from "./MapControls";
@@ -50,7 +49,7 @@ export default function MainMap() {
 
   const deckRef = useRef();
   const mapRef = useRef();
-  
+
   useEffect(() => {
     if (initialViewState.longitude)
       setViewport({

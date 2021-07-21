@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { GeodaContext } from "../contexts";
 
 import {
@@ -97,21 +97,33 @@ export default function useLoadData(dateLists = {}) {
   const datasetToLoad = useSelector((state) => state.datasetToLoad);
   const dataPresets = useSelector((state) => state.dataPresets);
   const dataParams = useSelector((state) => state.dataParams);
+  const [shouldRetryLoadGeoJSON, setShouldRetryLoadGeoJSON] = useState(false)
   const dispatch = useDispatch();
 
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [loadingProgress, setLoadingProgress] = useState(null);
-
   useEffect(() => {
-    if (datasetToLoad) {
-      loadData(dataPresets, datasetToLoad)
-    }
+    if (datasetToLoad) { loadData(dataPresets, datasetToLoad) }
   },[datasetToLoad])
 
+  useEffect(() => {
+    if (shouldRetryLoadGeoJSON) {
+      setTimeout(() => {
+        attemptGeojsonLoad();
+      }, 10000)
+    }
+  },[shouldRetryLoadGeoJSON])
 
   useEffect(() => {
     loadData(dataPresets, dataPresets.data[0].geodata)
   },[])
+
+  const attemptGeojsonLoad = async () => {
+    const currentDataPreset = find(
+      dataPresets.data,
+      (o) => o.geodata === currentData
+    )
+    const secondMapId = await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentDataPreset.geodata}`) 
+    setShouldRetryLoadGeoJSON(false)
+  }
 
   const loadData = async (dataPresets, datasetToLoad) => {
     if (geoda === undefined) location.reload();
@@ -125,7 +137,7 @@ export default function useLoadData(dateLists = {}) {
     const denominatorTable =
       currentDataPreset.tables?.hasOwnProperty(dataParams.denominator) 
       && currentDataPreset.tables[dataParams.denominator];
-    
+      
     const firstLoadPromises = [
       notTiles ? geoda.loadGeoJSON(`${window.location.origin}/geojson/${currentDataPreset.geodata}`, currentDataPreset.id) : [false, false],
       numeratorTable && handleLoadData(numeratorTable),
@@ -137,6 +149,8 @@ export default function useLoadData(dateLists = {}) {
       numeratorData, 
       denominatorData
     ] = await Promise.all(firstLoadPromises);
+    
+    if (mapId === null) setShouldRetryLoadGeoJSON(true)
 
     const geojsonProperties = notTiles 
     ? indexGeoProps(geojsonData,currentDataPreset.id)
@@ -146,10 +160,11 @@ export default function useLoadData(dateLists = {}) {
     ? getIdOrder(geojsonData.features,currentDataPreset.id) 
     : false;
 
-    const bounds = currentDataPreset.bounds 
+    const bounds = mapId === null
+      ? [-180,180,-70,80]
+      : currentDataPreset.bounds 
       ? currentDataPreset.bounds 
       : await geoda.getBounds(mapId);
-    
 
     let initialViewState =
       window !== undefined
@@ -165,32 +180,37 @@ export default function useLoadData(dateLists = {}) {
 
     if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
     
+    const tempParams = {
+      ...dataParams,
+      [dataParams.nIndex === null && 'nIndex']: numeratorData.dateIndices.length-1
+    }
+
     const binData = cachedVariables.hasOwnProperty(currentData) && 
-        cachedVariables[currentData].hasOwnProperty(dataParams.variable)
-      ? Object.values(cachedVariables[currentData][dataParams.variable])
-      : dataParams.categorical 
+        cachedVariables[currentData].hasOwnProperty(tempParams.variable)
+      ? Object.values(cachedVariables[currentData][tempParams.variable])
+      : tempParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
-        dataParams)
+        tempParams)
       : parseColumnData({
-        numeratorData: dataParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
-        denominatorData: dataParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
-        dataParams,
+        numeratorData: tempParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
+        denominatorData: tempParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
+        dataParams: tempParams,
         fixedOrder: geojsonOrder
     });
 
-    const bins = dataParams.lisa 
+    const bins = tempParams.lisa 
       ? lisaBins
       : await getBins({
         geoda,
-        dataParams,
+        dataParams: tempParams,
         binData
       })    
       
-    const colorScale = dataParams.lisa 
+    const colorScale = tempParams.lisa 
       ? lisaColors
       : getColorScale({
-        dataParams,
+        dataParams: tempParams,
         bins
       })
     dispatch({
@@ -219,7 +239,7 @@ export default function useLoadData(dateLists = {}) {
           bins,
           colorScale: colorScale || colors.colorbrewer.YlGnBu[5],
         },
-        variableParams: dataParams,
+        variableParams: tempParams,
         initialViewState,
         id: currentDataPreset.id,
         cachedVariable: {
@@ -229,16 +249,17 @@ export default function useLoadData(dateLists = {}) {
         }
       }
     });
-    await loadTables(dataPresets, datasetToLoad, dateLists);
-    loadWidgets(dataPresets.widgets, dispatch); // TODO: Have useLoadWidgetData handle this?
+
+    loadTables(dataPresets, datasetToLoad, dateLists, mapId);
+    loadWidgets(dataPresets);
   };
 
   const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
-    const tablesToFetch = find(
+    const currentDataPreset = find(
       dataPresets.data,
       (o) => o.geodata === datasetToLoad
-    ).tables;
-
+    )
+    const tablesToFetch = currentDataPreset.tables;
     const tableNames = Object.keys(tablesToFetch);
     const tableDetails = Object.values(tablesToFetch);
     const tablePromises = tableDetails.map((table) =>

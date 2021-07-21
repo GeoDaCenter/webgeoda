@@ -1,5 +1,6 @@
 import { CSVLoader } from "@loaders.gl/csv";
 import { load } from "@loaders.gl/core";
+import { handleTimeSeriesTable } from './time';
 
 export const fixedScales = {
   // eg. lisa
@@ -346,26 +347,27 @@ export const fileLoader = {
  *  data (object, keyed to ID column with tabular data)
  * }
  */
-export const handleLoadData = async (info, dateList) => {
-  const { file, type, join, dates, accumulate, schema } = info;
+export const handleLoadData = async (info) => {
+  const { file, type, join, dateCol, valueCol, accumulate, schema } = info;
   const fetchUrl =
     file.slice(0, 4) === "http" ? file : `${window.location.origin}/${file.slice(-3)}/${file}`;
   let data = await fileLoader[file.slice(-3)](fetchUrl, schema);
   let dateIndices = [];
   let columns = Object.keys(data[0]);
-  if (dates) {
-    if (accumuluate) {
-      // todo accumulation logic
-    } else {
-      // todo non-accumulation date assignment logic
+  if (type === 'time-series') {
+    const { dataTable, dateList }  = handleTimeSeriesTable(data, join, dateCol, valueCol)
+    return {
+      dateIndices: dateList,
+      columns,
+      data: dataTable
     }
+  } else {
+    return {
+      dateIndices,
+      columns,
+      data: indexTable(data, join),
+    };
   }
-
-  return {
-    dateIndices,
-    columns,
-    data: indexTable(data, join),
-  };
 };
 
 

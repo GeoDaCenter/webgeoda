@@ -83,12 +83,18 @@ $WIDGET_COLUMN_WIDTH: 400px;
 }
 
 .widgetDropdownHandle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
   z-index: 2;
   background-color: #FFFFFF;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   text-align: center;
   width: 135px;
+  height: 50px;
   cursor: pointer;
+  transition: width 0.5s;
   .caret {
     margin: auto 0;
     position: absolute;
@@ -112,6 +118,7 @@ $WIDGET_COLUMN_WIDTH: 400px;
     top: 150px;
     border-top-left-radius: 5em;
     border-bottom-left-radius: 5em;
+    transition: left 0.5s, right 0.5s;
     p {
       margin-left: 20px;
     }
@@ -119,14 +126,25 @@ $WIDGET_COLUMN_WIDTH: 400px;
       left: 20px;
     }
   }
-  #widgetTray:has(#columnRight.hidden) & { // TODO: :has is experimental
+  #widgetTray &.hidden {
+    width: 50px;
     left: unset;
-    right: 135px;
+    right: 0px;
+    p {
+      display: none;
+    }
+    .caret {
+      transform: rotate(180deg);
+    }
   }
 }
 #widgetTray {
   position: relative;
   height: 100%;
+  #widgetTrayContent {
+    height: 100%;
+    overflow-y: scroll;
+  }
 }
 
 .widgetColumn {
@@ -154,8 +172,11 @@ $WIDGET_COLUMN_WIDTH: 400px;
       .widget {
         opacity: 1;
       }
-      .widgetDropdownHandle .caret {
-        transform: rotate(90deg);
+      .widgetDropdownHandle {
+        width: 100%;
+        .caret {
+          transform: rotate(90deg);
+        }
       }
     }
 
@@ -174,7 +195,6 @@ $WIDGET_COLUMN_WIDTH: 400px;
   &#columnRight {
     margin: 10px 0;
     padding: 0 10px;
-    height: 100%;
     background:white;
     overflow-x: hidden;
     box-sizing: content-box;
@@ -184,6 +204,39 @@ $WIDGET_COLUMN_WIDTH: 400px;
     &.hidden {
       .widget {
         opacity: 0;
+      }
+    }
+  }
+
+  &#columnHidden {
+    max-height: 50px;
+    overflow: hidden;
+    &.hidden {
+      .widget {
+        opacity: 0;
+      }
+    }
+    .widget:not(.dragging) {
+      opacity: 0;
+    }
+    #hidingMenuTitle {
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 13px;
+      color: #777777;
+      .caret {
+        margin-left: 20px;
+        transition: transform 0.5s;
+      }
+    }
+
+    &:hover, &.widgetIsDragging {
+      max-height: none;
+      .widget {
+        opacity: 1;
+      }
+      #hidingMenuTitle .caret {
+        transform: rotate(180deg);
       }
     }
   }

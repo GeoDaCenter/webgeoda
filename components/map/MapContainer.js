@@ -2,6 +2,7 @@ import styles from "../../components/map/MainMap.module.css";
 import MainMap from "../../components/map/MainMap";
 import VariablePanel from "../../components/map/VariablePanel";
 import MapTooltip from "../../components/map/MapTooltip";
+import TimeSlider from '../../components/map/slider/TimeSlider';
 import { useSelector } from "react-redux";
 
 
@@ -14,6 +15,7 @@ export default function MapContainer(){
             <MainMap />
             <VariablePanel />
             <MapTooltip />
+            <TimeSlider />
         </div>
     )
 }
