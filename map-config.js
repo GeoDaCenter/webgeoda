@@ -4,6 +4,7 @@ const data = [
     name: 'Texas Block Groups', // Plain english name for dataset
     geodata: 'tx.geojson', // geospatial data to join to
     id: 'GEOID', // fid / geoid join column
+    bounds: [-125.109215,-66.925621,25.043926,49.295128],
     tables: {
       // any additional tabular data
       acs_data: {
