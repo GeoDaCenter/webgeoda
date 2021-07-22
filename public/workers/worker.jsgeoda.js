@@ -85,24 +85,13 @@ class GeodaWorkerProxy {
         geojsonData.features[i].properties[geoIdColumn] = +geojsonData.features[i].properties[geoIdColumn]
       }
     }
-    try {
-      var id = this.readGeoJSON(ab);
-      return [id, geojsonData];
-    } catch {
-      var id = null;
-      var tempAb = encodeJsonToAb(dummyData);
-      var loadSuccess = false;
-      var loaded = null;
-      for (let i=0; i<5; i++){
-        if (loadSuccess === true) {
-          id = this.readGeoJSON(ab);
-          break;
-        }
-        loaded = forceReadGeojson(tempAb)
-        if ('string' === typeof loaded) loadSuccess = true;
-      }
-      return [id, geojsonData]
+    for (let i=0; i<5; i++){
+      try {
+        var id = this.readGeoJSON(ab);
+        return [id, geojsonData];
+      } catch {}
     }
+    return [null, geojsonData]
   }
 
   async attemptSecondGeojsonLoad(url){
