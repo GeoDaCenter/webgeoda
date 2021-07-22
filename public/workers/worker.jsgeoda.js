@@ -36,7 +36,7 @@ var dummyData = { "type": "FeatureCollection",
   ]
 }
 
-function encodeAb(content){
+function encodeJsonToAb(content){
   return new TextEncoder().encode(flatstr(JSON.stringify(content)))
 }
 
@@ -73,9 +73,13 @@ class GeodaWorkerProxy {
    */
   async loadGeoJSON(url, geoIdColumn) {
     if (this.geoda === null) await this.New();
-    var geojsonData = await fetch(url).then(r => r.json());
-    try{console.log(this.readGeoJSON(encodeAb(geojsonData)))}catch{}
-    console.log(geojsonData)
+    var response = await fetch(url);
+    var responseClone = await response.clone();
+    var [geojsonData, ab] = await Promise.all([
+      response.json(),
+      responseClone.arrayBuffer(),
+    ]);
+
     if (
       !(isNaN(+geojsonData.features[0].properties[geoIdColumn])) 
       && "number" !== typeof geojsonData.features[0].properties[geoIdColumn])
@@ -85,10 +89,12 @@ class GeodaWorkerProxy {
       }
     }
     try {
-      var id = this.readGeoJSON(encodeAb(geojsonData));
+      var id = this.read_geojson(ab);
       return [id, geojsonData];
     } catch {
-      return [null, geojsonData]
+      var id = this.readGeoJSON(encodeJsonToAb(geojsonData))
+      alert(id)
+      return [id, geojsonData]
     }
   }
 
