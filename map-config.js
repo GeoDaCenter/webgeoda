@@ -15,7 +15,12 @@ const data = [
         file: 'texas_heating.csv',
         type:'characteristic',
         join: 'FIPS'
-      }
+      },
+      income_data: {
+        file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
+        type:'characteristic',
+        join: 'FIPS'
+      },
     },
   },
   {
@@ -31,11 +36,6 @@ const data = [
       },
       household_data: {
         file: 'texas_heating.csv',
-        type:'characteristic',
-        join: 'FIPS'
-      },
-      income_data: {
-        file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
         type:'characteristic',
         join: 'FIPS'
       },
@@ -64,6 +64,14 @@ const data = [
 
 const variables = [
   {
+    variable: "Total Population",
+    numerator: "acs_data",
+    nProperty: "Total Population",
+    binning: "naturalBreaks",
+    numberOfBins: 8,
+    colorScale: colors.colorbrewer.Greens,
+  },
+  {
     variable: "Covid April",
     numerator: "covid_data",
     nIndex: null,
@@ -71,14 +79,6 @@ const variables = [
     binning: "naturalBreaks",
     numberOfBins: 5,
     colorScale: colors.colorbrewer.YlOrBr,
-  },
-  {
-    variable: "Total Population",
-    numerator: "acs_data",
-    nProperty: "Total Population",
-    binning: "naturalBreaks",
-    numberOfBins: 8,
-    colorScale: colors.colorbrewer.Greens,
   },
   {
     variable: "Median age",
