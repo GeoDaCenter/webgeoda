@@ -38,10 +38,20 @@ export default function useLisa() {
     }) => {
         if (!storedGeojson[geographyName]) return;
         alert(storedGeojson[currentData].id)
-        const mapId = 'string' !== typeof storedGeojson[currentData].id
-            ? await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentData}`)
-            : storedGeojson[currentData].id
+        let mapId = storedGeojson[currentData].id;
+        for (let i=0; i<5; i++){
+            if ('string' !== typeof storedGeojson[currentData].id) {
+                break
+            } else {
+                alert(`${window.location.origin}/geojson/${currentData}`)
+                let tempId = await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentData}`)
+                alert(tempId)
+                mapId = tempId
+            }
+        }
         alert(mapId)
+        if ('string' !== typeof mapId) return;
+        
         // TODO: load data if missing
         const numeratorTable = findTable(
             dataPresets.data,
