@@ -92,15 +92,15 @@ class GeodaWorkerProxy {
       var id = null;
       var tempAb = encodeJsonToAb(dummyData);
       var loadSuccess = false;
+      var loaded = null;
       for (let i=0; i<5; i++){
         if (loadSuccess === true) {
           id = this.readGeoJSON(ab);
           break;
         }
-        var loaded = forceReadGeojson(tempAb)
+        loaded = forceReadGeojson(tempAb)
         if ('string' === typeof loaded) loadSuccess = true;
       }
-      alert(id)
       return [id, geojsonData]
     }
   }
