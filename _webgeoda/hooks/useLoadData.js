@@ -94,7 +94,6 @@ export default function useLoadData(dateLists = {}) {
   const datasetToLoad = useSelector((state) => state.datasetToLoad);
   const dataPresets = useSelector((state) => state.dataPresets);
   const dataParams = useSelector((state) => state.dataParams);
-  const [shouldRetryLoadGeoJSON, setShouldRetryLoadGeoJSON] = useState(false)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -124,12 +123,22 @@ export default function useLoadData(dateLists = {}) {
       denominatorTable && handleLoadData(denominatorTable),
     ];
     
-    const [
+    let [
       [mapId, geojsonData], 
       numeratorData, 
       denominatorData
     ] = await Promise.all(firstLoadPromises);
-    if (mapId === null) setShouldRetryLoadGeoJSON(true)
+    alert(mapId)
+    if (mapId === null) {
+      for (let i=0; i<5; i++){
+        alert(mapId)
+        if ('string' === typeof mapId) {
+            break
+        } else {
+            mapId = await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentData}`)
+        }
+      }
+    }
 
     const geojsonProperties = notTiles 
     ? indexGeoProps(geojsonData,currentDataPreset.id)
