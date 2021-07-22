@@ -182,7 +182,7 @@ export default function useLoadData(dateLists = {}) {
     
     const tempParams = {
       ...dataParams,
-      [dataParams.nIndex === null && 'nIndex']: numeratorData.dateIndices.length-1
+      [dataParams.nIndex === null && 'nIndex']: numeratorData?.dateIndices?.length-1
     }
 
     const binData = cachedVariables.hasOwnProperty(currentData) && 
