@@ -1,6 +1,24 @@
 import * as colors from "@webgeoda/utils/colors";
 const data = [
   {
+    name: 'Texas Block Groups', // Plain english name for dataset
+    geodata: 'tx.geojson', // geospatial data to join to
+    id: 'GEOID', // fid / geoid join column
+    tables: {
+      // any additional tabular data
+      acs_data: {
+        file: 'texas_acs.csv',
+        type: 'characteristic',
+        join: 'FIPS',
+      },
+      household_data: {
+        file: 'texas_heating.csv',
+        type:'characteristic',
+        join: 'FIPS'
+      }
+    },
+  },
+  {
     name: 'US States', // Plain english name for dataset
     geodata: 'states.geojson', // geospatial data to join to
     id: 'GEOID', // fid / geoid join column
@@ -25,24 +43,6 @@ const data = [
         file: 'nyt_covid_state.csv',
         type: 'time-series',
         join: 'fips',
-      }
-    },
-  },
-  {
-    name: 'Texas Block Groups', // Plain english name for dataset
-    geodata: 'tx.geojson', // geospatial data to join to
-    id: 'GEOID', // fid / geoid join column
-    tables: {
-      // any additional tabular data
-      acs_data: {
-        file: 'texas_acs.csv',
-        type: 'characteristic',
-        join: 'FIPS',
-      },
-      household_data: {
-        file: 'texas_heating.csv',
-        type:'characteristic',
-        join: 'FIPS'
       }
     },
   },
@@ -175,16 +175,16 @@ const widgets = [
   //     yAxisLabel: "Median Household Income"
   //   }
   // },
-  {
-    display: "tray",
-    type: "line",
-    variable: "Covid April",
-    options: {
-      header: "Time Series Data",
-      foregroundColor: "#AAAA00",
-      yAxisLabel: "Y Axis"
-    }
-  },
+  // {
+  //   display: "tray",
+  //   type: "line",
+  //   variable: "Covid April",
+  //   options: {
+  //     header: "Time Series Data",
+  //     foregroundColor: "#AAAA00",
+  //     yAxisLabel: "Y Axis"
+  //   }
+  // },
   {
     display: "tray",
     type: "scatter",
