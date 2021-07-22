@@ -148,7 +148,7 @@ export default function useLoadData(dateLists = {}) {
       numeratorData, 
       denominatorData
     ] = await Promise.all(firstLoadPromises);
-    
+    alert(mapId)
     if (mapId === null) setShouldRetryLoadGeoJSON(true)
 
     const geojsonProperties = notTiles 
