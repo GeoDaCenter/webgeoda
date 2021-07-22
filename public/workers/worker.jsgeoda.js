@@ -1,13 +1,14 @@
 var exports={};
 importScripts(
   "https://unpkg.com/comlink/dist/umd/comlink.js", 
-  "https://unpkg.com/jsgeoda@0.2.0/lib/index.js",
+  "https://unpkg.com/jsgeoda@0.1.8/lib/index.js",
 );
 //https://github.com/davidmarkclements/flatstr#readme
 function flatstr (s) {
   s | 0
   return s
 }
+
 // thanks @ https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class/31055217
 function getAllFuncs(toCheck) {
   var props = [];
@@ -89,11 +90,11 @@ class GeodaWorkerProxy {
       }
     }
     try {
-      var id = this.read_geojson(ab);
+      var id = this.ReadGeojsonMap('test',ab);
       console.log(id)
       return [id, geojsonData];
     } catch {
-      var id = this.read_geojson(encodeJsonToAb(geojsonData))
+      var id = this.ReadGeojsonMap('test',encodeJsonToAb(geojsonData))
       console.log(id)
       return [id, geojsonData]
     }
@@ -104,7 +105,7 @@ class GeodaWorkerProxy {
     var response = await fetch(url);
     var ab = await response.arrayBuffer();
     try {
-      var id = this.read_geojson(ab);
+      var id = this.ReadGeojsonMap('test',ab);
       return id;
     } catch {
       return null;
