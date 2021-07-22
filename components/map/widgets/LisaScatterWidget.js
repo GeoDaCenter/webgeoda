@@ -11,6 +11,8 @@ import Loader from '../../layout/Loader';
 import usePanMap from '@webgeoda/hooks/usePanMap';
 import * as ss from 'simple-statistics';
 import { getVarId } from '@webgeoda/utils/data';
+import zoomPlugin from 'chartjs-plugin-zoom';
+
 
 
 function LisaScatterWidgetUnwrapped(props) {
@@ -25,6 +27,10 @@ function LisaScatterWidgetUnwrapped(props) {
     const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
     const lisaVariable = useSelector((state) => state.lisaVariable)
     const lisaData = getCachedLisa({variable: lisaVariable});
+
+    if (typeof window === "undefined"){
+        return null;
+    }
 
 
     // console.log(allLisaData)
@@ -79,7 +85,8 @@ function LisaScatterWidgetUnwrapped(props) {
                         type: "scatter",
                         label: props.options.header,
                         data: lisaData.scatterPlotDataStan,
-                        pointBackgroundColor: lisaData.lisaResults.clusters.map(i => lisaData.lisaResults.colors[i])
+                        pointBackgroundColor: lisaData.lisaResults.clusters.map(i => lisaData.lisaResults.colors[i]),
+                        pointRadius: 1.5,
                     }
                 ]
             };
@@ -195,17 +202,33 @@ function LisaScatterWidgetUnwrapped(props) {
                         filter: (legend) => legend.datasetIndex != 0 // hide scatter label
                     }
                 },
-                tooltip: {
-                    callbacks: {
-                        label: (tooltipItem) => { 
-                            const point = tooltipItem.raw.id;
-                            if (point != undefined) { 
-                                return `${tooltipItem.raw.id}` 
-                            }
-                            else { return "undefined" };
-                        }
+                zoom: {
+                    // Container for pan options
+                    pan: {
+                        // Boolean to enable panning
+                        enabled: true,
+                        mode: 'xy',
+                    },
+                    zoom: {
+                        // Boolean to enable zooming
+                        enabled: true,
+                        // Enable drag-to-zoom behavior
+                        drag: true,
+                        mode: 'xy',
                     }
+            
                 },
+                // tooltip: {
+                //     callbacks: {
+                //         label: (tooltipItem) => { 
+                //             const point = tooltipItem.raw.id;
+                //             if (point != undefined) { 
+                //                 return `${tooltipItem.raw.id}` 
+                //             }
+                //             else { return "undefined" };
+                //         }
+                //     }
+                // },
                 boxselect: {
                     select: {
                         enabled: true,
