@@ -37,15 +37,13 @@ export default function useLisa() {
         getScatterPlot=false
     }) => {
         if (!storedGeojson[geographyName]) return;
+        
         let mapId = storedGeojson[currentData].id;
         for (let i=0; i<5; i++){
             if ('string' === typeof mapId) {
-                alert(mapId)
                 break
             } else {
-                let tempId = await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentData}`)
-                mapId = tempId
-                alert(mapId)
+                mapId = await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentData}`)
             }
         }
         if ('string' !== typeof mapId) return;

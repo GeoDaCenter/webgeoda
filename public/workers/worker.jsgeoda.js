@@ -13,6 +13,22 @@ function getAllFuncs(toCheck) {
   });
 }
 
+var dummyData = { "type": "FeatureCollection",
+  "features": [
+    { "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[ [0, 1], [1, 1], [1, 0]]
+          ]
+      }
+    }
+  ]
+}
+
+function encodeJsonToAb(content){
+  return new TextEncoder().encode(flatstr(JSON.stringify(content)))
+}
+
 /**
  * @class
  * @classdesc geodaWorkerProxy is the equivalent of entry point to getting a geoda proxy in through comlink.
@@ -37,6 +53,14 @@ class GeodaWorkerProxy {
       this[key] = (...args) => this.handleFunction(key, args);
     }
     return true;
+  }
+  async forceReadGeojson(ab){
+    try {
+      return this.readGeoJSON(ab)
+    } catch {
+      return null;
+    }
+    
   }
   /**
    * Pass through of readGeoJson.
@@ -65,7 +89,19 @@ class GeodaWorkerProxy {
       var id = this.readGeoJSON(ab);
       return [id, geojsonData];
     } catch {
-      return [null, geojsonData]
+      var id = null;
+      var tempAb = encodeJsonToAb(dummyData);
+      var loadSuccess = false;
+      for (let i=0; i<5; i++){
+        if (loadSuccess === true) {
+          id = this.readGeoJSON(ab);
+          break;
+        }
+        var loaded = forceReadGeojson(tempAb)
+        if ('string' === typeof loaded) loadSuccess = true;
+      }
+      alert(id)
+      return [id, geojsonData]
     }
   }
 
