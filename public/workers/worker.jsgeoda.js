@@ -1,7 +1,7 @@
 var exports={};
 importScripts(
   "https://unpkg.com/comlink/dist/umd/comlink.js", 
-  "https://unpkg.com/jsgeoda@0.2.2/lib/index.js",
+  "https://unpkg.com/jsgeoda@0.2.0/lib/index.js",
 );
 //https://github.com/davidmarkclements/flatstr#readme
 function flatstr (s) {
@@ -90,10 +90,11 @@ class GeodaWorkerProxy {
     }
     try {
       var id = this.read_geojson(ab);
+      console.log(id)
       return [id, geojsonData];
     } catch {
-      var id = this.readGeoJSON(encodeJsonToAb(geojsonData))
-      alert(id)
+      var id = this.read_geojson(encodeJsonToAb(geojsonData))
+      console.log(id)
       return [id, geojsonData]
     }
   }
