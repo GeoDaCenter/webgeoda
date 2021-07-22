@@ -41,6 +41,7 @@ export default function useLisa() {
         let mapId = storedGeojson[currentData].id;
         for (let i=0; i<5; i++){
             if ('string' !== typeof storedGeojson[currentData].id) {
+                alert(tempId)
                 break
             } else {
                 alert(`${window.location.origin}/geojson/${currentData}`)
