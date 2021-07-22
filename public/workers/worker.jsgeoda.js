@@ -1,13 +1,4 @@
-var exports={};
-importScripts(
-  "https://unpkg.com/comlink/dist/umd/comlink.js", 
-  "https://unpkg.com/jsgeoda@0.1.8/lib/index.js",
-);
-//https://github.com/davidmarkclements/flatstr#readme
-function flatstr (s) {
-  s | 0
-  return s
-}
+importScripts("https://unpkg.com/comlink/dist/umd/comlink.js", "./jsgeoda.js");
 
 // thanks @ https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class/31055217
 function getAllFuncs(toCheck) {
@@ -20,25 +11,6 @@ function getAllFuncs(toCheck) {
   return props.sort().filter(function (e, i, arr) {
     if (e != arr[i + 1] && typeof toCheck[e] == "function") return true;
   });
-}
-
-
-var dummyData = { "type": "FeatureCollection",
-  "features": [
-    { "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
-            [100.0, 1.0], [100.0, 0.0] ]
-          ]
-      }
-    }
-  ]
-}
-
-function encodeJsonToAb(content){
-  return new TextEncoder().encode(flatstr(JSON.stringify(content)))
 }
 
 /**
@@ -90,22 +62,18 @@ class GeodaWorkerProxy {
       }
     }
     try {
-      var id = this.ReadGeojsonMap('test',ab);
-      console.log(id)
+      var id = this.readGeoJSON(ab);
       return [id, geojsonData];
     } catch {
-      var id = this.ReadGeojsonMap('test',encodeJsonToAb(geojsonData))
-      console.log(id)
-      return [id, geojsonData]
+      return [null, geojsonData]
     }
   }
 
   async attemptSecondGeojsonLoad(url){
     if (this.geoda === null) await this.New();
-    var response = await fetch(url);
-    var ab = await response.arrayBuffer();
+    var ab = await fetch(url).then(r => r.arrayBuffer());
     try {
-      var id = this.ReadGeojsonMap('test',ab);
+      var id = this.readGeoJSON(ab);
       return id;
     } catch {
       return null;

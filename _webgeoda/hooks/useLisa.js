@@ -37,6 +37,11 @@ export default function useLisa() {
         getScatterPlot=false
     }) => {
         if (!storedGeojson[geographyName]) return;
+        alert(storedGeojson[currentData].id)
+        const mapId = 'string' !== typeof storedGeojson[currentData].id
+            ? await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentData}`)
+            : storedGeojson[currentData].id
+        alert(mapId)
         // TODO: load data if missing
         const numeratorTable = findTable(
             dataPresets.data,
