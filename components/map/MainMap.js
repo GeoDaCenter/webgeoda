@@ -14,10 +14,12 @@ import Loader from "../layout/Loader";
 import { useViewport, useSetViewport } from '@webgeoda/contexts';
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateMap from "@webgeoda/hooks/useUpdateMap";
+import useGetLisa from "../../_webgeoda/hooks/useGetLisa";
 // import usePanMap from "@webgeoda/hooks/usePanMap";
 
 import Legend from "./Legend";
 import MapControls from "./MapControls";
+import useGetVariable from "../../_webgeoda/hooks/useGetVariable";
 
 export default function MainMap() {
   const initialViewState = useSelector((state) => state.initialViewState);
@@ -37,6 +39,16 @@ export default function MainMap() {
   const [glContext, setGLContext] = useState();
   const dispatch = useDispatch();
   // const panToGeoid = usePanMap();
+
+  const variableData = useGetVariable({
+    variable:'Total Population'
+  })
+  console.log(variableData) // [55,213,515,512...]
+
+  const lisaData = useGetLisa({
+    variable: 'Total Population'
+  })
+  console.log(lisaData) //{weights:{}...}
 
   // eslint-disable-next-line no-empty-pattern
   const [] = useLoadData();
