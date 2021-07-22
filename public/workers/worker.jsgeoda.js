@@ -1,4 +1,8 @@
-importScripts("https://unpkg.com/comlink/dist/umd/comlink.js", "./jsgeoda.js");
+var exports={};
+importScripts(
+  "https://unpkg.com/comlink/dist/umd/comlink.js", 
+  "https://unpkg.com/jsgeoda@0.2.2/lib/index.js"
+  );
 
 // thanks @ https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class/31055217
 function getAllFuncs(toCheck) {
@@ -70,7 +74,7 @@ class GeodaWorkerProxy {
       }
     }
     try {
-      var id = this.readGeoJSON(ab);
+      var id = this.read_geojson(ab);
       return [id, geojsonData];
     } catch {
       return [null, geojsonData]
@@ -82,7 +86,7 @@ class GeodaWorkerProxy {
     var response = await fetch(url);
     var ab = await response.arrayBuffer();
     try {
-      var id = this.readGeoJSON(ab);
+      var id = this.read_geojson(ab);
       return id;
     } catch {
       return null;
