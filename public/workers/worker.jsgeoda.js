@@ -58,7 +58,6 @@ class GeodaWorkerProxy {
   async New() {
     if (this.geoda !== null) return true;
     var jsgeoda = await exports.New();
-    try{console.log(jsgeoda.readGeoJSON(encodeAb(dummyData)))}catch{}
     this.geoda = jsgeoda;
     var allFunctions = getAllFuncs(this.geoda);
     for (const key of allFunctions) {
@@ -74,13 +73,9 @@ class GeodaWorkerProxy {
    */
   async loadGeoJSON(url, geoIdColumn) {
     if (this.geoda === null) await this.New();
-    var response = await fetch(url);
-    var responseClone = await response.clone();
-    var [geojsonData, ab] = await Promise.all([
-      response.json(),
-      responseClone.arrayBuffer(),
-    ]);
-
+    var geojsonData = await fetch(url).then(r => r.json());
+    try{console.log(this.readGeoJSON(encodeAb(geojsonData)))}catch{}
+    console.log(geojsonData)
     if (
       !(isNaN(+geojsonData.features[0].properties[geoIdColumn])) 
       && "number" !== typeof geojsonData.features[0].properties[geoIdColumn])
@@ -90,7 +85,7 @@ class GeodaWorkerProxy {
       }
     }
     try {
-      var id = this.read_geojson(ab);
+      var id = this.readGeoJSON(encodeAb(geojsonData));
       return [id, geojsonData];
     } catch {
       return [null, geojsonData]
