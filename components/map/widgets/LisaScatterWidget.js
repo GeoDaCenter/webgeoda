@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import { useSelector } from "react-redux";
-import { Scatter } from 'react-chartjs-2';
+import { Scatter, Chart } from 'react-chartjs-2';
 import pluginBoxSelect from './chartjs-plugins/boxselect';
 import useLisa from '@webgeoda/hooks/useLisa';
 import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
@@ -11,7 +11,7 @@ import Loader from '../../layout/Loader';
 import usePanMap from '@webgeoda/hooks/usePanMap';
 import * as ss from 'simple-statistics';
 import { getVarId } from '@webgeoda/utils/data';
-import zoomPlugin from 'chartjs-plugin-zoom';
+//import zoom from 'chartjs-plugin-zoom';
 
 
 
@@ -26,9 +26,9 @@ function LisaScatterWidgetUnwrapped(props) {
     const [getLisa, cacheLisa,] = useLisa();
     const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
     const lisaVariable = useSelector((state) => state.lisaVariable)
-    const lisaData = getCachedLisa({variable: lisaVariable});
+    const lisaData = getCachedLisa({ variable: lisaVariable });
 
-    if (typeof window === "undefined"){
+    if (typeof window === "undefined") {
         return null;
     }
 
@@ -50,29 +50,29 @@ function LisaScatterWidgetUnwrapped(props) {
     React.useEffect(async () => {
         if (lisaData == null) {
             const lisaData = await getLisa({
-                dataParams: {variable: lisaVariable},
+                dataParams: { variable: lisaVariable },
                 getScatterPlot: true
             });
-            updateCachedLisa({variable: lisaVariable}, lisaData);
+            updateCachedLisa({ variable: lisaVariable }, lisaData);
         }
-    },[]);
+    }, []);
 
 
     //const lisaData = allLisaData[props.data.variableSpec]
     //TODO: box select filtering
 
-        const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
-        const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
+    // const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
+    // const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
 
-        if (chartRef.current) {
-            chartRef.current.boxselect.state = {
-                display: xFilter != undefined && yFilter != undefined,
-                xMin: xFilter?.from,
-                xMax: xFilter?.to,
-                yMin: yFilter?.from,
-                yMax: yFilter?.to
-            };
-        }
+    // if (chartRef.current) {
+    //     chartRef.current.boxselect.state = {
+    //         display: xFilter != undefined && yFilter != undefined,
+    //         xMin: xFilter?.from,
+    //         xMax: xFilter?.to,
+    //         yMin: yFilter?.from,
+    //         yMax: yFilter?.to
+    //     };
+    // }
 
     const dataProp = React.useMemo(() => {
         let dataProp;
@@ -127,25 +127,25 @@ function LisaScatterWidgetUnwrapped(props) {
             //     borderColor: "black",
             //   })
 
-              let fittedLine = null;
-              let fittedLineEquation = null;
-              // TODO: Zero values influence k-means cluster algo, but need to be
-              // excluded in a way that preserves OG indices of data
-              const bestFitInfo = ss.linearRegression(statisticsFormattedData);
-              const bestFit = ss.linearRegressionLine(bestFitInfo);
-              fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
-                  { x: minX-2, y: bestFit(minX-2) },
-                  { x: maxX+2, y: bestFit(maxX+2) }
-              ];
-              fittedLineEquation = `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
+            let fittedLine = null;
+            let fittedLineEquation = null;
+            // TODO: Zero values influence k-means cluster algo, but need to be
+            // excluded in a way that preserves OG indices of data
+            const bestFitInfo = ss.linearRegression(statisticsFormattedData);
+            const bestFit = ss.linearRegressionLine(bestFitInfo);
+            fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
+                { x: minX - 2, y: bestFit(minX - 2) },
+                { x: maxX + 2, y: bestFit(maxX + 2) }
+            ];
+            fittedLineEquation = `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
 
-              dataProp.datasets.push({
+            dataProp.datasets.push({
                 type: "line",
                 label: "Global Moran's: " + bestFitInfo.m.toFixed(3),
                 data: fittedLine,
                 borderColor: "purple",
                 borderWidth: 0.5,
-              });
+            });
         }
 
         return dataProp;
@@ -156,19 +156,9 @@ function LisaScatterWidgetUnwrapped(props) {
 
 
     const options = React.useMemo(() => {
-        // let formattedData =[];
-        // if (lisaData){
-        //     for (let i = 0; i < lisaData.scatterPlotDataStan.length; i++) {
-        //         let x = lisaData.scatterPlotDataStan[i].x
-        //         let y = lisaData.scatterPlotDataStan[i].y
-        //         formattedData.push({
-        //             x: x,
-        //             y: y,
-        //             id: i
-        //         })
-        //     }
-        //}
-        
+
+        import('chartjs-plugin-zoom').then(zoomPlugin => {
+            Chart.register(zoomPlugin)
         return {
             events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
             maintainAspectRatio: false,
@@ -203,20 +193,21 @@ function LisaScatterWidgetUnwrapped(props) {
                     }
                 },
                 zoom: {
-                    // Container for pan options
                     pan: {
-                        // Boolean to enable panning
                         enabled: true,
                         mode: 'xy',
+                        overScaleMode: 'y'
                     },
                     zoom: {
-                        // Boolean to enable zooming
-                        enabled: true,
-                        // Enable drag-to-zoom behavior
-                        drag: true,
+                        wheel: {
+                            enabled: true,
+                        },
+                        pinch: {
+                            enabled: true,
+                        },
                         mode: 'xy',
+                        overScaleMode: 'y'
                     }
-            
                 },
                 // tooltip: {
                 //     callbacks: {
@@ -229,85 +220,89 @@ function LisaScatterWidgetUnwrapped(props) {
                 //         }
                 //     }
                 // },
-                boxselect: {
-                    select: {
-                        enabled: true,
-                        direction: 'xy'
+                // boxselect: {
+                //     select: {
+                //         enabled: true,
+                //         direction: 'xy'
+                //     },
+                //     callbacks: {
+                //         beforeSelect: function (startX, endX, startY, endY) {
+                //             return true;
+                //         },
+                //         afterSelect: (startX, endX, startY, endY, datasets) => {
+                //             dispatch({
+                //                 type: "SET_MAP_FILTER",
+                //                 payload: {
+                //                     widgetIndex: props.id,
+                //                     filterId: `${props.id}-x`,
+                //                     filter: {
+                //                         type: "range",
+                //                         field: props.fullWidgetConfig.xVariable,
+                //                         from: Math.min(startX, endX),
+                //                         to: Math.max(startX, endX)
+                //                     }
+                //                 }
+                //             });
+                //             dispatch({
+                //                 type: "SET_MAP_FILTER",
+                //                 payload: {
+                //                     widgetIndex: props.id,
+                //                     filterId: `${props.id}-y`,
+                //                     filter: {
+                //                         type: "range",
+                //                         field: props.fullWidgetConfig.yVariable,
+                //                         from: Math.min(startY, endY),
+                //                         to: Math.max(startY, endY)
+                //                     }
+                //                 }
+                //             });
+                //         }
+                //     }
+                // }
+                scales: { // TODO: Support gridlinesInterval option
+                    x: {
+                        title: {
+                            display: "xAxisLabel" in props.options,
+                            text: props.options.xAxisLabel || ""
+                        }
                     },
-                    callbacks: {
-                        beforeSelect: function (startX, endX, startY, endY) {
-                            return true;
-                        },
-                        afterSelect: (startX, endX, startY, endY, datasets) => {
-                            dispatch({
-                                type: "SET_MAP_FILTER",
-                                payload: {
-                                    widgetIndex: props.id,
-                                    filterId: `${props.id}-x`,
-                                    filter: {
-                                        type: "range",
-                                        field: props.fullWidgetConfig.xVariable,
-                                        from: Math.min(startX, endX),
-                                        to: Math.max(startX, endX)
-                                    }
-                                }
-                            });
-                            dispatch({
-                                type: "SET_MAP_FILTER",
-                                payload: {
-                                    widgetIndex: props.id,
-                                    filterId: `${props.id}-y`,
-                                    filter: {
-                                        type: "range",
-                                        field: props.fullWidgetConfig.yVariable,
-                                        from: Math.min(startY, endY),
-                                        to: Math.max(startY, endY)
-                                    }
-                                }
-                            });
+                    y: {
+                        title: {
+                            display: "yAxisLabel" in props.options,
+                            text: props.options.yAxisLabel || ""
                         }
                     }
                 }
-            },
-            scales: { // TODO: Support gridlinesInterval option
-                x: {
-                    title: {
-                        display: "xAxisLabel" in props.options,
-                        text: props.options.xAxisLabel || ""
-                    }
-                },
-                y: {
-                    title: {
-                        display: "yAxisLabel" in props.options,
-                        text: props.options.yAxisLabel || ""
-                    }
-                }
             }
-        };
+        }
+    })
     }, [props.options, props.data, props.fullWidgetConfig]);
 
     const chart = React.useMemo(() => {
+        //const ctx = document.getElementById("LISAChart").getContext("2d");
         if (lisaData) {
+            //lisaScatter = new Chart(ctx, data={dataProp}, options={options},ref={chartRef});
             return (
                 <Scatter
                     data={dataProp}
                     options={options}
-                    plugins={[pluginBoxSelect]}
+                    //plugins={[pluginBoxSelect]}
                     ref={chartRef}
                 />
+                //lisaScatter
             );
         }
         else {
             return (
-            <div>
-                <Loader /> 
-                <br />
-                <br />
-                <center><small><i>LISA data generating...</i></small></center>
-            </div>
+                <div>
+                    <Loader />
+                    <br />
+                    <br />
+                    <center><small><i>LISA data generating...</i></small></center>
+                </div>
             )
         }
-    }, [dataProp, options, pluginBoxSelect]);
+    }, [dataProp, options]);
 
     return (
         <div>{chart}</div>
