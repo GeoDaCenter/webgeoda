@@ -67,7 +67,7 @@ const formatChart = (formattedData, labels, options, variable, callback) => {
     }
 }
 
-export default function useGetHisotgramData({
+export default function useGetHistogramData({
     variable=false,
     dataset=false,
     options={},
