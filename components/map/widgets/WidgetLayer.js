@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styles from './Widgets.module.scss';
 import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faAngleLeft, faAngleRight, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import {faAngleRight, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 
 const mapWidgets = ({widgets, widgetLocations, side}) => widgets
   .map((elem, index) => ({elem, index}))
@@ -84,6 +84,7 @@ export default function WidgetLayer(){
                   <FontAwesomeIcon icon={faAngleRight} className={styles.caret} />
                   <p>Pinned</p>
                 </div>
+                {/* {provided.placeholder} */}
                 {widgetElementsLeft}
               </div>
             )}
@@ -97,6 +98,7 @@ export default function WidgetLayer(){
               <Droppable droppableId="widgets-right">
                 {(provided, snapshot) => (
                   <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden}`} id={styles.columnRight}>
+                    {/* {provided.placeholder} */}
                     {widgetElementsRight}
                   </div>
                 )}
@@ -105,6 +107,7 @@ export default function WidgetLayer(){
                 {(provided, snapshot) => (
                   <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden} ${widgetIsDragging ? styles.widgetIsDragging : ""}`} id={styles.columnHidden}>
                     <p id={styles.hidingMenuTitle}>Hidden <FontAwesomeIcon icon={faAngleUp} className={styles.caret} /></p>
+                    {/* {provided.placeholder} */}
                     {widgetElementsHidden}
                   </div>
                 )}
