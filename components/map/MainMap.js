@@ -40,16 +40,6 @@ export default function MainMap() {
   const dispatch = useDispatch();
   // const panToGeoid = usePanMap();
 
-  const variableData = useGetVariable({
-    variable:'Total Population'
-  })
-  console.log(variableData) // [55,213,515,512...]
-
-  const lisaData = useGetLisa({
-    variable: 'Total Population'
-  })
-  console.log(lisaData) //{weights:{}...}
-
   // eslint-disable-next-line no-empty-pattern
   const [] = useLoadData();
   // eslint-disable-next-line no-empty-pattern

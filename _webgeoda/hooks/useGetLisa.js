@@ -79,13 +79,10 @@ export default function useGetLisa({
                 })
             }
             setData({ weights, lisaResults, scatterPlotData });
+        } else {
+            setData({ weights, lisaResults, lisaData:columnData });
         }
-
-        setData({ weights, lisaResults, lisaData:columnData });
     }
-
-    
-
     useEffect(() => {
         getLisa( 
             columnData,

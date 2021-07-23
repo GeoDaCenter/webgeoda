@@ -29,6 +29,7 @@ export default function useGetVariable({
         variable,
         geoids
     ) => {
+        if (variable === false) return;
         // variable already exists
         if (dataset in cachedVariables && variable in cachedVariables[dataset]){
             if (geoids.length){

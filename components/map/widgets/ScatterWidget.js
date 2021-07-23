@@ -15,6 +15,7 @@ function ScatterWidgetUnwrapped(props) {
   const [getLisa,] = useLisa();
   const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
   const lisaData = getCachedLisa(props.data.variableSpecs[0]);
+  console.log(props)
 
   React.useEffect(async () => {
     if(lisaData == null){
@@ -169,6 +170,9 @@ function ScatterWidgetUnwrapped(props) {
     };
   }, [props.options, props.options.pointSize, props.data, props.fullWidgetConfig.xVariable, props.fullWidgetConfig.yVariable]);
 
+  console.log(dataProp)
+  console.log(options)
+   
   const chart = React.useMemo(() => {
     return (
       <Scatter

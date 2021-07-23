@@ -30,6 +30,7 @@ export default function useGetTables({
         variable=false,
         geoids=[]
     ) => {
+        if (variable === false) return;
         const variableSpec = find(
                 dataPresets.variables,
                 (o) => o.variable === variable
