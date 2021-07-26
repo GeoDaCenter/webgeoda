@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import { useSelector } from "react-redux";
@@ -11,11 +11,34 @@ import Loader from '../../layout/Loader';
 import usePanMap from '@webgeoda/hooks/usePanMap';
 import * as ss from 'simple-statistics';
 import { getVarId } from '@webgeoda/utils/data';
+import dynamic from 'next/dynamic'
+
 //import zoom from 'chartjs-plugin-zoom';
 
 
 
 function LisaScatterWidgetUnwrapped(props) {
+    
+    // const zoomPlugin = dynamic(
+    //     () => {
+    //         console.log('hi')
+    //         const imp = import('chartjs-plugin-zoom')
+    //         Chart.register(imp);
+    //         return imp;
+    //     },
+    //     { ssr: false }
+    // )
+
+    // const zoomPlugin = dynamic(
+    //     () => import('chartjs-plugin-zoom'),
+    //     { ssr: false }
+    // )
+
+    import('chartjs-plugin-zoom').then(({default: zoomPlugin}) => {
+        console.log(zoomPlugin)
+        Chart.register(zoomPlugin)
+    })
+
     const chartRef = React.useRef();
     const dispatch = useDispatch();
     const storedGeojson = useSelector((state) => state.storedGeojson);
@@ -56,6 +79,12 @@ function LisaScatterWidgetUnwrapped(props) {
             updateCachedLisa({ variable: lisaVariable }, lisaData);
         }
     }, []);
+
+    // React.useEffect(async () => {
+    //     const { default: zoomPlugin } = await import('chartjs-plugin-zoom');
+    //     Chart.register(zoomPlugin)
+    // }
+    // )
 
 
     //const lisaData = allLisaData[props.data.variableSpec]
@@ -157,8 +186,8 @@ function LisaScatterWidgetUnwrapped(props) {
 
     const options = React.useMemo(() => {
 
-        import('chartjs-plugin-zoom').then(zoomPlugin => {
-            Chart.register(zoomPlugin)
+        // import('chartjs-plugin-zoom').then(zoomPlugin => {
+        //console.log(zoomPlugin.toString())
         return {
             events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
             maintainAspectRatio: false,
@@ -211,10 +240,10 @@ function LisaScatterWidgetUnwrapped(props) {
                 },
                 // tooltip: {
                 //     callbacks: {
-                //         label: (tooltipItem) => { 
+                //         label: (tooltipItem) => {
                 //             const point = tooltipItem.raw.id;
-                //             if (point != undefined) { 
-                //                 return `${tooltipItem.raw.id}` 
+                //             if (point != undefined) {
+                //                 return `${tooltipItem.raw.id}`
                 //             }
                 //             else { return "undefined" };
                 //         }
@@ -275,7 +304,7 @@ function LisaScatterWidgetUnwrapped(props) {
                 }
             }
         }
-    })
+        // })
     }, [props.options, props.data, props.fullWidgetConfig]);
 
     const chart = React.useMemo(() => {
@@ -286,7 +315,7 @@ function LisaScatterWidgetUnwrapped(props) {
                 <Scatter
                     data={dataProp}
                     options={options}
-                    //plugins={[pluginBoxSelect]}
+                    //plugins={[zoomPlugin]}
                     ref={chartRef}
                 />
                 //lisaScatter
@@ -305,7 +334,9 @@ function LisaScatterWidgetUnwrapped(props) {
     }, [dataProp, options]);
 
     return (
-        <div>{chart}</div>
+        <div>
+            {chart}
+            </div>
     );
 }
 

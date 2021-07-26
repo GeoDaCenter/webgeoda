@@ -166,16 +166,6 @@ const widgets = [
   //   }
   // },
   // {
-  //   display: "hidden",
-  //   type: "histogram",
-  //   variable: "Median Household Income",
-  //   options: {
-  //     header: "Median Household Income",
-  //     foregroundColor: "#FF00FF",
-  //     yAxisLabel: "Median Household Income"
-  //   }
-  // },
-  // {
   //   display: "tray",
   //   type: "line",
   //   variable: "Covid April",
@@ -223,6 +213,16 @@ const widgets = [
       xAxisLabel: "Total Population",
       yAxisLabel: "Spatial Lag",
       removeZeroValues: true
+    }
+  },
+  {
+    display: "tray",
+    type: "histogram",
+    variable: "Median Household Income",
+    options: {
+      header: "Median Household Income",
+      foregroundColor: "#FF00FF",
+      yAxisLabel: "Median Household Income"
     }
   },
   // {
