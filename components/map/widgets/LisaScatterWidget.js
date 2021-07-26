@@ -12,7 +12,6 @@ import usePanMap from '@webgeoda/hooks/usePanMap';
 import * as ss from 'simple-statistics';
 import { getVarId } from '@webgeoda/utils/data';
 import dynamic from 'next/dynamic'
-import { resetZoom } from 'chartjs-plugin-zoom';
 
 
 
@@ -232,7 +231,7 @@ function LisaScatterWidgetUnwrapped(props) {
                 //             });
                 //         }
                 //     }
-                // }
+                // },
                 scales: { // TODO: Support gridlinesInterval option
                     x: {
                         title: {
@@ -255,23 +254,24 @@ function LisaScatterWidgetUnwrapped(props) {
     let graphic = null;
 
     const chart = React.useMemo(() => {
-        console.log(resetZoom)
         if (lisaData) {
             graphic = <Scatter
                 data={dataProp}
                 options={options}
-                plugins={[pluginBoxSelect]}
+                //plugins={[pluginBoxSelect]}
                 ref={chartRef}
             />
+            console.log(chartRef)
+            let buttonFunc = null;
             import('chartjs-plugin-zoom').then(({ resetZoom }) => {
-                console.log(resetZoom)
-                return (
-                    <div>
-                        {graphic}
-                        <button onClick={() => { resetZoom(graphic) }}>Reset Zoom</button>
-                    </div>
-                );
+                buttonFunc = resetZoom
             })
+            return (
+                <div>
+                    {graphic}
+                    <button onClick={() => { buttonFunc(chartRef.current) }}>Reset Zoom</button>
+                </div>
+            );
         }
         else {
             return (
