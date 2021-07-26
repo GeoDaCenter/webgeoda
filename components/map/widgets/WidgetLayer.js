@@ -69,7 +69,6 @@ export default function WidgetLayer(){
       payload: newWidgetLocations
     });
   }
-  const handleWidgetTrayClick = () => dispatch({type: "SET_SHOW_WIDGET_TRAY", payload: !showWidgetTray});
 
   return (
     <div className={styles.widgetLayer}>
@@ -90,10 +89,6 @@ export default function WidgetLayer(){
             )}
           </Droppable>
           <div id={styles.widgetTray}>
-            <div className={`${styles.widgetDropdownHandle} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden}`} onClick={handleWidgetTrayClick}>
-              <FontAwesomeIcon icon={faAngleRight} className={styles.caret} />
-              <p>Widgets</p>
-            </div>
             <div id={styles.widgetTrayContent} className={"hideScrollbar"}>
               <Droppable droppableId="widgets-right">
                 {(provided, snapshot) => (

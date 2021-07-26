@@ -122,10 +122,10 @@ $WIDGET_COLUMN_WIDTH: 400px;
       right: 20px;
     }
   }
-  #widgetTray & { // Right
+  &#dropdownHandleRight { // Right
     position: absolute;
     overflow: hidden;
-    left: -135px;
+    right: 0px;
     top: 150px;
     border-top-left-radius: 5em;
     border-bottom-left-radius: 5em;
@@ -136,16 +136,14 @@ $WIDGET_COLUMN_WIDTH: 400px;
     .caret {
       left: 20px;
     }
-  }
-  #widgetTray &.hidden {
-    width: 50px;
-    left: unset;
-    right: 0px;
-    p {
-      display: none;
-    }
-    .caret {
-      transform: rotate(180deg);
+    &.hidden {
+      width: 50px;
+      p {
+        display: none;
+      }
+      .caret {
+        transform: rotate(180deg);
+      }
     }
   }
 }
