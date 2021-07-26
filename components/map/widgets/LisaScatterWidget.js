@@ -1,4 +1,4 @@
-import React, {Suspense} from 'react';
+import React, { Suspense } from 'react';
 import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import { useSelector } from "react-redux";
@@ -12,14 +12,13 @@ import usePanMap from '@webgeoda/hooks/usePanMap';
 import * as ss from 'simple-statistics';
 import { getVarId } from '@webgeoda/utils/data';
 import dynamic from 'next/dynamic'
-
-//import zoom from 'chartjs-plugin-zoom';
+import { resetZoom } from 'chartjs-plugin-zoom';
 
 
 
 function LisaScatterWidgetUnwrapped(props) {
 
-    import('chartjs-plugin-zoom').then(({default: zoomPlugin}) => {
+    import('chartjs-plugin-zoom').then(({ default: zoomPlugin }) => {
         console.log(zoomPlugin)
         Chart.register(zoomPlugin)
     })
@@ -40,21 +39,6 @@ function LisaScatterWidgetUnwrapped(props) {
         return null;
     }
 
-
-    // console.log(allLisaData)
-    // const prelimLisaData = allLisaData[props.data.variableSpec.variable]
-
-    // React.useEffect(async () => {
-    //     if (prelimLisaData === undefined || prelimLisaData == null) {
-    //        cacheLisa({
-    //            dataParams: props.data.variableSpec.variable,
-    //            geographyName: currentData,
-    //        })
-    //     }
-    // },[]);
-
-    // const lisaData = allLisaData[props.data.variableSpec.variable]
-
     React.useEffect(async () => {
         if (lisaData == null) {
             const lisaData = await getLisa({
@@ -65,14 +49,6 @@ function LisaScatterWidgetUnwrapped(props) {
         }
     }, []);
 
-    // React.useEffect(async () => {
-    //     const { default: zoomPlugin } = await import('chartjs-plugin-zoom');
-    //     Chart.register(zoomPlugin)
-    // }
-    // )
-
-
-    //const lisaData = allLisaData[props.data.variableSpec]
     //TODO: box select filtering
 
     // const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
@@ -93,13 +69,14 @@ function LisaScatterWidgetUnwrapped(props) {
         if (lisaData == null) {
             dataProp = { datasets: [] };
         } else {
+            const dataSub = lisaData.scatterPlotDataStan.filter(point => point.cluster!=0)
             dataProp = {
                 datasets: [
                     {
                         type: "scatter",
                         label: props.options.header,
-                        data: lisaData.scatterPlotDataStan,
-                        pointBackgroundColor: lisaData.lisaResults.clusters.map(i => lisaData.lisaResults.colors[i]),
+                        data: dataSub,
+                        pointBackgroundColor: dataSub.map(point => lisaData.lisaResults.colors[point.cluster]),
                         pointRadius: 1.5,
                     }
                 ]
@@ -130,8 +107,7 @@ function LisaScatterWidgetUnwrapped(props) {
 
             let fittedLine = null;
             let fittedLineEquation = null;
-            // TODO: Zero values influence k-means cluster algo, but need to be
-            // excluded in a way that preserves OG indices of data
+
             const bestFitInfo = ss.linearRegression(statisticsFormattedData);
             const bestFit = ss.linearRegressionLine(bestFitInfo);
             fittedLine = [ // Provide two points spanning entire domain instead of m & b to match chart.js data type
@@ -157,9 +133,6 @@ function LisaScatterWidgetUnwrapped(props) {
 
 
     const options = React.useMemo(() => {
-
-        // import('chartjs-plugin-zoom').then(zoomPlugin => {
-        //console.log(zoomPlugin.toString())
         return {
             events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
             maintainAspectRatio: false,
@@ -195,21 +168,21 @@ function LisaScatterWidgetUnwrapped(props) {
                 },
                 zoom: {
                     zoom: {
-                      wheel: {
-                        enabled: true // SET SCROOL ZOOM TO TRUE
-                      },
-                      pinch: {
-                          enabled: true
-                      },
-                      mode: "xy",
-                      speed: 100
+                        wheel: {
+                            enabled: true // SET SCROOL ZOOM TO TRUE
+                        },
+                        pinch: {
+                            enabled: true
+                        },
+                        mode: "xy",
+                        speed: 100
                     },
                     pan: {
-                      enabled: true,
-                      mode: "xy",
-                      speed: 100
+                        enabled: true,
+                        mode: "xy",
+                        speed: 100
                     }
-                  },
+                },
                 // tooltip: {
                 //     callbacks: {
                 //         label: (tooltipItem) => {
@@ -279,19 +252,26 @@ function LisaScatterWidgetUnwrapped(props) {
         // })
     }, [props.options, props.data, props.fullWidgetConfig]);
 
+    let graphic = null;
+
     const chart = React.useMemo(() => {
-        //const ctx = document.getElementById("LISAChart").getContext("2d");
+        console.log(resetZoom)
         if (lisaData) {
-            //lisaScatter = new Chart(ctx, data={dataProp}, options={options},ref={chartRef});
-            return (
-                <Scatter
-                    data={dataProp}
-                    options={options}
-                    //plugins={[zoomPlugin]}
-                    ref={chartRef}
-                />
-                //lisaScatter
-            );
+            graphic = <Scatter
+                data={dataProp}
+                options={options}
+                plugins={[pluginBoxSelect]}
+                ref={chartRef}
+            />
+            import('chartjs-plugin-zoom').then(({ resetZoom }) => {
+                console.log(resetZoom)
+                return (
+                    <div>
+                        {graphic}
+                        <button onClick={() => { resetZoom(graphic) }}>Reset Zoom</button>
+                    </div>
+                );
+            })
         }
         else {
             return (
@@ -308,7 +288,7 @@ function LisaScatterWidgetUnwrapped(props) {
     return (
         <div>
             {chart}
-            </div>
+        </div>
     );
 }
 
