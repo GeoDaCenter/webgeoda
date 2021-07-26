@@ -18,21 +18,6 @@ import dynamic from 'next/dynamic'
 
 
 function LisaScatterWidgetUnwrapped(props) {
-    
-    // const zoomPlugin = dynamic(
-    //     () => {
-    //         console.log('hi')
-    //         const imp = import('chartjs-plugin-zoom')
-    //         Chart.register(imp);
-    //         return imp;
-    //     },
-    //     { ssr: false }
-    // )
-
-    // const zoomPlugin = dynamic(
-    //     () => import('chartjs-plugin-zoom'),
-    //     { ssr: false }
-    // )
 
     import('chartjs-plugin-zoom').then(({default: zoomPlugin}) => {
         console.log(zoomPlugin)
@@ -142,19 +127,6 @@ function LisaScatterWidgetUnwrapped(props) {
             const maxX = ss.max(arrayXData)
             const maxY = ss.max(arrayYData)
 
-            // dataProp.datasets.push({
-            //     type: "line",
-            //     label: false,
-            //     data: [{x:minX, y:0}, {x:maxX, y:0}],
-            //     borderColor: "black",
-            //   })
-
-            //   dataProp.datasets.push({
-            //     type: "line",
-            //     label: false,
-            //     data: [{x:0, y:minY}, {x:0, y:maxY}],
-            //     borderColor: "black",
-            //   })
 
             let fittedLine = null;
             let fittedLineEquation = null;
@@ -222,22 +194,22 @@ function LisaScatterWidgetUnwrapped(props) {
                     }
                 },
                 zoom: {
-                    pan: {
-                        enabled: true,
-                        mode: 'xy',
-                        overScaleMode: 'y'
-                    },
                     zoom: {
-                        wheel: {
-                            enabled: true,
-                        },
-                        pinch: {
-                            enabled: true,
-                        },
-                        mode: 'xy',
-                        overScaleMode: 'y'
+                      wheel: {
+                        enabled: true // SET SCROOL ZOOM TO TRUE
+                      },
+                      pinch: {
+                          enabled: true
+                      },
+                      mode: "xy",
+                      speed: 100
+                    },
+                    pan: {
+                      enabled: true,
+                      mode: "xy",
+                      speed: 100
                     }
-                },
+                  },
                 // tooltip: {
                 //     callbacks: {
                 //         label: (tooltipItem) => {
