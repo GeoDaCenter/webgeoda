@@ -12,9 +12,9 @@ export default function WidgetTrayHandle(props){
     const handleWidgetTrayClick = () => dispatch({type: "SET_SHOW_WIDGET_TRAY", payload: !showWidgetTray});
 
     return (
-        <div id={styles.dropdownHandleRight} className={`${styles.widgetDropdownHandle} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden}`} onClick={handleWidgetTrayClick}>
+        <button id={styles.dropdownHandleRight} className={`${styles.widgetDropdownHandle} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden}`} onClick={handleWidgetTrayClick}>
             <FontAwesomeIcon icon={faAngleRight} className={styles.caret} />
             <p>Widgets</p>
-        </div>
+        </button>
     );
 }

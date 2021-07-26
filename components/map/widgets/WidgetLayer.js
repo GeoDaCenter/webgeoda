@@ -77,12 +77,12 @@ export default function WidgetLayer(){
           <Droppable droppableId="widgets-left">
             {(provided, snapshot) => (
               <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""} ${columnLeftActive ? styles.active : ""}`} id={styles.columnLeft}>
-                <div className={styles.widgetDropdownHandle} onClick={() => {
+                <button className={styles.widgetDropdownHandle} onClick={() => {
                   setColumnLeftActive(!columnLeftActive);
                 }}>
                   <FontAwesomeIcon icon={faAngleRight} className={styles.caret} />
                   <p>Pinned</p>
-                </div>
+                </button>
                 {/* {provided.placeholder} */}
                 {widgetElementsLeft}
               </div>
