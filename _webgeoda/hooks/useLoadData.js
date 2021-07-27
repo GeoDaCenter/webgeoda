@@ -94,15 +94,15 @@ export default function useLoadData(dateLists = {}) {
   const geoda = useContext(GeodaContext);
   const currentData = useSelector((state) => state.currentData);
   const cachedVariables = useSelector((state) => state.cachedVariables);
-  const mapDataset = useSelector((state) => state.mapDataset);
+  const datasetToLoad = useSelector((state) => state.datasetToLoad);
   const dataPresets = useSelector((state) => state.dataPresets);
   const dataParams = useSelector((state) => state.dataParams);
   const [shouldRetryLoadGeoJSON, setShouldRetryLoadGeoJSON] = useState(false)
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (mapDataset) { loadData(dataPresets, mapDataset) }
-  },[mapDataset])
+    if (datasetToLoad) { loadData(dataPresets, datasetToLoad) }
+  },[datasetToLoad])
 
   useEffect(() => {
     if (shouldRetryLoadGeoJSON) {
@@ -114,7 +114,7 @@ export default function useLoadData(dateLists = {}) {
 
   useEffect(() => {
     // Load default dataset on page load
-    dispatch({ type: "CHANGE_MAP_DATASET", payload: dataPresets.data[0].geodata })
+    dispatch({ type: "CHANGE_MAP_DATASET", payload: dataPresets.data[0].geodata });
   },[])
 
   const attemptGeojsonLoad = async () => {

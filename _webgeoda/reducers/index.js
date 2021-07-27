@@ -134,7 +134,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       } else {
         return {
           ...state,
-          mapDataset: action.payload
+          datasetToLoad: action.payload
         };
       }
     }

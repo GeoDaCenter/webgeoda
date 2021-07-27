@@ -20,7 +20,7 @@ export const INITIAL_STATE = {
   cachedVariables: {},
   cachedTimeSeries: {},
   currentData: dataPresets.data[0].geodata,
-  mapDataset: null,
+  datasetToLoad: null,
   activeDatasets: [],
   currentMethod: "natural_breaks",
   currentOverlay: "",
