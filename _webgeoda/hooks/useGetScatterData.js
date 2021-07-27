@@ -171,11 +171,58 @@ const formatChart = ({
     }
 }
 
+const scaleAxis = (data, targetRange) => {
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+    const range = max - min;
+    return {min, max, range, scalar: targetRange/range};
+}
+
+const scaleAxes = (x, y, z, targetRange) => { return { 
+    xScale: scaleAxis(x, targetRange),
+    yScale: scaleAxis(y, targetRange),
+    zScale: scaleAxis(z, targetRange),
+}}
+
+const zipAndScale = (x, y, z, targetRange) => {
+    console.log(x,y,z)
+    if (!x.length || !y.length || !z.length){
+        return {
+            xScale:{},
+            yScale:{},
+            zScale:{},
+            data:[]
+        }
+    }
+    const {
+        xScale,
+        yScale,
+        zScale
+    } = scaleAxes(x,y,z,targetRange)
+    let data = [];
+    for (let i=0; i<x.length;i++){
+        data.push({
+            position: [
+                (x[i]-xScale.min)*xScale.scalar,
+                (y[i]-yScale.min)*yScale.scalar,
+                (z[i]-zScale.min)*zScale.scalar
+            ]
+        })
+    }
+    return {
+        data,
+        xScale,
+        yScale,
+        zScale
+    }
+}
+
 export default function useGetScatterData({
     dataset=false,
     options={},
     config={},
     id=0,
+    targetRange=100
 }){
     const currentData = useSelector((state) => state.currentData)
     const currentDataset = useSelector((state) => state.storedGeojson[dataset||currentData]);
@@ -211,65 +258,88 @@ export default function useGetScatterData({
         getScatterPlot: true
     })
 
-    const {
-        formattedData,
-        fittedLine,
-        fittedLineEquation
-    } = useMemo(() => formatScatterData({
-        xData: config.type === 'lisaScatter' ? lisaData.lisaData : xData,
-        yData: config.type === 'lisaScatter' ? lisaData.spatialLags : yData,
-        zData: config.type === 'scatter3d' ? [] : zData,
-        clusters: lisaData?.lisaResults?.clusters,
-        colors: lisaData?.lisaResults?.colors,
-        config,
-        idKeys,
-        options
-    }), [Object.keys(xData).length, Object.keys(yData).length, idKeys.length, Object.keys(lisaData).length, config, options]);
+    if (config.type === "scatter3d"){
+        const {
+            data,
+            xScale,
+            yScale,
+            zScale
+        } = useMemo(() => zipAndScale(
+            xData,
+            yData,
+            zData,
+            targetRange
+        ),[Object.keys(xData).length, Object.keys(yData).length, Object.keys(zData).length, config, options])
 
-    const handleFilter = (startX, endX, startY, endY, datasets) => {
-        dispatch({
-            type: "SET_MAP_FILTER",
-            payload: {   
-                widgetIndex: id, 
-                filterId: `${id}-x`,
-                filter: {
-                type: "range",
-                field: config.xVariable,
-                from: Math.min(startX, endX),
-                to: Math.max(startX, endX)
-                }
-            }
-        });
-        dispatch({
-            type: "SET_MAP_FILTER",
-            payload: {    
-                widgetIndex: id, 
-                filterId: `${id}-y`,
-                filter: {
-                type: "range",
-                field: config.yVariable,
-                from: Math.min(startY, endY),
-                to: Math.max(startY, endY)
-                }
-            }
-        });
-    }
+        return {
+            xScale,
+            yScale,
+            zScale,
+            data
+        }
+    } else {
     
-    const {
-        chartData, 
-        chartOptions
-    } = useMemo(() => formatChart({
-        options,
-        formattedData,
-        fittedLine,
-        fittedLineEquation,
-        filterCallback: handleFilter,
-        clickCallback: panToGeoid
-    }),
-    [JSON.stringify(formattedData[0]), JSON.stringify(config), idKeys.length]);
+        const {
+            formattedData,
+            fittedLine,
+            fittedLineEquation
+        } = useMemo(() => formatScatterData({
+            xData: config.type === 'lisaScatter' ? lisaData.lisaData : xData,
+            yData: config.type === 'lisaScatter' ? lisaData.spatialLags : yData,
+            zData: config.type === 'scatter3d' ? [] : zData,
+            clusters: lisaData?.lisaResults?.clusters,
+            colors: lisaData?.lisaResults?.colors,
+            config,
+            idKeys,
+            options
+        }), [Object.keys(xData).length, Object.keys(yData).length, idKeys.length, Object.keys(lisaData).length, config, options]);
+    
+        const handleFilter = (startX, endX, startY, endY, datasets) => {
+            dispatch({
+                type: "SET_MAP_FILTER",
+                payload: {   
+                    widgetIndex: id, 
+                    filterId: `${id}-x`,
+                    filter: {
+                    type: "range",
+                    field: config.xVariable,
+                    from: Math.min(startX, endX),
+                    to: Math.max(startX, endX)
+                    }
+                }
+            });
+            dispatch({
+                type: "SET_MAP_FILTER",
+                payload: {    
+                    widgetIndex: id, 
+                    filterId: `${id}-y`,
+                    filter: {
+                    type: "range",
+                    field: config.yVariable,
+                    from: Math.min(startY, endY),
+                    to: Math.max(startY, endY)
+                    }
+                }
+            });
+        }
 
-    return {
-        chartData,
-        chartOptions
+        const {
+            chartData, 
+            chartOptions
+        } = useMemo(() => formatChart({
+            options,
+            formattedData,
+            fittedLine,
+            fittedLineEquation,
+            filterCallback: handleFilter,
+            clickCallback: panToGeoid
+        }),
+        [JSON.stringify(formattedData[0]), JSON.stringify(config), idKeys.length]);
+
+        
+        return {
+            chartData,
+            chartOptions
+        }
     }
 }

@@ -6,6 +6,7 @@ import DeckGL from '@deck.gl/react';
 import {COORDINATE_SYSTEM, OrbitView} from '@deck.gl/core';
 import {PointCloudLayer, TextLayer} from '@deck.gl/layers';
 import {SimpleMeshLayer} from '@deck.gl/mesh-layers';
+import useGetScatterData from '@webgeoda/hooks/useGetScatterData';
 // import {WIDGET_WIDTH} from './Widget';
 
 const DEFAULT_VIEW_STATE = {
@@ -23,12 +24,23 @@ export const TARGET_RANGE = 100;
 
 function Scatter3DWidgetUnwrapped(props) {
   const [viewState, setViewState] = useState(DEFAULT_VIEW_STATE);
-  // const mins = [0, 0, 0];
-  // const maxs = [100, 100, 100];
+  const {
+    xScale,
+    yScale,
+    zScale,
+    data
+  } = useGetScatterData({
+    options: props.options,
+    config: props.config,
+    targetRange: 100
+  })
+
+  if (!data.length || !('scalar' in xScale) || !('scalar' in yScale) || !('scalar' in zScale)) return null;
+
   const showGridlines = "gridlinesInterval" in props.options && props.options.gridlinesInterval.length === 3;
-  const xTick = showGridlines ? (props.data.axesInfo[0].scalar * props.options.gridlinesInterval[0]) : null;
-  const yTick = showGridlines ? (props.data.axesInfo[1].scalar * props.options.gridlinesInterval[1]) : null;
-  const zTick = showGridlines ? (props.data.axesInfo[2].scalar * props.options.gridlinesInterval[2]) : null;
+  const xTick = showGridlines ? (xScale.scalar * props.options.gridlinesInterval[0]) : null;
+  const yTick = showGridlines ? (yScale.scalar * props.options.gridlinesInterval[1]) : null;
+  const zTick = showGridlines ? (zScale.scalar * props.options.gridlinesInterval[2]) : null;
   const xyBoxMesh = showGridlines ? {
     positions: new Float32Array([
       0, 0, 0,
@@ -57,10 +69,9 @@ function Scatter3DWidgetUnwrapped(props) {
     ])
   } : null;
 
-
   const pointCloudLayer = new PointCloudLayer({
     id: "3d-scatter-layer",
-    data: props.data.data,
+    data,
     coordinateSystem: COORDINATE_SYSTEM.CARTESIAN,
     getNormal: [0, 1, 0],
     getColor: hexToRgb(props.options.foregroundColor || "#000000"),
@@ -82,6 +93,7 @@ function Scatter3DWidgetUnwrapped(props) {
       for(let j = 0; j <= TARGET_RANGE; j += zTick)
         xzGridlinesData.push({position: [i, 0, j]});
     
+    
     for(let axis = 0; axis <= 2; axis++){
       const tick = [xTick, yTick, zTick][axis];
       for(let i = 0; i <= TARGET_RANGE; i += tick){
@@ -89,11 +101,12 @@ function Scatter3DWidgetUnwrapped(props) {
         position[axis] = i;
         textData.push({
           position,
-          text: parseFloat(i / props.data.axesInfo[axis].scalar + props.data.axesInfo[axis].min).toFixed(2)
+          text: parseFloat(i / [xScale,yScale,zScale][axis].scalar + [xScale,yScale,zScale][axis].min).toFixed(2)
         });
       }
     }
   }
+
   const axisLabels = [
     {
       position: [50, -15, 0],

@@ -5,7 +5,6 @@ import styles from './Widgets.module.scss';
 import { Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripLines, faCog, faFilter, faSlash } from "@fortawesome/free-solid-svg-icons";
-import Loader from '../../layout/Loader';
 import WidgetSettings from './WidgetSettings';
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';

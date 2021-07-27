@@ -208,20 +208,20 @@ const widgets = [
       removeZeroValues: true
     }
   },
-  // {
-  //   display: "hidden",
-  //   type: "scatter3d",
-  //   xVariable: "Median Household Income",
-  //   yVariable: "Median Gross Rent",
-  //   zVariable: "Median age",
-  //   options: {
-  //     foregroundColor: "#00AAFF",
-  //     xAxisLabel: "Median Household Income",
-  //     yAxisLabel: "Median Gross Rent",
-  //     zAxisLabel: "Median Age",
-  //     gridlinesInterval: [50000, 500, 5]
-  //   }
-  // }
+  {
+    display: "hidden",
+    type: "scatter3d",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
+    zVariable: "Median age",
+    options: {
+      foregroundColor: "#00AAFF",
+      xAxisLabel: "Median Household Income",
+      yAxisLabel: "Median Gross Rent",
+      zAxisLabel: "Median Age",
+      gridlinesInterval: [50000, 500, 5]
+    }
+  }
 ];
 
 // const style = {
