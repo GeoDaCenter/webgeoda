@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './Widgets.module.scss';
 import { Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGripLines, faCog, faFilter, faSlash, faExpandArrowsAlt } from "@fortawesome/free-solid-svg-icons";
+import { faGripLines, faCog, faFilter, faSlash, faExpandArrowsAlt, faInfo, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import Loader from '../../layout/Loader';
 import WidgetSettings from './WidgetSettings';
 import HistogramWidget from './HistogramWidget';

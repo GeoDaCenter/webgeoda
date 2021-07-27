@@ -57,7 +57,7 @@ function LisaWidget(props) {
     let avg = null;
     let lisaVal = null;
     arrayData.length==0 ? avg = 'N/A' : avg = ss.mean(arrayData).toFixed(3)
-    cachedVariables=='undefined' ? lisaVal = 'N/A' : lisaVal = cachedVariables[lisaVariable][currentHoverId]
+    cachedVariables==undefined ? lisaVal = 'N/A' : lisaVal = cachedVariables[lisaVariable][currentHoverId]
 
     return (
     <div>

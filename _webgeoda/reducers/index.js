@@ -586,6 +586,18 @@ export default function reducer(state = INITIAL_STATE, action) {
     case "SET_LISA_VARIABLE": {
       return {...state, lisaVariable: action.payload};
     }
+
+    case "SET_CACHED_VARIABLE": {
+      let cachedVariables = {...state.cachedVariables}
+      cachedVariables = {
+        ...cachedVariables,
+        [state.currentData]: {
+          ...(cachedVariables[state.currentData]||{}),
+          [widgetData[i.id].variableToCache[n].variable]: zip(widgetData[i.id].variableToCache[n].order, widgetData[i.id].variableToCache[n].data)
+        }
+      }
+      return {...state, cachedVariables};
+    }
     case "FORMAT_WIDGET_DATA": {
       let cachedVariables = {...state.cachedVariables}
       const widgetData = {...state.widgetData};
