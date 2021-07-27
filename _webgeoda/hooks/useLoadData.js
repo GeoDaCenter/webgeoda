@@ -92,17 +92,39 @@ const lisaColors = [
 
 export default function useLoadData(dateLists = {}) {
   const geoda = useContext(GeodaContext);
-  const currentData = useSelector((state) => state.currentData);
+  const currentData = useSelector((state) => state.currentData); // Current map data
+  const datasetToLoad = useSelector((state) => state.datasetToLoad); // Set when map data needs to be loaded
   const cachedVariables = useSelector((state) => state.cachedVariables);
-  const datasetToLoad = useSelector((state) => state.datasetToLoad);
   const dataPresets = useSelector((state) => state.dataPresets);
   const dataParams = useSelector((state) => state.dataParams);
+  const activeDatasets = useSelector((state) => state.activeDatasets);
+  const storedData = useSelector((state) => state.storedData);
+  const storedGeojson = useSelector((state) => state.storedGeojson);
   const [shouldRetryLoadGeoJSON, setShouldRetryLoadGeoJSON] = useState(false)
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (datasetToLoad) { loadData(dataPresets, datasetToLoad) }
+    if (datasetToLoad) {
+      loadData(dataPresets, datasetToLoad).then(() => {
+        dispatch({ type: "CHANGE_MAP_DATASET", payload: null });
+        // TODO: Get rid of datasetToLoad. CHANGE_MAP_DATASET should
+        // probably change currentData directly, and useLoadData should
+        // listen for updates to currentData and load approriately (if not already loaded) to match
+        // what's happening for widget datasets
+      });
+    }
   },[datasetToLoad])
+
+  useEffect(() => {
+    for(const dataset of activeDatasets){
+      if(!(dataset in storedData) || !(dataset in storedGeojson)){ // TODO: is an entry in storedData and storedGeojson guaranteed?
+        // TODO: Load data into redux state
+        // However, we can't use the current loadData function or the INITIAL_LOAD action
+        // since that would modify map state. Create new action to load data without
+        // map side effects
+      }
+    }
+  }, [activeDatasets]);
 
   useEffect(() => {
     if (shouldRetryLoadGeoJSON) {
