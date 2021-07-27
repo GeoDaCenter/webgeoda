@@ -202,13 +202,14 @@ const zipAndScale = (x, y, z, targetRange) => {
             data:[]
         }
     }
+    
     const {
         xScale,
         yScale,
         zScale
     } = scaleAxes(xVals,yVals,zVals,targetRange)
     let data = [];
-    for (let i=0; i<x.length;i++){
+    for (let i=0; i<xVals.length;i++){
         data.push({
             position: [
                 (xVals[i]-xScale.min)*xScale.scalar,
@@ -217,6 +218,7 @@ const zipAndScale = (x, y, z, targetRange) => {
             ]
         })
     }
+    
     return {
         data,
         xScale,
@@ -292,9 +294,8 @@ export default function useGetScatterData({
             fittedLine,
             fittedLineEquation
         } = useMemo(() => formatScatterData({
-            xData: config.type === 'lisaScatter' ? lisaData.lisaData : xData,
-            yData: config.type === 'lisaScatter' ? lisaData.spatialLags : yData,
-            zData: config.type === 'scatter3d' ? [] : zData,
+            xData: config.type === 'lisaScatter' ? lisaData.lisaData : Object.values(xData),
+            yData: config.type === 'lisaScatter' ? lisaData.spatialLags : Object.values(yData),
             clusters: lisaData?.lisaResults?.clusters,
             colors: lisaData?.lisaResults?.colors,
             config,

@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { find, parseColumnData } from '../utils/data';
+import { find, parseColumnData, zip} from '../utils/data';
 import useGetTables from './useGetTables';
 import useFetchData from "./useFetchData";
 
@@ -76,7 +76,7 @@ export default function useGetVariable({
                     }
                 }
             })
-            setData(result)
+            setData(zip(order, result))
         }
     }
 
