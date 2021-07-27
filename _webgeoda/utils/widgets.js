@@ -414,6 +414,13 @@ export const updateLisaVariable = async (newLisa, dispatch) => {
         type: "SET_LISA_VARIABLE",
         payload: newLisa
     })
+    // dispatch({
+    //     type: "SET_CACHED_VARIABLE",
+    //     payload: {
+    //         cachedVariable: {
+    //             variable: newLisa,            }
+    //     },
+    // });
 }
 
 export const updateHoverId = async (newId, dispatch) => {

@@ -18,7 +18,6 @@ import dynamic from 'next/dynamic'
 function LisaScatterWidgetUnwrapped(props) {
 
     import('chartjs-plugin-zoom').then(({ default: zoomPlugin }) => {
-        console.log(zoomPlugin)
         Chart.register(zoomPlugin)
     })
 
@@ -47,6 +46,16 @@ function LisaScatterWidgetUnwrapped(props) {
             updateCachedLisa({ variable: lisaVariable }, lisaData);
         }
     }, []);
+
+    // dispatch({
+    //     type: "SET_CACHED_VARIABLE",
+    //     payload: {
+    //         cachedVariable: {
+    //             variable: lisaVariable,
+    //             geoidOrder: storedGeojson[currentData].order
+    //         }
+    //     },
+    // });
 
     //TODO: box select filtering
 
@@ -261,7 +270,6 @@ function LisaScatterWidgetUnwrapped(props) {
                 //plugins={[pluginBoxSelect]}
                 ref={chartRef}
             />
-            console.log(chartRef)
             let buttonFunc = null;
             import('chartjs-plugin-zoom').then(({ resetZoom }) => {
                 buttonFunc = resetZoom

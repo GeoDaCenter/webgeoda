@@ -1,5 +1,6 @@
 import { INITIAL_STATE } from "../constants/defaults";
 import {getWidgetSpec} from "../utils/widgets";
+import { getColumnData } from "../utils/widgets";
 
 import {
   mapFnNb,
@@ -584,19 +585,39 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {...state, widgetConfig};
     }
     case "SET_LISA_VARIABLE": {
-      return {...state, lisaVariable: action.payload};
+      const variableSpec = find(
+        state.dataPresets.variables,
+        (o) => o.variable === action.payload
+    )
+      const {data} = getColumnData(variableSpec, state);
+      console.log(data)
+      return {...state, 
+        lisaVariable: action.payload,
+        cachedVariables: {
+          ...state.cachedVariables,
+          [state.currentData]: {
+              ...state.cachedVariables[state.currentData],
+              [action.payload]: zip(
+                state.storedGeojson[state.currentData].order, 
+                data
+            )
+          }
+        }
+      };
     }
 
     case "SET_CACHED_VARIABLE": {
-      let cachedVariables = {...state.cachedVariables}
-      cachedVariables = {
-        ...cachedVariables,
+      const {data, keys} = getColumnData(action.payload.cachedVariable.variable, state, true);
+      return {...state, cachedVariables: {
+        ...state.cachedVariables,
         [state.currentData]: {
-          ...(cachedVariables[state.currentData]||{}),
-          [widgetData[i.id].variableToCache[n].variable]: zip(widgetData[i.id].variableToCache[n].order, widgetData[i.id].variableToCache[n].data)
+            ...state.cachedVariables[state.currentData],
+            [action.payload.cachedVariable.variable]: zip(
+              keys, 
+              data
+          )
         }
-      }
-      return {...state, cachedVariables};
+      }};
     }
     case "FORMAT_WIDGET_DATA": {
       let cachedVariables = {...state.cachedVariables}

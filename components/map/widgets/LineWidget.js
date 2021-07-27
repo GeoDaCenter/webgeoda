@@ -8,7 +8,6 @@ function LineWidget(props){
   const data = useGetTimeSeriesData({
     variable: props.fullWidgetConfig.variable
   });
-  console.log(data)
   const formattedData = React.useMemo(() => {
     if(data == null) return null;
     return data.map((val, i) => {
