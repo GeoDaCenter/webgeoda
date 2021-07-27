@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@deck.gl/aggregation-layers": "^8.5.0",
-    "@deck.gl/core": "^8.4.20",
+    "@deck.gl/core": "^8.5.0",
     "@deck.gl/geo-layers": "^8.4.20",
-    "@deck.gl/layers": "^8.4.20",
+    "@deck.gl/layers": "^8.5.0",
     "@deck.gl/mapbox": "^8.4.20",
     "@deck.gl/mesh-layers": "^8.4.20",
     "@deck.gl/react": "^8.4.20",
