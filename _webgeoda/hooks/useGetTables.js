@@ -13,7 +13,8 @@ import { useState, useEffect } from "react";
 export default function useGetTables({
     dataset=false,
     variable=false,
-    geoids=[]
+    geoids=[],
+    getDates=false
 }){
     const currentData = useSelector((state) => state.currentData);
     const storedData = useSelector((state) => state.storedData);
@@ -22,7 +23,8 @@ export default function useGetTables({
     const fetchData = useFetchData();
     const [tables, setTables] = useState({
         numerator: {},
-        denominator: {}
+        denominator: {},
+        dates: []
     })
 
     const getTables = async (
@@ -40,10 +42,11 @@ export default function useGetTables({
             console.log('Missing Variable')
             setTables({
                 numerator: {},
-                denominator: {}
+                denominator: {},
+                dates: []
             })
+            return;
         }
-
         const numeratorTable = findTable(
             dataset,
             variableSpec.numerator,            
@@ -61,7 +64,7 @@ export default function useGetTables({
                 ? storedGeojson[dataset].properties
                 : await fetchData({ req:dataset })
             : numeratorTable && numeratorTable.file in storedData
-                ? storedData[numeratorTable.file].data
+                ? storedData[numeratorTable.file]
                 : await fetchData({ req:numeratorTable })
 
         const denominatorData = variableSpec && variableSpec.denominator === 'properties' 
@@ -69,13 +72,15 @@ export default function useGetTables({
                 ? storedGeojson[dataset].properties
                 : await fetchData({ req:dataset })
             : denominatorTable && denominatorTable.file in storedData
-                ? storedData[denominatorTable.file].data
+                ? storedData[denominatorTable.file]
                 : await fetchData({ req:denominatorTable })     
-
- 
+        
         if (geoids.length){
+            let numeratorData = 'data' in numeratorData ? numeratorData.data : numeratorData;
+            let denominatorData = 'data' in denominatorData ? denominatorData.data : denominatorData;
             let tempNumer = {};
             let tempDenom = {};
+
             if (denominatorData) {
                 for (let i=0; i<geoids.length;i++){
                     tempNumer[geoids[i]] = numeratorData[geoids[i]]
@@ -88,14 +93,16 @@ export default function useGetTables({
             }
 
             setTables({
-                numerator: tempNumer,
-                denominator: tempDenom
+                numerator: 'data' in numeratorData ? numeratorData.data : numeratorData,
+                denominator: 'data' in denominatorData ? denominatorData.data : denominatorData,
+                dates: numeratorData?.dateIndices || denominatorData.dateIndices || []
             })
         }
-
+        
         setTables({
-            numerator: numeratorData,
-            denominator: denominatorData
+            numerator: 'data' in numeratorData ? numeratorData.data : numeratorData,
+            denominator: 'data' in denominatorData ? denominatorData.data : denominatorData,
+            dates: numeratorData?.dateIndices || denominatorData?.dateIndices || []
         })
     }
 

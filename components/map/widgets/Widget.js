@@ -33,15 +33,8 @@ const ParentWidget = (props) => {
 }
 function Widget(props) {
   const dispatch = useDispatch();
-  const data = useSelector(state => state.widgetData[props.id]);
   const mapFilters = useSelector(state => state.mapFilters);
   const [showSettings, setShowSettings] = React.useState(false);
-  if(data == null){
-    return (
-      <div className={styles.widget}><Loader /></div>
-    );
-  }
-
   const activeFilters = mapFilters.filter(i => i.source == props.id);
   const hasActiveFilter = activeFilters.length > 0;
 
@@ -87,14 +80,13 @@ function Widget(props) {
             <ParentWidget 
               type={props.type}
               options={props.options}
-              data={data}
-              fullWidgetConfig={props.fullWidgetConfig}
+              config={props.config}
               id={props.id}
               activeFilters={activeFilters}
             />
           </div>
           <div className={styles.widgetSettings}>
-            <WidgetSettings config={props.fullWidgetConfig} id={props.id} onSave={() => {
+            <WidgetSettings config={props.config} id={props.id} onSave={() => {
               setShowSettings(false);
             }} />
           </div>
@@ -108,7 +100,7 @@ function Widget(props) {
 Widget.propTypes = {
   type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d"]).isRequired,
   options: PropTypes.object.isRequired,
-  fullWidgetConfig: PropTypes.object.isRequired,
+  config: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired
 };

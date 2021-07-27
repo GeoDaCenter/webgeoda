@@ -11,7 +11,8 @@ function HistogramWidget(props) {
     chartData,
     chartOptions
   } = useGetHistogramData({
-    variable: props.fullWidgetConfig.variable,
+    variable: props.config.variable,
+    config: props.config,
     options: props.options,
     id: props.id
   })
@@ -41,7 +42,7 @@ HistogramWidget.propTypes = {
   options: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,
-  fullWidgetConfig: PropTypes.object.isRequired
+  config: PropTypes.object.isRequired
 };
 
 export default HistogramWidget;

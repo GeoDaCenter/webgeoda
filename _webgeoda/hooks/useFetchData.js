@@ -84,7 +84,7 @@ export default function useFetchData(){
             if (dateIndices) {
                 return data
             }
-            return data.data
+            return data
         }
     }
 

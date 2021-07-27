@@ -70,15 +70,7 @@ export default function useGetLisa({
             let scatterPlotData = [];
             const standardizedVals = standardize(columnData);
             const spatialLags = await geoda.spatialLag(weights, standardizedVals);
-            for (let i=0; i<columnData.length; i++){
-                scatterPlotData.push({
-                    x: columnData[i],
-                    y: spatialLags[i],
-                    cluster: lisaResults.clusters[i],
-                    id: storedGeojson[geographyName].order[i]
-                })
-            }
-            setData({ weights, lisaResults, scatterPlotData });
+            setData({ weights, lisaResults, scatterPlotData, lisaData:columnData, spatialLags });
         } else {
             setData({ weights, lisaResults, lisaData:columnData });
         }

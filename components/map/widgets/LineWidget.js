@@ -8,7 +8,7 @@ function LineWidget(props){
     chartData,
     chartOptions
   } = useGetLineChartData({
-    variable: props.fullWidgetConfig.variable,
+    variable: props.config.variable,
     dataset: 'states.geojson',
     options: props.options
   })
@@ -22,7 +22,7 @@ function LineWidget(props){
 
 LineWidget.propTypes = {
   options: PropTypes.object.isRequired,
-  fullWidgetConfig: PropTypes.object.isRequired
+  config: PropTypes.object.isRequired
 };
 
 export default LineWidget;

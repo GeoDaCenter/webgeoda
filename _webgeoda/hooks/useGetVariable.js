@@ -87,6 +87,6 @@ export default function useGetVariable({
             geoids
         )
     },[dataset, variable, geoids.length, numerator, denominator])
-
+    
     return data
 }
