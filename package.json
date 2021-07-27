@@ -9,6 +9,7 @@
     "build:worker": "node _webgeoda/build-scripts/build-sw"
   },
   "dependencies": {
+    "@deck.gl/aggregation-layers": "^8.5.0",
     "@deck.gl/core": "^8.4.20",
     "@deck.gl/geo-layers": "^8.4.20",
     "@deck.gl/layers": "^8.4.20",

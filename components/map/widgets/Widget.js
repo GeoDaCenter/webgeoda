@@ -9,6 +9,7 @@ import WidgetSettings from './WidgetSettings';
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';
 import Scatter3DWidget from './Scatter3DWidget';
+import HeatmapWidget from './HeatmapWidget';
 import LineWidget from './LineWidget';
 
 // As defined in CSS
@@ -18,6 +19,7 @@ const widgetTypes = {
   'histogram': HistogramWidget,
   'scatter': ScatterWidget,
   'scatter3d': Scatter3DWidget,
+  'heatmap':HeatmapWidget,
   'line': LineWidget
 }
 

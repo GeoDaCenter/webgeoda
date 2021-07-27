@@ -899,6 +899,15 @@
     "@babel/helper-validator-identifier" "^7.14.5"
     to-fast-properties "^2.0.0"
 
+"@deck.gl/aggregation-layers@^8.5.0":
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/@deck.gl/aggregation-layers/-/aggregation-layers-8.5.0.tgz#5b6da0e5bc6367abd98a2a13780a051f328f25cd"
+  integrity sha512-lfukCuDhU5t8uMLDGktEWQkkBRAGZxVTub0Ue37847l9i6Ph4pYPhnzq7He2DNaad1Q8unqoEvDJL1vqOvGuqA==
+  dependencies:
+    "@luma.gl/shadertools" "^8.5.4"
+    "@math.gl/web-mercator" "^3.5.3"
+    d3-hexbin "^0.2.1"
+
 "@deck.gl/core@^8.4.20":
   version "8.4.20"
   resolved "https://registry.npmjs.org/@deck.gl/core/-/core-8.4.20.tgz"
@@ -1561,6 +1570,14 @@
     "@babel/runtime" "^7.0.0"
     "@math.gl/core" "^3.4.2"
 
+"@luma.gl/shadertools@^8.5.4":
+  version "8.5.4"
+  resolved "https://registry.yarnpkg.com/@luma.gl/shadertools/-/shadertools-8.5.4.tgz#a1caf78bffa60133b37db9d5830dc5731fe89d5e"
+  integrity sha512-rwLBLrACi75aWnuJm8rVKCQnJR2sMTCxHuexfjHJ7Uecl0vVcVJZT7c9EnCFaz5LUTNbdupvuhq0SKNckKiKmw==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    "@math.gl/core" "^3.5.0"
+
 "@luma.gl/webgl@8.4.5":
   version "8.4.5"
   resolved "https://registry.npmjs.org/@luma.gl/webgl/-/webgl-8.4.5.tgz"
@@ -1634,6 +1651,14 @@
     "@babel/runtime" "^7.12.0"
     gl-matrix "^3.0.0"
 
+"@math.gl/core@^3.5.0":
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/@math.gl/core/-/core-3.5.3.tgz#8f40c374c68cf2731f7e2c2b7609094b10ff767a"
+  integrity sha512-TaSnvG0qFh1VxeNW5L58jSx0nJUMWMpUl6zo6Z3ScQzFySG5cicGOBzk/D40RkIZWPazCKCZ+ZThg5npSK9y3g==
+  dependencies:
+    "@babel/runtime" "^7.12.0"
+    gl-matrix "^3.0.0"
+
 "@math.gl/culling@^3.3.0", "@math.gl/culling@^3.4.2":
   version "3.4.3"
   resolved "https://registry.npmjs.org/@math.gl/culling/-/culling-3.4.3.tgz"
@@ -1663,6 +1688,14 @@
   version "3.4.3"
   resolved "https://registry.npmjs.org/@math.gl/web-mercator/-/web-mercator-3.4.3.tgz"
   integrity sha512-wfT1ku2b0k9MmaesFev60PXCCqqDvCR9batcY99ob/nMRXcQ/F5yVChS07OIqjUJseK6+6Gep9iYXiflPyPR2Q==
+  dependencies:
+    "@babel/runtime" "^7.12.0"
+    gl-matrix "^3.0.0"
+
+"@math.gl/web-mercator@^3.5.3":
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/@math.gl/web-mercator/-/web-mercator-3.5.3.tgz#4cc7ba98a48580a18ad683206a6f6002fa9d2d7e"
+  integrity sha512-WZE9ALeTS4n3HDgkqTxcNLBU7DL0mjmPXSrcqSZIUeDY00+LCtNvMQWUAwqolpB7nD71vD6HLW8delzVuy4teA==
   dependencies:
     "@babel/runtime" "^7.12.0"
     gl-matrix "^3.0.0"
@@ -2981,6 +3014,11 @@ d3-dsv@^1.2.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/d3-format/-/d3-format-2.0.0.tgz"
   integrity sha512-Ab3S6XuE/Q+flY96HXT0jOXcM4EAClYFnRGY5zsjRGNy6qCYrQsMffs7cV5Q9xejb35zxW5hf/guKw34kvIKsA==
+
+d3-hexbin@^0.2.1:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/d3-hexbin/-/d3-hexbin-0.2.2.tgz#9c5837dacfd471ab05337a9e91ef10bfc4f98831"
+  integrity sha1-nFg32s/UcasFM3qeke8Qv8T5iDE=
 
 "d3-interpolate@1.2.0 - 2":
   version "2.0.1"
