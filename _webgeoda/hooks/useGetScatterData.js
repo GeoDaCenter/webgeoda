@@ -185,8 +185,16 @@ const scaleAxes = (x, y, z, targetRange) => { return {
 }}
 
 const zipAndScale = (x, y, z, targetRange) => {
-    console.log(x,y,z)
-    if (!x.length || !y.length || !z.length){
+    const [
+        xVals,
+        yVals,
+        zVals
+    ] = [
+        Object.values(x),
+        Object.values(y),
+        Object.values(z)
+    ]
+    if (!xVals.length || !yVals.length || !zVals.length){
         return {
             xScale:{},
             yScale:{},
@@ -198,14 +206,14 @@ const zipAndScale = (x, y, z, targetRange) => {
         xScale,
         yScale,
         zScale
-    } = scaleAxes(x,y,z,targetRange)
+    } = scaleAxes(xVals,yVals,zVals,targetRange)
     let data = [];
     for (let i=0; i<x.length;i++){
         data.push({
             position: [
-                (x[i]-xScale.min)*xScale.scalar,
-                (y[i]-yScale.min)*yScale.scalar,
-                (z[i]-zScale.min)*zScale.scalar
+                (xVals[i]-xScale.min)*xScale.scalar,
+                (yVals[i]-yScale.min)*yScale.scalar,
+                (zVals[i]-zScale.min)*zScale.scalar
             ]
         })
     }
@@ -270,7 +278,7 @@ export default function useGetScatterData({
             zData,
             targetRange
         ),[Object.keys(xData).length, Object.keys(yData).length, Object.keys(zData).length, config, options])
-
+        
         return {
             xScale,
             yScale,

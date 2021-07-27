@@ -35,7 +35,7 @@ function Scatter3DWidgetUnwrapped(props) {
     targetRange: 100
   })
 
-  if (!data.length || !('scalar' in xScale) || !('scalar' in yScale) || !('scalar' in zScale)) return null;
+  if (!data.length) return null;
 
   const showGridlines = "gridlinesInterval" in props.options && props.options.gridlinesInterval.length === 3;
   const xTick = showGridlines ? (xScale.scalar * props.options.gridlinesInterval[0]) : null;
