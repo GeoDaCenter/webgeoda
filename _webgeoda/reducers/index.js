@@ -124,7 +124,7 @@ export default function reducer(state = INITIAL_STATE, action) {
         };
       }
     }
-    case "CHANGE_DATASET": {
+    case "CHANGE_MAP_DATASET": {
       if (state.storedGeojson.hasOwnProperty(action.payload)){
         return {
           ...state,
@@ -134,7 +134,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       } else {
         return {
           ...state,
-          datasetToLoad: action.payload
+          mapDataset: action.payload
         };
       }
     }
@@ -700,6 +700,21 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         cachedTimeSeries
       }
+    }
+    case "ADD_ACTIVE_DATASETS": {
+      const activeDatasets = [...state.activeDatasets];
+      for(const i of action.payload.datasets){
+        if(!activeDatasets.includes(i)) activeDatasets.push(i);
+      }
+      return {...state, activeDatasets};
+    }
+    case "REMOVE_ACTIVE_DATASETS": {
+      const activeDatasets = [...state.activeDatasets];
+      for(const i of action.payload.datasets){
+        const index = activeDatasets.indexOf(i);
+        if(index >= 0) activeDatasets.splice(index, 1);
+      }
+      return {...state, activeDatasets};
     }
     default:
       return state;
