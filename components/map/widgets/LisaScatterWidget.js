@@ -47,16 +47,6 @@ function LisaScatterWidgetUnwrapped(props) {
         }
     }, []);
 
-    // dispatch({
-    //     type: "SET_CACHED_VARIABLE",
-    //     payload: {
-    //         cachedVariable: {
-    //             variable: lisaVariable,
-    //             geoidOrder: storedGeojson[currentData].order
-    //         }
-    //     },
-    // });
-
     //TODO: box select filtering
 
     // const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
