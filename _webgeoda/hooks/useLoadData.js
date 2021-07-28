@@ -105,7 +105,7 @@ export default function useLoadData(dateLists = {}) {
 
   useEffect(() => {
     if (datasetToLoad) {
-      loadData(dataPresets, datasetToLoad).then(() => {
+      loadDataForMap(dataPresets, datasetToLoad).then(() => {
         dispatch({ type: "CHANGE_MAP_DATASET", payload: null });
         // TODO: Get rid of datasetToLoad. CHANGE_MAP_DATASET should
         // probably change currentData directly, and useLoadData should
@@ -148,6 +148,78 @@ export default function useLoadData(dateLists = {}) {
     setShouldRetryLoadGeoJSON(false)
   }
 
+
+  const loadDataForMap = async (dataPresets, datasetToLoad) => {
+    const {currentDataPreset, numeratorTable, denominatorTable, tempParams, mapId, geojsonOrder, geojsonProperties, numeratorData, denominatorData, notTiles} = await loadData(dataPresets, datasetToLoad);
+    const binData = cachedVariables.hasOwnProperty(currentData) && 
+        cachedVariables[currentData].hasOwnProperty(tempParams.variable)
+      ? Object.values(cachedVariables[currentData][tempParams.variable])
+      : tempParams.categorical 
+      ? getUniqueVals(
+        numeratorData || geojsonProperties,
+        tempParams)
+      : parseColumnData({
+        numeratorData: tempParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
+        denominatorData: tempParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
+        dataParams: tempParams,
+        fixedOrder: geojsonOrder
+    });
+    const bins = tempParams.lisa 
+      ? lisaBins
+      : await getBins({
+        geoda,
+        dataParams: tempParams,
+        binData
+      })
+    const colorScale = tempParams.lisa 
+      ? lisaColors
+      : getColorScale({
+        dataParams: tempParams,
+        bins
+      })
+    const bounds = mapId === null
+      ? [-180,180,-70,80]
+      : currentDataPreset.bounds 
+      ? currentDataPreset.bounds 
+      : await geoda.getBounds(mapId);
+    let initialViewState =
+      window !== undefined
+        ? fitBounds({
+            width: window.innerWidth,
+            height: window.innerHeight,
+            bounds: [
+              [bounds[0], bounds[2]],
+              [bounds[1], bounds[3]],
+            ],
+          })
+        : null;
+
+    if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
+    dispatch({
+      type: "INITIAL_LOAD",
+      payload: {
+        currentData: datasetToLoad,
+        currentTable: {
+          numerator: dataParams.numerator === "properties" ? "properties" : numeratorTable,
+          denominator: dataParams.numerator === "properties" ? "properties" : denominatorTable,
+        },
+        currentTiles: currentDataPreset.tiles,
+        mapParams: {
+          bins,
+          colorScale: colorScale || colors.colorbrewer.YlGnBu[5],
+        },
+        variableParams: tempParams,
+        initialViewState,
+        id: currentDataPreset.id,
+        cachedVariable: {
+          variable: dataParams.variable,
+          data: binData,
+          geoidOrder: geojsonOrder
+        }
+      }
+    });
+  };
+
   const loadData = async (dataPresets, datasetToLoad) => {
     if (geoda === undefined) location.reload();
     const notTiles = !datasetToLoad.includes('tiles')
@@ -182,69 +254,15 @@ export default function useLoadData(dateLists = {}) {
     const geojsonOrder = notTiles 
     ? getIdOrder(geojsonData.features,currentDataPreset.id) 
     : false;
-
-    const bounds = mapId === null
-      ? [-180,180,-70,80]
-      : currentDataPreset.bounds 
-      ? currentDataPreset.bounds 
-      : await geoda.getBounds(mapId);
-
-    let initialViewState =
-      window !== undefined
-        ? fitBounds({
-            width: window.innerWidth,
-            height: window.innerHeight,
-            bounds: [
-              [bounds[0], bounds[2]],
-              [bounds[1], bounds[3]],
-            ],
-          })
-        : null;
-
-    if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
     
     const tempParams = {
       ...dataParams,
       [dataParams.nIndex === null && 'nIndex']: numeratorData?.dateIndices?.length-1
     }
 
-    const binData = cachedVariables.hasOwnProperty(currentData) && 
-        cachedVariables[currentData].hasOwnProperty(tempParams.variable)
-      ? Object.values(cachedVariables[currentData][tempParams.variable])
-      : tempParams.categorical 
-      ? getUniqueVals(
-        numeratorData || geojsonProperties,
-        tempParams)
-      : parseColumnData({
-        numeratorData: tempParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
-        denominatorData: tempParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
-        dataParams: tempParams,
-        fixedOrder: geojsonOrder
-    });
-
-    const bins = tempParams.lisa 
-      ? lisaBins
-      : await getBins({
-        geoda,
-        dataParams: tempParams,
-        binData
-      })    
-      
-    const colorScale = tempParams.lisa 
-      ? lisaColors
-      : getColorScale({
-        dataParams: tempParams,
-        bins
-      })
     dispatch({
-      type: "INITIAL_LOAD",
+      type: "STORE_DATA",
       payload: {
-        currentData: datasetToLoad,
-        currentTable: {
-          numerator: dataParams.numerator === "properties" ? "properties" : numeratorTable,
-          denominator: dataParams.numerator === "properties" ? "properties" : denominatorTable,
-        },
-        currentTiles: currentDataPreset.tiles,
         storedGeojson: {
           [datasetToLoad]: {
             data: geojsonData,
@@ -258,24 +276,13 @@ export default function useLoadData(dateLists = {}) {
           [numeratorTable?.file] : numeratorData,
           [denominatorTable?.file] : denominatorData 
         },
-        mapParams: {
-          bins,
-          colorScale: colorScale || colors.colorbrewer.YlGnBu[5],
-        },
-        variableParams: tempParams,
-        initialViewState,
-        id: currentDataPreset.id,
-        cachedVariable: {
-          variable: dataParams.variable,
-          data: binData,
-          geoidOrder: geojsonOrder
-        }
       }
     });
 
-    loadTables(dataPresets, datasetToLoad, dateLists, mapId).then(r => {
-      loadWidgets(dataPresets.widgets, dispatch);
-    })
+    await loadTables(dataPresets, datasetToLoad, dateLists, mapId)
+    await loadWidgets(dataPresets.widgets, dispatch);
+
+    return {currentDataPreset, numeratorTable, denominatorTable, tempParams, mapId, geojsonOrder, geojsonProperties, numeratorData, denominatorData, notTiles}; // Return misc info for functions like loadDataForMap
   };
 
   const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
@@ -301,5 +308,5 @@ export default function useLoadData(dateLists = {}) {
     });
   };
 
-  return [loadData];
+  return [loadData, loadDataForMap];
 }

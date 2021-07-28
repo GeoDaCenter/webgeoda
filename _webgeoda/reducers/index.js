@@ -32,6 +32,21 @@ const [defaultTables, dataPresetsRedux, tooltipTables] = [{}, {}, []];
 
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
+    case "STORE_DATA": {
+      const storedGeojson = {
+        ...state.storedGeojson,
+        ...action.payload.storedGeojson
+      };
+      const storedData = {
+        ...state.storedData,
+        ...action.payload.storedData
+      };
+      return {
+        ...state,
+        storedGeojson,
+        storedData
+      };
+    }
     case "INITIAL_LOAD": {
       const dataParams = {
         ...state.dataParams,
@@ -41,21 +56,10 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state.mapParams,
         ...action.payload.mapParams,
       };
-      const storedData = {
-        ...state.storedData,
-        ...action.payload.storedData,
-      };
-
-      const storedGeojson = {
-        ...state.storedGeojson,
-        ...action.payload.storedGeojson,
-      };
       return {
         ...state,
         currentTiles: action.payload.currentTiles,
         currentData: action.payload.currentData,
-        storedGeojson,
-        storedData,
         dataParams,
         mapParams,
         initialViewState:
@@ -66,11 +70,9 @@ export default function reducer(state = INITIAL_STATE, action) {
         isLoading: false,
         mapData: dataParams.lisa 
           ? state.mapData 
-          : generateMapData({
+          : generateMapData({ // TODO: storedGeojson and storedData no longer guaranteed to be not null, leading to race conditions
             ...state,
             currentData: action.payload.currentData,
-            storedGeojson,
-            storedData,
             dataParams,
             mapParams,
             initialViewState:
