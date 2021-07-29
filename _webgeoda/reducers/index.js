@@ -500,13 +500,13 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         boxSelect: {
           active: true,
-          width: action.payload.width < 50 
-            ? 50 
+          width: action.payload.width < 30 
+            ? 30 
             : window.innerWidth < action.payload.width + state.boxSelect.left
             ? window.innerWidth - state.boxSelect.left
             : action.payload.width || state.boxSelect.width,
-          height: action.payload.height < 50 
-            ? 50 
+          height: action.payload.height < 30 
+            ? 30 
             : window.innerHeight - 50 < action.payload.height + state.boxSelect.top
             ? window.innerHeight - 50 - state.boxSelect.top
             : action.payload.height || state.boxSelect.height,

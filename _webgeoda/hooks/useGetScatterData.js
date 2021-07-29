@@ -105,7 +105,7 @@ const formatChart = ({
                         if (geoids.includes(context.dataset.data[context.dataIndex]?.id)){
                             return '#FF0000'
                         } else {
-                            return 'rgba(0,0,0,0)'
+                            return 'rgba(0, 0, 0, 0.01)'
                         }
                     }
                 }
