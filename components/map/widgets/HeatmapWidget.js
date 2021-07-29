@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import PropTypes from 'prop-types';
 import useGetScatterData from '@webgeoda/hooks/useGetScatterData';
+import * as ss from 'simple-statistics'
 
 // import { OrthographicView, COORDINATE_SYSTEM } from '@deck.gl/core';
 // import { TextLayer, PathLayer, ScatterplotLayer } from '@deck.gl/layers';
@@ -96,18 +97,34 @@ function HeatmapWidget(props) {
   // })
 
   import("plotly.js").then(({default: Plotly}) => {
-    console.log(Plotly)
+    console.log(arrayYData)
 
     const data=[
         {
           x: arrayXData,
           y: arrayYData,
+          autobinx: false,
+          xbins: {
+            start: ss.min(arrayXData),
+            end: ss.max(arrayXData),
+            size: Math.floor((ss.max(arrayXData)-ss.min(arrayXData))/40)
+          },
+          autobiny: false,
+          ybins: {
+            start: ss.min(arrayYData),
+            end: 10000,
+            size: Math.floor((10000-ss.min(arrayYData))/40)
+          },
+           colorscale: [['0', 'rgb(255, 255, 217)'], ['0.25', 'rgb(199, 233, 180)'], ['0.5', 'rgb(65, 182, 196)'], ['0.75', 'rgb(34, 94, 168)'], ['1', 'rgb(8, 29, 88)']],
+
+          //colorscale: [['0', 'rgb(250,250,250)'], ['0.25', 'rgb(210,210,210)'], ['0.5', 'rgb(140,140,140)'], ['0.75', 'rgb(100,100,100)'], ['1', 'rgb(50,50,50)']],
           type: 'histogram2d',
         }
       ]
 
-    graphic = Plotly.newPlot('myDiv', data)
-    console.log(graphic)
+      const layout = { width: 400, height: 320}
+
+    graphic = Plotly.newPlot('myDiv', data, layout)
   })
 
 

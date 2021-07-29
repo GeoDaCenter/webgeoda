@@ -193,14 +193,14 @@ const widgets = [
   {
     display: "tray",
     type: "heatmap",
-    xVariable: "Median age",
-    yVariable: "Population Density",
+    xVariable: "Median Household Income",
+    yVariable: "Total Population",
     options: {
-      header: "Total Population vs Population Density",
+      header: "Total Population vs Median Household Income",
       foregroundColor: "#000000",
       pointSize: .2,
-      xAxisLabel: "Total Population",
-      yAxisLabel: "Population Density",
+      xAxisLabel: "Gross Rent",
+      yAxisLabel: "Median Household Income",
       removeZeroValues: true
     }
   },
