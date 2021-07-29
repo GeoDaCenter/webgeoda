@@ -99,21 +99,28 @@ function HeatmapWidget(props) {
   import("plotly.js").then(({default: Plotly}) => {
     console.log(arrayYData)
 
+
+    const yMin = ss.median(arrayYData) - 1.5*ss.interquartileRange(arrayYData)
+    const yMax = ss.median(arrayYData) + 1.5*ss.interquartileRange(arrayYData)
+
+    const xMin = ss.median(arrayXData) - 1.5*ss.interquartileRange(arrayXData)
+    const xMax = ss.median(arrayXData) + 1.5*ss.interquartileRange(arrayXData)
+
     const data=[
         {
           x: arrayXData,
           y: arrayYData,
           autobinx: false,
           xbins: {
-            start: ss.min(arrayXData),
-            end: ss.max(arrayXData),
-            size: Math.floor((ss.max(arrayXData)-ss.min(arrayXData))/40)
+            start: xMin,
+            end: xMax,
+            size: Math.floor((xMax-xMin)/40)
           },
           autobiny: false,
           ybins: {
-            start: ss.min(arrayYData),
-            end: ss.max(arrayYData),
-            size: Math.floor((ss.max(arrayYData)-ss.min(arrayYData))/40)
+            start: yMin,
+            end: yMax,
+            size: Math.floor((yMax-yMin)/40)
           },
            colorscale: [['0', 'rgb(255, 255, 217)'], ['0.25', 'rgb(199, 233, 180)'], ['0.5', 'rgb(65, 182, 196)'], ['0.75', 'rgb(34, 94, 168)'], ['1', 'rgb(8, 29, 88)']],
 
