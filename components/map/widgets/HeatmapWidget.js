@@ -122,7 +122,13 @@ function HeatmapWidget(props) {
         }
       ]
 
-      const layout = { width: 320, height: 320}
+      const layout = { width: 370, height: 200, margin: {
+        l: 40,
+        r: 0,
+        b: 30,
+        t: 30,
+        pad: 1
+      },}
 
     graphic = Plotly.newPlot('myDiv', data, layout)
   })
