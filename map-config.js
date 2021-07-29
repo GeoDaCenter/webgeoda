@@ -177,22 +177,32 @@ const widgets = [
   // },
   {
     display: "tray",
-    type: "scatter",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
+    type: "heatmap",
+    variable: "Median Household Income",
     options: {
-      header: "Gross Rent vs. Household Income",
-      foregroundColor: "#000000",
-      numClusters: 3,
-      clusterColors: [
-        "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF"
-      ],
-      pointSize: .2,
-      xAxisLabel: "Median Household Income",
-      yAxisLabel: "Median Gross Rent",
-      removeZeroValues: true
+      header: "Median Household Income",
+      foregroundColor: "#FF00FF",
+      yAxisLabel: "Median Household Income"
     }
   },
+  // {
+  //   display: "tray",
+  //   type: "scatter",
+  //   xVariable: "Median Household Income",
+  //   yVariable: "Median Gross Rent",
+  //   options: {
+  //     header: "Gross Rent vs. Household Income",
+  //     foregroundColor: "#000000",
+  //     numClusters: 3,
+  //     clusterColors: [
+  //       "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF"
+  //     ],
+  //     pointSize: .2,
+  //     xAxisLabel: "Median Household Income",
+  //     yAxisLabel: "Median Gross Rent",
+  //     removeZeroValues: true
+  //   }
+  // },
   {
     display: "tray",
     type: "lisaW",
@@ -213,16 +223,6 @@ const widgets = [
       xAxisLabel: "Total Population",
       yAxisLabel: "Spatial Lag",
       removeZeroValues: true
-    }
-  },
-  {
-    display: "tray",
-    type: "histogram",
-    variable: "Median Household Income",
-    options: {
-      header: "Median Household Income",
-      foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Household Income"
     }
   },
   // {

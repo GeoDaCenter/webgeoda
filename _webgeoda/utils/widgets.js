@@ -294,6 +294,8 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         return {};
     }
 
+    if (widgetType === 'heatmap') {return {}}
+    
     if(widgetType === "summary"){
         const variableSpec = find(
             dataPresets.variables,
