@@ -112,8 +112,8 @@ function HeatmapWidget(props) {
           autobiny: false,
           ybins: {
             start: ss.min(arrayYData),
-            end: 10000,
-            size: Math.floor((10000-ss.min(arrayYData))/40)
+            end: ss.max(arrayYData),
+            size: Math.floor((ss.max(arrayYData)-ss.min(arrayYData))/40)
           },
            colorscale: [['0', 'rgb(255, 255, 217)'], ['0.25', 'rgb(199, 233, 180)'], ['0.5', 'rgb(65, 182, 196)'], ['0.75', 'rgb(34, 94, 168)'], ['1', 'rgb(8, 29, 88)']],
 
