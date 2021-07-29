@@ -20,6 +20,7 @@ import useGetLisa from "../../_webgeoda/hooks/useGetLisa";
 import Legend from "./Legend";
 import MapControls from "./MapControls";
 import useGetVariable from "../../_webgeoda/hooks/useGetVariable";
+import useBoxSelectFilter from "@webgeoda/hooks/useBoxSelectFilter";
 
 export default function MainMap() {
   const initialViewState = useSelector((state) => state.initialViewState);
@@ -48,6 +49,7 @@ export default function MainMap() {
   const viewport = useViewport();
   // eslint-disable-next-line no-empty-pattern
   const setViewport = useSetViewport();
+  const boxFilteredGeoids = useBoxSelectFilter();
 
   const deckRef = useRef();
   const mapRef = useRef();
@@ -102,11 +104,11 @@ export default function MainMap() {
       new MapboxLayer({ id: "choropleth-hover", deck })
     );
   }, []);
-
   // Apply map filters
   const itemIsInFilter = (id) => {
     // TODO: Instead of currentData, store `dataset` index with filter, use here
     const cachedData = cachedVariables[currentData];
+    if (boxFilteredGeoids.length && !boxFilteredGeoids.includes(id)) return false;
     if(cachedData === null) return false;
     for(const filter of mapFilters){
       if(filter.type === "set"){
@@ -168,7 +170,7 @@ export default function MainMap() {
         onHover: handleMapHover,
         // onClick: handleMapClick,
         updateTriggers: {
-          getFillColor: [mapData.params, mapFilters],
+          getFillColor: [mapData.params, mapFilters, boxFilteredGeoids.length],
           getLineColor: [mapData.params, currentHoverId]
         }
       })];

@@ -63,6 +63,9 @@ export const INITIAL_STATE = {
     context: false,
     contextPos: { x: null, y: null },
   },
+  boxSelect: {
+    active: false
+  },
   selectionKeys: [],
   selectionNames: [],
   sidebarData: {},

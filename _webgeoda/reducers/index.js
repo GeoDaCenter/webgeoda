@@ -487,6 +487,26 @@ export default function reducer(state = INITIAL_STATE, action) {
         cachedVariables
       }
     }
+    case "TOGGLE_SELECT": {
+      return {
+        ...state,
+        boxSelect: !state.boxSelect.active
+          ? {left:200,top:200,width:200,height:200,active:true}
+          : {active:false}
+      }
+    }
+    case "MOVE_SELECT": {
+      return {
+        ...state,
+        boxSelect: {
+          active: true,
+          width: action.payload.width < 50 ? 50 : action.payload.width || state.boxSelect.width,
+          height: action.payload.height < 50 ? 50 : action.payload.height || state.boxSelect.height,
+          top: action.payload.top < 0 ? 0 : action.payload.top || state.boxSelect.top,
+          left: action.payload.left < 0 ? 0 : action.payload.left || state.boxSelect.left,
+        }
+      }
+    }
     default:
       return state;
   }

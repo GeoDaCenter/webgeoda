@@ -85,7 +85,7 @@ export default function Map() {
       <Provider store={store}>
         {geodaReady && (
           <GeodaContext.Provider value={geoda}>
-            <WidgetLayer />
+            {/* <WidgetLayer /> */}
             <MapContainer />
           </GeodaContext.Provider>
         )}
