@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { useRef } from 'react';
 import PropTypes from 'prop-types';
 import useGetScatterData from '@webgeoda/hooks/useGetScatterData';
@@ -19,14 +20,15 @@ import * as ss from 'simple-statistics'
 
 
 function HeatmapWidget(props) {
-  const chartRef = useRef()
+  const boxFilterGeoids = useSelector((state) => state.boxFilterGeoids)
   //console.log(Plotly)
   const {
     chartData
   } = useGetScatterData({
     config: props.config,
     options: props.options,
-    id: props.id
+    id: props.id,
+    geoids: boxFilterGeoids
   })
 
   let arrayXData = [];
@@ -97,7 +99,7 @@ function HeatmapWidget(props) {
   // })
 
   import("plotly.js").then(({default: Plotly}) => {
-    console.log(arrayYData)
+    // console.log(arrayYData)
 
 
     const yMin = ss.median(arrayYData) - 1.5*ss.interquartileRange(arrayYData)

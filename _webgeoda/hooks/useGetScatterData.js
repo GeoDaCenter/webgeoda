@@ -256,14 +256,16 @@ export default function useGetScatterData({
         variable: config.type === 'lisaScatter'
             ? false
             : config.xVariable,
-        dataset
+        dataset,
+        geoids: config.type === 'heatmap'? geoids : []
     });
 
     const yData = useGetVariable({
         variable: config.type === 'lisaScatter'
             ? false
             : config.yVariable,
-        dataset
+        dataset,
+        geoids: config.type === 'heatmap'? geoids : []
     });
 
     const zData = useGetVariable({
@@ -301,7 +303,6 @@ export default function useGetScatterData({
             data
         }
     } else {
-    
         const {
             formattedData,
             fittedLine,

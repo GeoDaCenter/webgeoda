@@ -194,12 +194,12 @@ const widgets = [
     display: "tray",
     type: "heatmap",
     xVariable: "Median Household Income",
-    yVariable: "Total Population",
+    yVariable: "Median Gross Rent",
     options: {
-      header: "Total Population vs Median Household Income",
+      header: "Median Gross Rent vs Median Household Income",
       foregroundColor: "#000000",
       pointSize: .2,
-      xAxisLabel: "Gross Rent",
+      xAxisLabel: "Median Gross Rent",
       yAxisLabel: "Median Household Income",
       removeZeroValues: true
     }

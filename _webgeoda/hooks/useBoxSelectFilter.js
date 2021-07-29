@@ -43,7 +43,7 @@ export default function useBoxSelectFilter(){
                         bottomRight
                     )
                 })
-            }, 15))
+            }, 5))
         }
     },[JSON.stringify(boxSelect), JSON.stringify(viewport), Object.keys(centroids).length])
     if (!boxSelect.active) return [];
