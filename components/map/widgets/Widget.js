@@ -77,7 +77,7 @@ function Widget(props) {
               }
             </h3>
           }
-          <div className={styles.widgetContent}>
+          <div id='myDiv' className={styles.widgetContent}>
             <ParentWidget 
               type={props.type}
               options={props.options}

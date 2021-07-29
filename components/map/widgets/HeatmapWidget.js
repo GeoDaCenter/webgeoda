@@ -2,17 +2,17 @@ import { useRef } from 'react';
 import PropTypes from 'prop-types';
 import useGetScatterData from '@webgeoda/hooks/useGetScatterData';
 
-import { OrthographicView, COORDINATE_SYSTEM } from '@deck.gl/core';
-import { TextLayer, PathLayer, ScatterplotLayer } from '@deck.gl/layers';
-import { HexagonLayer, GridLayer, ScreenGridLayer, HeatmapLayer, ContourLayer } from '@deck.gl/aggregation-layers';
-import { SimpleMeshLayer } from '@deck.gl/mesh-layers';
-import DeckGL from '@deck.gl/react';
-import { Matrix4 } from 'math.gl';
-import deckgl from '@deck.gl/react/dist/es5/deckgl';
-//import Plot from 'react-plotly.js';
-//import Plotly from 'plotly.js'
-import HeatMap from "react-heatmap-grid";
-import { VegaLite } from 'react-vega-lite';
+// import { OrthographicView, COORDINATE_SYSTEM } from '@deck.gl/core';
+// import { TextLayer, PathLayer, ScatterplotLayer } from '@deck.gl/layers';
+// import { HexagonLayer, GridLayer, ScreenGridLayer, HeatmapLayer, ContourLayer } from '@deck.gl/aggregation-layers';
+// import { SimpleMeshLayer } from '@deck.gl/mesh-layers';
+// import DeckGL from '@deck.gl/react';
+// import { Matrix4 } from 'math.gl';
+// import deckgl from '@deck.gl/react/dist/es5/deckgl';
+// //import Plot from 'react-plotly.js';
+// //import Plotly from 'plotly.js'
+// import HeatMap from "react-heatmap-grid";
+// import { VegaLite } from 'react-vega-lite';
 
 
 
@@ -31,22 +31,6 @@ function HeatmapWidget(props) {
   let arrayXData = [];
   let arrayYData = [];
 
-  const spec = {
-    "description": "A simple bar chart with embedded data.",
-    "mark": "bar",
-    "encoding": {
-      "x": {"field": "a", "type": "ordinal"},
-      "y": {"field": "b", "type": "quantitative"}
-    }
-  };
-  
-  const barData = {
-    "values": [
-      {"a": "A","b": 20}, {"a": "B","b": 34}, {"a": "C","b": 55},
-      {"a": "D","b": 19}, {"a": "E","b": 40}, {"a": "F","b": 34},
-      {"a": "G","b": 91}, {"a": "H","b": 78}, {"a": "I","b": 25}
-    ]
-  };
 
 
   if (chartData.datasets[0]?.data[0]?.x === undefined || chartData.datasets[0]?.data[0]?.y === undefined) return null;
@@ -111,51 +95,28 @@ function HeatmapWidget(props) {
   //   console.log(graphic)
   // })
 
-  // import("plotly.js").then(({default: Plotly}) => {
-  //   console.log(Plotly)
+  import("plotly.js").then(({default: Plotly}) => {
+    console.log(Plotly)
 
-  //   const data=[
-  //       {
-  //         x: arrayXData,
-  //         y: arrayYData,
-  //         type: 'histogram2d',
-  //       }
-  //     ]
+    const data=[
+        {
+          x: arrayXData,
+          y: arrayYData,
+          type: 'histogram2d',
+        }
+      ]
 
-  //   graphic = <div id='myDiv'>{Plotly.newPlot('myDiv', data)}</div>
-  //   console.log(graphic)
-  // })
+    graphic = Plotly.newPlot('myDiv', data)
+    console.log(graphic)
+  })
 
 
-  graphic = <VegaLite spec={spec} data={barData} />
   return (
       <div>
         {graphic}
     </div>
   );
 }
-
-{/* <Plot
-        data={[
-          {
-            x: arrayXData,
-            y: arrayYData,
-            type: 'histogram2d',
-          },
-        ]}      />
-    </div> */}
-
-{/* <DeckGL
-            initialViewState={{
-                latitude:0,
-                longitude:0,
-                pitch:0,
-                bearing:0,
-                zoom:0,
-            }}
-            controller={true}
-            layers={layers}
-        /> */}
 
 
 export default HeatmapWidget;
