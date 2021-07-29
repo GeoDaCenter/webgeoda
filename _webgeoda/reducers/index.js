@@ -500,10 +500,26 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         boxSelect: {
           active: true,
-          width: action.payload.width < 50 ? 50 : action.payload.width || state.boxSelect.width,
-          height: action.payload.height < 50 ? 50 : action.payload.height || state.boxSelect.height,
-          top: action.payload.top < 0 ? 0 : action.payload.top || state.boxSelect.top,
-          left: action.payload.left < 0 ? 0 : action.payload.left || state.boxSelect.left,
+          width: action.payload.width < 50 
+            ? 50 
+            : window.innerWidth < action.payload.width + state.boxSelect.left
+            ? window.innerWidth - state.boxSelect.left
+            : action.payload.width || state.boxSelect.width,
+          height: action.payload.height < 50 
+            ? 50 
+            : window.innerHeight - 50 < action.payload.height + state.boxSelect.top
+            ? window.innerHeight - 50 - state.boxSelect.top
+            : action.payload.height || state.boxSelect.height,
+          top: action.payload.top < 0 
+            ? 0 
+            : window.innerHeight - 50 < state.boxSelect.height + action.payload.top
+            ? window.innerHeight - 50 - state.boxSelect.height
+            : action.payload.top || state.boxSelect.top,
+          left: action.payload.left < 0 
+            ? 0 
+            : window.innerWidth < state.boxSelect.width + action.payload.left
+            ? window.innerWidth - state.boxSelect.width
+            : action.payload.left || state.boxSelect.left,
         }
       }
     }

@@ -41,7 +41,7 @@ export default function MapSelection(){
     }
     const dragListener = (e) => {changeDims({
         left: e.clientX-boxSelect.width/2,
-        top: e.clientY-50
+        top: e.clientY-50-boxSelect.height/2
     })}
     const dragTouchListener = (e) => changeDims({
         left: (e?.targetTouches[0]?.clientX)||boxSelect.width,

@@ -2,7 +2,6 @@
     position:absolute;
     border-style: dotted;
     border:1px solid var(--selected-color);
-    pointer-events: none;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.36), 0 1px 2px rgba(0, 0, 0, 0.72);
 }
 .buttonContainer {
@@ -11,7 +10,6 @@
     position:relative;
 }
 .buttonContainer button {
-    pointer-events: initial;
     background:none;
     border:none;
 }
@@ -22,10 +20,9 @@
 
 .drag {
     position:absolute;
-    top:0;
-    left:50%;
-    transform: translateX(-50%);
     cursor:cell;
+    width:100%;
+    height:100%;
 }
 .resize {
     position: absolute;

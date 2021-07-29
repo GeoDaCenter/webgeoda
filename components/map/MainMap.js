@@ -19,6 +19,7 @@ import useGetLisa from "../../_webgeoda/hooks/useGetLisa";
 
 import Legend from "./Legend";
 import MapControls from "./MapControls";
+import MapSelection from '../../components/map/MapSelection';
 import useGetVariable from "../../_webgeoda/hooks/useGetVariable";
 import useBoxSelectFilter from "@webgeoda/hooks/useBoxSelectFilter";
 
@@ -209,6 +210,7 @@ export default function MainMap() {
       <MapControls
         deck={deckRef}
       />
+      <MapSelection />
     </div>
   );
 }

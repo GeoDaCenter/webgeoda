@@ -1,6 +1,5 @@
 import styles from "../../components/map/MainMap.module.css";
 import MainMap from "../../components/map/MainMap";
-import MapSelection from '../../components/map/MapSelection';
 import MapTooltip from "../../components/map/MapTooltip";
 import TimeSlider from '../../components/map/slider/TimeSlider';
 import VariablePanel from "../../components/map/VariablePanel";
@@ -18,7 +17,6 @@ export default function MapContainer(){
             <VariablePanel />
             <MapTooltip />
             <TimeSlider />
-            <MapSelection />
         </div>
     )
 }
