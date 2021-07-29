@@ -11,8 +11,7 @@ export default function MapContainer(){
     const showWidgetTray = useSelector(state => state.showWidgetTray);
     
     return (
-        <div className={`${styles.mapContainer}`}>
-            {/* ${(showWidgetTray || widgetIsDragging) && styles.mapContainerRightMargin} */}
+        <div className={`${styles.mapContainer} ${(showWidgetTray || widgetIsDragging) && styles.mapContainerRightMargin}`}>
             <MainMap />
             <VariablePanel />
             <MapTooltip />

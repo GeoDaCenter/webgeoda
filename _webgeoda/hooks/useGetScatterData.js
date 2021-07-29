@@ -89,14 +89,26 @@ const formatChart = ({
     fittedLine,
     fittedLineEquation,
     filterCallback,
-    clickCallback
+    clickCallback,
+    geoids
 }) => {
     let chartData = {
         datasets: [
             {
                 type: "scatter",
                 label: options.header,
-                data: formattedData
+                data: formattedData,
+                pointBackgroundColor: function(context) {
+                    if (geoids === undefined || !geoids.length) {
+                        return options.foregroundColor
+                    } else {
+                        if (geoids.includes(context.dataset.data[context.dataIndex]?.id)){
+                            return '#FF0000'
+                        } else {
+                            return 'rgba(0,0,0,0)'
+                        }
+                    }
+                }
             }
         ]
     }
@@ -232,7 +244,8 @@ export default function useGetScatterData({
     options={},
     config={},
     id=0,
-    targetRange=100
+    targetRange=100,
+    geoids=[]
 }){
     const currentData = useSelector((state) => state.currentData)
     const currentDataset = useSelector((state) => state.storedGeojson[dataset||currentData]);
@@ -341,9 +354,10 @@ export default function useGetScatterData({
             fittedLine,
             fittedLineEquation,
             filterCallback: handleFilter,
-            clickCallback: panToGeoid
+            clickCallback: panToGeoid,
+            geoids
         }),
-        [JSON.stringify(formattedData[0]), JSON.stringify(config), idKeys.length]);
+        [JSON.stringify(formattedData[0]), JSON.stringify(config), idKeys.length, geoids.length]);
 
         
         return {

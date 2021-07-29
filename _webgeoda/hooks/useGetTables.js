@@ -76,25 +76,25 @@ export default function useGetTables({
                 : await fetchData({ req:denominatorTable })     
         
         if (geoids.length){
-            let numeratorData = 'data' in numeratorData ? numeratorData.data : numeratorData;
-            let denominatorData = 'data' in denominatorData ? denominatorData.data : denominatorData;
+            let numeratorDataList = 'data' in numeratorData ? numeratorData.data : numeratorData;
+            let denominatorDataList = 'data' in denominatorData ? denominatorData.data : denominatorData;
             let tempNumer = {};
             let tempDenom = {};
 
             if (denominatorData) {
                 for (let i=0; i<geoids.length;i++){
-                    tempNumer[geoids[i]] = numeratorData[geoids[i]]
-                    tempDenom[geoids[i]] = denominatorData[geoids[i]]
+                    tempNumer[geoids[i]] = numeratorDataList[geoids[i]]
+                    tempDenom[geoids[i]] = denominatorDataList[geoids[i]]
                 }
             } else {
                 for (let i=0; i<geoids.length;i++){
-                    tempNumer[geoids[i]] = numeratorData[geoids[i]]
+                    tempNumer[geoids[i]] = numeratorDataList[geoids[i]]
                 }
             }
 
             setTables({
-                numerator: 'data' in numeratorData ? numeratorData.data : numeratorData,
-                denominator: 'data' in denominatorData ? denominatorData.data : denominatorData,
+                numerator: numeratorDataList,
+                denominator: tempDenom,
                 dates: numeratorData?.dateIndices || denominatorData.dateIndices || []
             })
         }

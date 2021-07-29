@@ -523,6 +523,12 @@ export default function reducer(state = INITIAL_STATE, action) {
         }
       }
     }
+    case "SET_FILTERED_GEOIDS": {
+      return {
+        ...state,
+        boxFilterGeoids: action.payload
+      }
+    }
     default:
       return state;
   }

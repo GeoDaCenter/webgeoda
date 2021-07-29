@@ -3,7 +3,20 @@ import useGetVariable from './useGetVariable';
 import { bin as d3bin } from "d3-array";
 import { useDispatch } from 'react-redux';
 
-const formatData = (data, options) => {
+const formatData = (data, options, geoids=null, presetBins=null) => {
+    
+
+    if (geoids !== null && (presetBins === null || !geoids.length)) {
+        return []
+    }
+
+    if (geoids !== null && presetBins !== null && geoids.length) {
+        const tempData = geoids.map(id => data[id])
+        const thresholds = presetBins.map(i => i[1])
+        const binned = d3bin().thresholds(thresholds)(tempData)
+        return binned.map(i => i.length);
+    }
+
     const tempData = Object.values(data)
     let formattedData = [];
     let labels = [];
@@ -18,14 +31,14 @@ const formatData = (data, options) => {
     return { formattedData, labels, binBounds }
 }
 
-const formatChart = (formattedData, labels, options, variable, callback) => {
+const formatChart = (formattedData, secondaryData, labels, options, variable, callback) => {
     return {
         chartData: {
             labels,
             datasets: [{
                 label: options.header,
-                data: formattedData,
-                backgroundColor: options.foregroundColor || "#000000"
+                data: secondaryData.length ? secondaryData : formattedData,
+                backgroundColor: options.foregroundColor || '#000000'
             }]
         },
         chartOptions: {
@@ -72,6 +85,7 @@ export default function useGetHistogramData({
     dataset=false,
     options={},
     id=0,
+    geoids=[]
 }){
     const dispatch = useDispatch();
     const data = useGetVariable({
@@ -84,6 +98,8 @@ export default function useGetHistogramData({
         labels,
         binBounds
     } = useMemo(() => formatData(data, options), [data, options]);
+
+    const secondaryData = useMemo(() => formatData(data, options, geoids, binBounds), [data, options, binBounds, geoids.length]);
 
     const handleFilter = (datasets) => dispatch({
         type: "SET_MAP_FILTER",
@@ -106,12 +122,13 @@ export default function useGetHistogramData({
         chartOptions
     } = useMemo(() => formatChart(
         formattedData, 
+        secondaryData,
         labels, 
         options,
         variable,
-        handleFilter
+        handleFilter        
     ),
-    [data.length, variable, dataset, JSON.stringify(options)]);
+    [data.length, variable, dataset, JSON.stringify(options), geoids.length, JSON.stringify(secondaryData)]);
     
     return {
         chartData,

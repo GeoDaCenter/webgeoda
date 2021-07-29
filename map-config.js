@@ -69,6 +69,17 @@ const data = [
 
 const variables = [
   {
+    variable: "Pct w/o Internet",
+    numerator: "acs_data",
+    nProperty: "No Internet Access",
+    denominator: "acs_data",
+    dProperty: "Internet Total",
+    scale: 100,
+    binning: "naturalBreaks",
+    numberOfBins: 8,
+    colorScale: colors.colorbrewer.YlOrBr,
+  },
+  {
     variable: "Total Population",
     numerator: "acs_data",
     nProperty: "Total Population",
@@ -76,15 +87,15 @@ const variables = [
     numberOfBins: 8,
     colorScale: colors.colorbrewer.Greens,
   },
-  {
-    variable: "Covid April",
-    numerator: "covid_data",
-    nIndex: null,
-    nRange: 7,
-    binning: "naturalBreaks",
-    numberOfBins: 5,
-    colorScale: colors.colorbrewer.YlOrBr,
-  },
+  // {
+  //   variable: "Covid April",
+  //   numerator: "covid_data",
+  //   nIndex: null,
+  //   nRange: 7,
+  //   binning: "naturalBreaks",
+  //   numberOfBins: 5,
+  //   colorScale: colors.colorbrewer.YlOrBr,
+  // },
   {
     variable: "Median age",
     numerator: "properties",
@@ -159,16 +170,16 @@ const mapModes = {
 };
 
 const widgets = [
-  // {
-  //   display: "pinned",
-  //   type: "histogram",
-  //   variable: "Median age",
-  //   options: {
-  //     header: "Median Age",
-  //     foregroundColor: "#FF00FF",
-  //     yAxisLabel: "Median Age"
-  //   }
-  // },
+  {
+    display: "tray",
+    type: "histogram",
+    variable: "Median age",
+    options: {
+      header: "Median Age",
+      foregroundColor: "#FF00FF",
+      yAxisLabel: "Median Age"
+    }
+  },
   // {
   //   display: "hidden",
   //   type: "histogram",
@@ -192,15 +203,15 @@ const widgets = [
   // },
   {
     display: "tray",
-    type: "heatmap",
-    xVariable: "Median age",
-    yVariable: "Population Density",
+    type: "scatter",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
     options: {
-      header: "Total Population vs Population Density",
+      header: "Median Household Income vs Median Gross Rent",
       foregroundColor: "#000000",
       pointSize: .2,
-      xAxisLabel: "Total Population",
-      yAxisLabel: "Population Density",
+      xAxisLabel: "Median Household Income",
+      yAxisLabel: "Median Gross Rent",
       removeZeroValues: true
     }
   },

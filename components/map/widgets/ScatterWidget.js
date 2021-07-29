@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import {useRef} from 'react';
 import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
@@ -7,6 +8,7 @@ import useGetScatterData from '@webgeoda/hooks/useGetScatterData';
 
 function ScatterWidget(props) {
   const chartRef = useRef();
+  const boxFilterGeoids = useSelector((state) => state.boxFilterGeoids);
 
   const {
     chartData,
@@ -14,7 +16,8 @@ function ScatterWidget(props) {
   } = useGetScatterData({
     config: props.config,
     options: props.options,
-    id: props.id
+    id: props.id,
+    geoids: boxFilterGeoids
   })
 
   const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);

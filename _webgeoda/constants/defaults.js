@@ -76,6 +76,7 @@ export const INITIAL_STATE = {
     underLayerId: dataPresets.style?.underLayerId || 'water'
   },
   mapFilters: [],
+  boxFilterGeoids: [],
   notification: {
     info: null,
     location: "",
