@@ -142,14 +142,10 @@ export default function MainMap() {
       new GeoJsonLayer({
         id: "choropleth",
         data: currentMapGeography,
-        getFillColor: (d) => {
-          const id = d.properties[currentId];
-          const baseColor = mapData.data[id]?.color;
-          if(itemIsInFilter(id)) {
-            return baseColor;
-          }
-          return [baseColor[0], baseColor[1], baseColor[2], 20];
-        },
+        getFillColor: (d) => [
+          ...mapData.data[d.properties[currentId]]?.color,
+          itemIsInFilter(d.properties[currentId])*255+80
+        ],
         getLineColor: (d) => [
           0,
           0,
