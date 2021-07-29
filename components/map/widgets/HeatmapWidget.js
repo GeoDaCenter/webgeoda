@@ -1,90 +1,41 @@
 import {useRef} from 'react';
 import PropTypes from 'prop-types';
 //import useGetScatterData from '@webgeoda/hooks/useGetScatterData';
+import { VegaLite } from 'react-vega'
+
 
 function HeatmapWidget(props) {
-  // const {
-  //   chartData
-  // } = useGetScatterData({
-  //   config: props.config,
-  //   options: props.options,
-  //   id: props.id
-  // })
   
-  // if (chartData.datasets[0]?.data[0]?.x === undefined || chartData.datasets[0]?.data[0]?.y === undefined) return null;
-  
-  // const layers = [
-  //   new HeatmapLayer({
-  //       coordinateOrigin: [0,0, 0], 
-  //       id: 'heatmp-layer',
-  //       pickable: false,
-  //       getPosition: d => [d.x*10, -1*d.y/10],
-  //       getWeight: d => 1,
-  //       radiusPixels:20,
-  //       intensity:1,
-  //       threshold:0.05,
-  //   }),
-  //   new GridLayer({
-  //       id: 'screen-grid-layer',
-  //       data: chartData.datasets[0].data,
-  //       pickable: false,
-  //       opacity: 0.8,
-  //       radius:1,
-  //       cellSize: 2,
-  //       colorRange: [
-  //           [0, 25, 0, 25],
-  //           [0, 85, 0, 85],
-  //           [0, 127, 0, 127],
-  //           [0, 170, 0, 170],
-  //           [0, 190, 0, 190],
-  //           [0, 255, 0, 255]
-  //       ],
-  //       getPosition: d => [d.x*10, -1*d.y/10]
-  //   }),
-//     new ScatterplotLayer({
-//         coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-//         coordinateOrigin: [0,0, 0], 
-//         id:'scatterplot-layer',
-//         data: chartData.datasets[0].data,
-//         getPosition: d => [d.x*100, -1*d.y/10],
-//         getRadius:10,
-//   })
-// ]
 
 let graphic = null;
 
-  // import('react-plotly.js').then(({default: Plot}) => {
-  //   console.log(Plot)
-  //   graphic = <Plot
-  //     data={[
-  //       {
-  //         x: [1, 2, 3],
-  //         y: [4, 5, 6],
-  //         type: 'scatter',
-  //       },
-  //     ]}
-  //   />
-  //   console.log(graphic)
-  // })
+const spec = {
+  width: 300,
+  height: 150,
+  mark: 'bar',
+  encoding: {
+    x: { field: 'a', type: 'ordinal' },
+    y: { field: 'b', type: 'quantitative' },
+  },
+  data: { name: 'table' }, // note: vega-lite data attribute is a plain object instead of an array
+}
 
-  import("plotly.js").then(({default: Plotly}) => {
-    console.log(Plotly)
-
-    const data=[
-        {
-          x: [1,2,3,4,5],
-          y: [2,2,3,7,8],
-          type: 'histogram2d',
-        }
-      ]
-
-    graphic = Plotly.newPlot('myDiv', data)
-    console.log(graphic)
-  })
-
+const barData = {
+  table: [
+    { a: 'A', b: 28 },
+    { a: 'B', b: 55 },
+    { a: 'C', b: 43 },
+    { a: 'D', b: 91 },
+    { a: 'E', b: 81 },
+    { a: 'F', b: 53 },
+    { a: 'G', b: 19 },
+    { a: 'H', b: 87 },
+    { a: 'I', b: 52 },
+  ],
+}
   return (
     <div>
-        {graphic}
+        <VegaLite spec={spec} data={barData} />
     </div>
   );
 }
