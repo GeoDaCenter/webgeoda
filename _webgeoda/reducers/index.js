@@ -70,11 +70,13 @@ export default function reducer(state = INITIAL_STATE, action) {
         isLoading: false,
         mapData: dataParams.lisa 
           ? state.mapData 
-          : generateMapData({ // TODO: storedGeojson and storedData no longer guaranteed to be not null, leading to race conditions
+          : generateMapData({
             ...state,
             currentData: action.payload.currentData,
             dataParams,
             mapParams,
+            storedGeojson: action.payload.storedGeojson,
+            storedData: action.payload.storedData,
             initialViewState:
               action.payload.viewState !== null
                 ? action.payload.initialViewState

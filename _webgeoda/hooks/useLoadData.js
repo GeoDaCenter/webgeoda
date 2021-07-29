@@ -150,7 +150,7 @@ export default function useLoadData(dateLists = {}) {
 
 
   const loadDataForMap = async (dataPresets, datasetToLoad) => {
-    const {currentDataPreset, numeratorTable, denominatorTable, tempParams, mapId, geojsonOrder, geojsonProperties, numeratorData, denominatorData, notTiles} = await loadData(dataPresets, datasetToLoad);
+    const {currentDataPreset, numeratorTable, denominatorTable, tempParams, mapId, geojsonOrder, geojsonProperties, numeratorData, denominatorData, notTiles, storedGeojson, storedData} = await loadData(dataPresets, datasetToLoad);
     const binData = cachedVariables.hasOwnProperty(currentData) && 
         cachedVariables[currentData].hasOwnProperty(tempParams.variable)
       ? Object.values(cachedVariables[currentData][tempParams.variable])
@@ -198,6 +198,8 @@ export default function useLoadData(dateLists = {}) {
     dispatch({
       type: "INITIAL_LOAD",
       payload: {
+        storedGeojson,
+        storedData,
         currentData: datasetToLoad,
         currentTable: {
           numerator: dataParams.numerator === "properties" ? "properties" : numeratorTable,
@@ -259,30 +261,41 @@ export default function useLoadData(dateLists = {}) {
       ...dataParams,
       [dataParams.nIndex === null && 'nIndex']: numeratorData?.dateIndices?.length-1
     }
-
+    const storedGeojson = {
+      [datasetToLoad]: {
+        data: geojsonData,
+        properties: geojsonProperties,
+        order: geojsonOrder,
+        id: mapId,
+        weights: {}
+      },
+    };
+    const storedData = {
+      [numeratorTable?.file] : numeratorData,
+      [denominatorTable?.file] : denominatorData 
+    };
     dispatch({
       type: "STORE_DATA",
-      payload: {
-        storedGeojson: {
-          [datasetToLoad]: {
-            data: geojsonData,
-            properties: geojsonProperties,
-            order: geojsonOrder,
-            id: mapId,
-            weights: {}
-          },
-        },
-        storedData: {
-          [numeratorTable?.file] : numeratorData,
-          [denominatorTable?.file] : denominatorData 
-        },
-      }
+      payload: {storedGeojson, storedData}
     });
 
     await loadTables(dataPresets, datasetToLoad, dateLists, mapId)
     await loadWidgets(dataPresets.widgets, dispatch);
 
-    return {currentDataPreset, numeratorTable, denominatorTable, tempParams, mapId, geojsonOrder, geojsonProperties, numeratorData, denominatorData, notTiles}; // Return misc info for functions like loadDataForMap
+    return {
+      currentDataPreset,
+      numeratorTable,
+      denominatorTable,
+      tempParams,
+      mapId,
+      geojsonOrder,
+      geojsonProperties,
+      numeratorData,
+      denominatorData,
+      notTiles,
+      storedGeojson,
+      storedData
+    }; // Return misc info for functions like loadDataForMap
   };
 
   const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
