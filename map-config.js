@@ -11,13 +11,13 @@ const data = [
         type: 'characteristic',
         join: 'FIPS',
       },
-      household_data: {
-        file: 'texas_heating.csv',
+      income_data: {
+        file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
         type:'characteristic',
         join: 'FIPS'
       },
-      income_data: {
-        file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
+      household_data: {
+        file: 'texas_heating.csv',
         type:'characteristic',
         join: 'FIPS'
       },
@@ -47,13 +47,13 @@ const data = [
     },
   },
   {
-    name: 'Texas Block Groups', // Plain english name for dataset
-    geodata: 'tx.geojson', // geospatial data to join to
+    name: 'US States', // Plain english name for dataset
+    geodata: 'states.geojson', // geospatial data to join to
     id: 'GEOID', // fid / geoid join column
+    bounds: [-125.109215,-66.925621,25.043926,49.295128],
     tables: {
-      // any additional tabular data
       acs_data: {
-        file: 'texas_acs.csv',
+        file: 'state_acs.csv',
         type: 'characteristic',
         join: 'FIPS',
       },
@@ -61,6 +61,16 @@ const data = [
         file: 'texas_heating.csv',
         type:'characteristic',
         join: 'FIPS'
+      },
+      income_data: {
+        file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
+        type:'characteristic',
+        join: 'FIPS'
+      },
+      covid_data: {
+        file: 'nyt_covid_state.csv',
+        type: 'time-series',
+        join: 'fips',
       }
     },
   },
@@ -194,13 +204,16 @@ const widgets = [
   },
   {
     display: "tray",
-    type: "line",
-    variable: "Covid April",
+    type: "heatmap",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
     options: {
-      header: "Time Series Data",
-      foregroundColor: "#AAAA00",
-      yAxisLabel: "Y Axis",
-      dateFormat: "MM/DD/YYYY"
+      header: "Median Gross Rent vs Median Household Income",
+      foregroundColor: "#000000",
+      pointSize: .2,
+      xAxisLabel: "Median Gross Rent",
+      yAxisLabel: "Median Household Income",
+      removeZeroValues: true
     }
   },
   {

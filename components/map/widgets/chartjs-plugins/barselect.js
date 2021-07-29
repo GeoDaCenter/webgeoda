@@ -172,7 +172,7 @@ const barselectPlugin = {
 
 	afterDraw: function (chart) {
 
-		if (!chart.barselect.enabled) {
+		if (!chart?.barselect?.enabled) {
 			return;
 		}
 
@@ -182,7 +182,7 @@ const barselectPlugin = {
 
 	beforeTooltipDraw: function (chart) {
 		// suppress tooltips on dragging
-		return !chart.barselect.dragStarted && !chart.barselect.suppressTooltips;
+		return !chart?.barselect?.dragStarted && !chart?.barselect?.suppressTooltips;
 	},
 
 };

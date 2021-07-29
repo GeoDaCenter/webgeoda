@@ -624,7 +624,7 @@ export const parseTooltipData = (geoid, state, presets) => {
       denominatorData,
       cleanVariable
     );
-    tooltipData.push({
+    parseFloat(parsedVariable) === parsedVariable && tooltipData.push({
       name: [variables[i].variable],
       value: parsedVariable,
     });

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Widgets.module.scss';
 import {useDispatch, useSelector} from 'react-redux';
-import useLoadWidgetData from '@webgeoda/hooks/useLoadWidgetData';
 import {shallowEqual} from '@webgeoda/utils/data';
 
 const WIDGET_OPTION_TYPES = [

@@ -65,6 +65,9 @@ export const INITIAL_STATE = {
     context: false,
     contextPos: { x: null, y: null },
   },
+  boxSelect: {
+    active: false
+  },
   selectionKeys: [],
   selectionNames: [],
   sidebarData: {},
@@ -75,6 +78,7 @@ export const INITIAL_STATE = {
     underLayerId: dataPresets.style?.underLayerId || 'water'
   },
   mapFilters: [],
+  boxFilterGeoids: [],
   notification: {
     info: null,
     location: "",
@@ -84,7 +88,12 @@ export const INITIAL_STATE = {
     y: 0,
     data: null,
   },
-  widgetConfig: dataPresets.widgets,
+  widgetConfig: dataPresets.widgets.map((preset, i) => {
+    return {
+      ...preset,
+      id:i
+    }
+  }),
   widgetData: {},
   showWidgetTray: true,
   widgetLocations: generateWidgetPresets(dataPresets.widgets),

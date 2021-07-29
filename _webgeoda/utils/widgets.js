@@ -287,7 +287,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         };
     }
 
-    if(widgetType === "line"){
+    if(widgetType === "line" || widgetType === "heatmap"){
         // Time series data is handled by useGetTimeSeriesData
         return {};
     }
@@ -295,7 +295,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
 
 export const getWidgetSpec = (widget, i) => {
     let variable;
-    if(widget.type == 'scatter'){
+    if(widget.type == 'scatter' || widget == 'heatmap'){
         variable = [widget.xVariable, widget.yVariable];
     } else if(widget.type == 'scatter3d') {
         variable = [widget.xVariable, widget.yVariable, widget.zVariable];
