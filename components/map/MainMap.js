@@ -19,7 +19,9 @@ import useGetLisa from "../../_webgeoda/hooks/useGetLisa";
 
 import Legend from "./Legend";
 import MapControls from "./MapControls";
+import MapSelection from '../../components/map/MapSelection';
 import useGetVariable from "../../_webgeoda/hooks/useGetVariable";
+import useBoxSelectFilter from "@webgeoda/hooks/useBoxSelectFilter";
 
 export default function MainMap() {
   const initialViewState = useSelector((state) => state.initialViewState);
@@ -48,6 +50,7 @@ export default function MainMap() {
   const viewport = useViewport();
   // eslint-disable-next-line no-empty-pattern
   const setViewport = useSetViewport();
+  const boxFilteredGeoids = useBoxSelectFilter();
 
   const deckRef = useRef();
   const mapRef = useRef();
@@ -102,11 +105,11 @@ export default function MainMap() {
       new MapboxLayer({ id: "choropleth-hover", deck })
     );
   }, []);
-
   // Apply map filters
   const itemIsInFilter = (id) => {
     // TODO: Instead of currentData, store `dataset` index with filter, use here
     const cachedData = cachedVariables[currentData];
+    if (boxFilteredGeoids.length && !boxFilteredGeoids.includes(id)) return false;
     if(cachedData === null) return false;
     for(const filter of mapFilters){
       if(filter.type === "set"){
@@ -140,14 +143,10 @@ export default function MainMap() {
       new GeoJsonLayer({
         id: "choropleth",
         data: currentMapGeography,
-        getFillColor: (d) => {
-          const id = d.properties[currentId];
-          const baseColor = mapData.data[id]?.color;
-          if(itemIsInFilter(id)) {
-            return baseColor;
-          }
-          return [baseColor[0], baseColor[1], baseColor[2], 20];
-        },
+        getFillColor: (d) => [
+          ...mapData.data[d.properties[currentId]]?.color,
+          itemIsInFilter(d.properties[currentId])*255+80
+        ],
         getLineColor: (d) => [
           0,
           0,
@@ -168,7 +167,7 @@ export default function MainMap() {
         onHover: handleMapHover,
         // onClick: handleMapClick,
         updateTriggers: {
-          getFillColor: [mapData.params, mapFilters],
+          getFillColor: [mapData.params, mapFilters, boxFilteredGeoids.length],
           getLineColor: [mapData.params, currentHoverId]
         }
       })];
@@ -211,6 +210,7 @@ export default function MainMap() {
       <MapControls
         deck={deckRef}
       />
+      <MapSelection />
     </div>
   );
 }

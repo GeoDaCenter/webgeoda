@@ -15,7 +15,6 @@ export default function useGetVariable({
     const cachedVariables = useSelector((state) => state.cachedVariables);
     const fetchData = useFetchData();
     const dispatch = useDispatch();
-
     const {numerator, denominator} = useGetTables({
         dataset,
         variable,

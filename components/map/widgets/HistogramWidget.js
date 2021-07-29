@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import {Bar} from 'react-chartjs-2';
@@ -7,6 +7,7 @@ import useGetHistogramData from '@webgeoda/hooks/useGetHistogramData';
 
 function HistogramWidget(props) {
   const chartRef = useRef();
+  const boxFilterGeoids = useSelector((state) => state.boxFilterGeoids)
   const {
     chartData,
     chartOptions
@@ -14,7 +15,8 @@ function HistogramWidget(props) {
     variable: props.config.variable,
     config: props.config,
     options: props.options,
-    id: props.id
+    id: props.id,
+    geoids: boxFilterGeoids
   })
   
   const filter = props.activeFilters.find(i => i.id == props.id);

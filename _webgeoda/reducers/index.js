@@ -487,6 +487,48 @@ export default function reducer(state = INITIAL_STATE, action) {
         cachedVariables
       }
     }
+    case "TOGGLE_SELECT": {
+      return {
+        ...state,
+        boxSelect: !state.boxSelect.active
+          ? {left:200,top:200,width:200,height:200,active:true}
+          : {active:false}
+      }
+    }
+    case "MOVE_SELECT": {
+      return {
+        ...state,
+        boxSelect: {
+          active: true,
+          width: action.payload.width < 30 
+            ? 30 
+            : window.innerWidth < action.payload.width + state.boxSelect.left
+            ? window.innerWidth - state.boxSelect.left
+            : action.payload.width || state.boxSelect.width,
+          height: action.payload.height < 30 
+            ? 30 
+            : window.innerHeight - 50 < action.payload.height + state.boxSelect.top
+            ? window.innerHeight - 50 - state.boxSelect.top
+            : action.payload.height || state.boxSelect.height,
+          top: action.payload.top < 0 
+            ? 0 
+            : window.innerHeight - 50 < state.boxSelect.height + action.payload.top
+            ? window.innerHeight - 50 - state.boxSelect.height
+            : action.payload.top || state.boxSelect.top,
+          left: action.payload.left < 0 
+            ? 0 
+            : window.innerWidth < state.boxSelect.width + action.payload.left
+            ? window.innerWidth - state.boxSelect.width
+            : action.payload.left || state.boxSelect.left,
+        }
+      }
+    }
+    case "SET_FILTERED_GEOIDS": {
+      return {
+        ...state,
+        boxFilterGeoids: action.payload
+      }
+    }
     default:
       return state;
   }
