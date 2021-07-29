@@ -99,7 +99,7 @@ function Widget(props) {
 }
 
 Widget.propTypes = {
-  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d"]).isRequired,
+  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d", "heatmap"]).isRequired,
   options: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,
