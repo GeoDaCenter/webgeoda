@@ -1,4 +1,4 @@
-import Chart from 'chart.js/auto';
+// import Chart from 'chart.js/auto';
 import {valueOrDefault} from 'chart.js/helpers';
 
 var defaultOptions = {
@@ -8,10 +8,10 @@ var defaultOptions = {
 		selectboxBorderColor: '#48F',
 	},
 	callbacks: {
-		beforeSelect: function (startX, endX) {
+		beforeSelect: function () { //startX, endX
 			return true;
 		},
-		afterSelect: function (startX, endX, datasets) {
+		afterSelect: function () { //startX, endX, datasets
 			
 		}
 	}
@@ -75,7 +75,7 @@ function drawSelectbox(chart) {
 
 	const borderColor = getOption(chart, 'select', 'selectboxBorderColor');
 	const fillColor = getOption(chart, 'select', 'selectboxBackgroundColor');
-	const direction = getOption(chart, 'select', 'direction');
+	// const direction = getOption(chart, 'select', 'direction');
 	chart.ctx.beginPath();
 	let xStart, xSize;
 	const xScale = getXScale(chart);

@@ -1,10 +1,10 @@
 import {
     Slider,
-    SliderInput,
+    // SliderInput,
     SliderTrack,
     SliderRange,
     SliderHandle,
-    SliderMarker,
+    // SliderMarker,
   } from "@reach/slider";
 import "@reach/slider/styles.css";
 

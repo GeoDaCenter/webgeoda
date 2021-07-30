@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
-import { useRef } from 'react';
-import PropTypes from 'prop-types';
+// import { useRef } from 'react';
+// import PropTypes from 'prop-types';
 import useGetScatterData from '@webgeoda/hooks/useGetScatterData';
 import * as ss from 'simple-statistics'
 

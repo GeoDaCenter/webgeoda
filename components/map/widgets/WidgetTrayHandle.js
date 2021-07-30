@@ -4,7 +4,7 @@ import styles from "./Widgets.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
-export default function WidgetTrayHandle(props){
+export default function WidgetTrayHandle(){ //props
     const dispatch = useDispatch();
     const showWidgetTray = useSelector(state => state.showWidgetTray);
     const widgetIsDragging = useSelector(state => state.widgetIsDragging);

@@ -14,13 +14,13 @@ import Loader from "../layout/Loader";
 import { useViewport, useSetViewport } from '@webgeoda/contexts';
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateMap from "@webgeoda/hooks/useUpdateMap";
-import useGetLisa from "../../_webgeoda/hooks/useGetLisa";
+// import useGetLisa from "../../_webgeoda/hooks/useGetLisa";
 // import usePanMap from "@webgeoda/hooks/usePanMap";
 
 import Legend from "./Legend";
 import MapControls from "./MapControls";
 import MapSelection from '../../components/map/MapSelection';
-import useGetVariable from "../../_webgeoda/hooks/useGetVariable";
+// import useGetVariable from "../../_webgeoda/hooks/useGetVariable";
 import useBoxSelectFilter from "@webgeoda/hooks/useBoxSelectFilter";
 
 export default function MainMap() {
