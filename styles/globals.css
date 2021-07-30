@@ -92,3 +92,10 @@ div#view-default-view {
 .hideScrollbar::-webkit-scrollbar {
   display: none;
 }
+
+button.unstyled {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+}

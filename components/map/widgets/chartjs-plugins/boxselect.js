@@ -1,4 +1,4 @@
-import Chart from 'chart.js/auto';
+// import Chart from 'chart.js/auto';
 import {valueOrDefault} from 'chart.js/helpers';
 
 var defaultOptions = {
@@ -9,10 +9,10 @@ var defaultOptions = {
 		selectboxBorderColor: '#48F',
 	},
 	callbacks: {
-		beforeSelect: function (startX, endX, startY, endY) {
+		beforeSelect: function () { // startX, endX, startY, endY
 			return true;
 		},
-		afterSelect: function (startX, endX, startY, endY, datasets) {
+		afterSelect: function () { // startX, endX, startY, endY, datasets
 			
 		}
 	}
@@ -127,7 +127,7 @@ const boxselectPlugin = {
 
 	afterEvent: function (chart, e) {
 
-		const chartType = chart.config.type;
+		// const chartType = chart.config.type;
 		// if (chartType !== 'scatter' && chartType !== 'line') return;
 		
 		// fix for Safari

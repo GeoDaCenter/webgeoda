@@ -173,18 +173,20 @@ export const generateMapData = (state) => {
       tempParams
     );
 
-    const color = getColor(
-      tempVal,
-      state.mapParams.bins.breaks,
-      state.mapParams.colorScale,
-      state.mapParams.mapType,
-      tempParams.numerator,
-      state.storedLisaData,
-      state.storedGeojson,
-      state.currentData,
-      idList[i],
-      mapFn
-    );
+    const color = isNaN(tempVal)
+      ? [0,0,0,0]
+      : getColor(
+          tempVal,
+          state.mapParams.bins.breaks,
+          state.mapParams.colorScale,
+          state.mapParams.mapType,
+          tempParams.numerator,
+          state.storedLisaData,
+          state.storedGeojson,
+          state.currentData,
+          idList[i],
+          mapFn
+        );
     
     const height = getHeight(tempVal, tempParams);
 

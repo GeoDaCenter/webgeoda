@@ -1,7 +1,8 @@
+import { useDispatch } from "react-redux";
 import styles from "./MainMap.module.css";
 import { FlyToInterpolator } from "@deck.gl/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faMinus, faLocationArrow, faGlobe } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faMinus, faLocationArrow, faGlobe, faObjectGroup } from "@fortawesome/free-solid-svg-icons";
 
 import Tooltip from "@reach/tooltip";
 import "@reach/tooltip/styles.css";
@@ -43,7 +44,7 @@ const resetTilt = (setViewport) => {
 
 export default function MapControls() {
   const setViewport = useSetViewport();
-
+  const dispatch = useDispatch();
   return (
     <div className={styles.mapButtonContainer}>
       <Tooltip label="Zoom In">
@@ -84,6 +85,16 @@ export default function MapControls() {
           onClick={() => handleGeolocate(setViewport)}
         >
           <FontAwesomeIcon icon={faGlobe} className={styles.icon} />
+        </button>
+      </Tooltip>
+      <Tooltip label="Select Geographies">
+        <button
+          className={styles.mapButton}
+          title="Select Geographies"
+          id="select-geog"
+          onClick={() => dispatch({type:'TOGGLE_SELECT'})}
+        >
+          <FontAwesomeIcon icon={faObjectGroup} className={styles.icon} />
         </button>
       </Tooltip>
     </div>

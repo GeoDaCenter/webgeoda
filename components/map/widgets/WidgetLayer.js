@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styles from './Widgets.module.scss';
 import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faAngleLeft, faAngleRight, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import {faAngleRight, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 
 const mapWidgets = ({widgets, widgetLocations, side}) => widgets
   .map((elem, index) => ({elem, index}))
@@ -14,7 +14,7 @@ const mapWidgets = ({widgets, widgetLocations, side}) => widgets
 
 const renderWidget = (widget, trueIndex, columnIndex) => {
   if(widget == undefined) return <div />;
-  return <Widget type={widget.type} options={widget.options} fullWidgetConfig={widget} key={`widget-${trueIndex}`} id={trueIndex} index={columnIndex} />
+  return <Widget type={widget.type} options={widget.options} config={widget} key={`widget-${trueIndex}`} id={trueIndex} index={columnIndex} />
 };
 
 export default function WidgetLayer(){
@@ -69,7 +69,6 @@ export default function WidgetLayer(){
       payload: newWidgetLocations
     });
   }
-  const handleWidgetTrayClick = () => dispatch({type: "SET_SHOW_WIDGET_TRAY", payload: !showWidgetTray});
 
   return (
     <div className={styles.widgetLayer}>
@@ -78,25 +77,23 @@ export default function WidgetLayer(){
           <Droppable droppableId="widgets-left">
             {(provided, snapshot) => (
               <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""} ${columnLeftActive ? styles.active : ""}`} id={styles.columnLeft}>
-                <div className={styles.widgetDropdownHandle} onClick={() => {
+                <button className={styles.widgetDropdownHandle} onClick={() => {
                   setColumnLeftActive(!columnLeftActive);
                 }}>
                   <FontAwesomeIcon icon={faAngleRight} className={styles.caret} />
                   <p>Pinned</p>
-                </div>
+                </button>
+                {/* {provided.placeholder} */}
                 {widgetElementsLeft}
               </div>
             )}
           </Droppable>
           <div id={styles.widgetTray}>
-            <div className={`${styles.widgetDropdownHandle} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden}`} onClick={handleWidgetTrayClick}>
-              <FontAwesomeIcon icon={faAngleRight} className={styles.caret} />
-              <p>Widgets</p>
-            </div>
             <div id={styles.widgetTrayContent} className={"hideScrollbar"}>
               <Droppable droppableId="widgets-right">
                 {(provided, snapshot) => (
                   <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden}`} id={styles.columnRight}>
+                    {/* {provided.placeholder} */}
                     {widgetElementsRight}
                   </div>
                 )}
@@ -105,6 +102,7 @@ export default function WidgetLayer(){
                 {(provided, snapshot) => (
                   <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden} ${widgetIsDragging ? styles.widgetIsDragging : ""}`} id={styles.columnHidden}>
                     <p id={styles.hidingMenuTitle}>Hidden <FontAwesomeIcon icon={faAngleUp} className={styles.caret} /></p>
+                    {/* {provided.placeholder} */}
                     {widgetElementsHidden}
                   </div>
                 )}

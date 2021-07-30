@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './Widgets.module.scss';
 import { Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGripLines, faCog, faFilter, faSlash, faExpandArrowsAlt, faInfo, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import Loader from '../../layout/Loader';
+import { faGripLines, faCog, faFilter, faSlash } from "@fortawesome/free-solid-svg-icons";
 import WidgetSettings from './WidgetSettings';
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';
 import Scatter3DWidget from './Scatter3DWidget';
+import HeatmapWidget from './HeatmapWidget';
 import LineWidget from './LineWidget';
 import SummaryWidget from './SummaryWidget';
 import LisaWidget from './LisaWidget';
@@ -41,16 +41,9 @@ const ParentWidget = (props) => {
 }
 function Widget(props) {
   const dispatch = useDispatch();
-  const data = useSelector(state => state.widgetData[props.id]);
   const mapFilters = useSelector(state => state.mapFilters);
   const lisaVariable = useSelector(state => state.lisaVariable)
   const [showSettings, setShowSettings] = React.useState(false);
-  if(data == null){
-    return (
-      <div className={styles.widget}><Loader /></div>
-    );
-  }
-
   const activeFilters = mapFilters.filter(i => i.source == props.id);
   const hasActiveFilter = activeFilters.length > 0;
   let header = '';
@@ -104,14 +97,13 @@ function Widget(props) {
             <ParentWidget 
               type={props.type}
               options={props.options}
-              data={data}
-              fullWidgetConfig={props.fullWidgetConfig}
+              config={props.config}
               id={props.id}
               activeFilters={activeFilters}
             />
           </div>
           <div className={styles.widgetSettings}>
-            <WidgetSettings config={props.fullWidgetConfig} id={props.id} onSave={() => {
+            <WidgetSettings config={props.config} id={props.id} onSave={() => {
               setShowSettings(false);
             }} />
           </div>
@@ -125,7 +117,7 @@ function Widget(props) {
 Widget.propTypes = {
   type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d","summary", "lisaW", "lisaScatter", "heatmap"]).isRequired,
   options: PropTypes.object.isRequired,
-  fullWidgetConfig: PropTypes.object.isRequired,
+  config: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired
 };
