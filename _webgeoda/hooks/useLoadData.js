@@ -280,7 +280,7 @@ export default function useLoadData(dateLists = {}) {
     });
 
     await loadTables(dataPresets, datasetToLoad, dateLists, mapId)
-    await loadWidgets(dataPresets.widgets, dispatch);
+    // await loadWidgets(dataPresets.widgets, dispatch);
 
     return {
       currentDataPreset,
@@ -304,21 +304,17 @@ export default function useLoadData(dateLists = {}) {
       (o) => o.geodata === datasetToLoad
     )
     const tablesToFetch = currentDataPreset.tables;
-    const tableNames = Object.keys(tablesToFetch);
     const tableDetails = Object.values(tablesToFetch);
-    const tablePromises = tableDetails.map((table) =>
-      handleLoadData(table, dateLists)
-    );
-    const tableData = await Promise.all(tablePromises);
-
-    const dataCollection = {};
-    for (let i = 0; i < tableNames.length; i++)
-      dataCollection[tableDetails[i].file] = tableData[i];
-
-    dispatch({
-      type: "ADD_TABLES",
-      payload: dataCollection,
-    });
+    for (let i=0; i<tableDetails; i++){ // intentionally lazy load
+      const tableData = await handleLoadData(tableDetails[i], dateLists)
+      dispatch({
+        type: "ADD_TABLES",
+        payload: {
+          [tableDetails[i].file]: tableData
+        },
+      });
+    }
+    
   };
 
   return [loadData, loadDataForMap];

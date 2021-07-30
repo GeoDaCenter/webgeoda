@@ -202,20 +202,20 @@ const widgets = [
       yAxisLabel: "Median Household Income"
     }
   },
-  {
-    display: "tray",
-    type: "heatmap",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
-    options: {
-      header: "Median Gross Rent vs Median Household Income",
-      foregroundColor: "#000000",
-      pointSize: .2,
-      xAxisLabel: "Median Gross Rent",
-      yAxisLabel: "Median Household Income",
-      removeZeroValues: true
-    }
-  },
+  // {
+  //   display: "tray",
+  //   type: "heatmap",
+  //   xVariable: "Median Household Income",
+  //   yVariable: "Median Gross Rent",
+  //   options: {
+  //     header: "Median Gross Rent vs Median Household Income",
+  //     foregroundColor: "#000000",
+  //     pointSize: .2,
+  //     xAxisLabel: "Median Gross Rent",
+  //     yAxisLabel: "Median Household Income",
+  //     removeZeroValues: true
+  //   }
+  // },
   {
     display: "tray",
     type: "scatter",
