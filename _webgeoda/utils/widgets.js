@@ -6,7 +6,6 @@ import {TARGET_RANGE} from "../../components/map/widgets/Scatter3DWidget";
 
 import { bin as d3bin } from "d3-array";
 import useLisa from '@webgeoda/hooks/useLisa';
-import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
 import {linearRegression, linearRegressionLine, kMeansCluster, min, max, standardDeviation, median, mean} from "simple-statistics";
 
 const findFirstTable = (tableName, storedData, dataPresets) => {

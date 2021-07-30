@@ -14,7 +14,6 @@ import LineWidget from './LineWidget';
 import SummaryWidget from './SummaryWidget';
 import LisaWidget from './LisaWidget';
 import LisaScatterWidget from './LisaScatterWidget';
-import HeatmapWidget from './HeatmapWidget';
 
 // As defined in CSS
 export const WIDGET_WIDTH = 400;

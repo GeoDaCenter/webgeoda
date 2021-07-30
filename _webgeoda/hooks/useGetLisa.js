@@ -67,10 +67,18 @@ export default function useGetLisa({
         })
 
         if (getScatterPlot) {
-            let scatterPlotData = [];
+            let scatterPlotDataStan = [];
             const standardizedVals = standardize(columnData);
             const spatialLags = await geoda.spatialLag(weights, standardizedVals);
-            setData({ weights, lisaResults, scatterPlotData, lisaData:columnData, spatialLags });
+            for (let i=0; i<standardizedVals.length; i++){
+                scatterPlotDataStan.push({
+                    x: standardizedVals[i],
+                    y: spatialLags[i],
+                    cluster: lisaResults.clusters[i],
+                    id: storedGeojson[state.currentData].order[i]
+                })
+            }
+            setData({ weights, lisaResults, scatterPlotDataStan, lisaData:columnData, spatialLags });
         } else {
             setData({ weights, lisaResults, lisaData:columnData });
         }
