@@ -14,8 +14,6 @@ import {
   getBins
 } from "../utils/geoda-helpers";
 
-import {loadWidgets} from "../utils/widgets";
-
 import * as colors from "../utils/colors";
 
 import { fitBounds, zoomToScale } from "@math.gl/web-mercator";
@@ -117,11 +115,8 @@ export default function useLoadData(dateLists = {}) {
 
   useEffect(() => {
     for(const dataset of activeDatasets){
-      if(!(dataset in storedData) || !(dataset in storedGeojson)){ // TODO: is an entry in storedData and storedGeojson guaranteed?
-        // TODO: Load data into redux state
-        // However, we can't use the current loadData function or the INITIAL_LOAD action
-        // since that would modify map state. Create new action to load data without
-        // map side effects
+      if(!(dataset in storedData) || !(dataset in storedGeojson)){
+        loadData(dataPresets, dataset);
       }
     }
   }, [activeDatasets]);
@@ -280,7 +275,6 @@ export default function useLoadData(dateLists = {}) {
     });
 
     await loadTables(dataPresets, datasetToLoad, dateLists, mapId)
-    // await loadWidgets(dataPresets.widgets, dispatch);
 
     return {
       currentDataPreset,

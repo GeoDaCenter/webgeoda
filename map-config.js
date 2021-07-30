@@ -193,7 +193,7 @@ const widgets = [
     }
   },
   {
-    display: "hidden",
+    display: "pinned",
     type: "histogram",
     variable: "Median Household Income",
     options: {
