@@ -16,6 +16,7 @@ import LisaWidget from './LisaWidget';
 import LisaScatterWidget from './LisaScatterWidget';
 
 // As defined in CSS
+//TODO: fix heatmap placement div
 export const WIDGET_WIDTH = 400;
 
 const widgetTypes = {
@@ -92,7 +93,7 @@ function Widget(props) {
                 }
                 </h3>
           }
-          <div id='myDiv' className={styles.widgetContent}>
+          <div id='myDiv' className={styles.widgetContent}> 
             <ParentWidget 
               type={props.type}
               options={props.options}

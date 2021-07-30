@@ -26,15 +26,22 @@ function LisaWidget(props) {
 
     const lisaData = getCachedLisa({variable: lisaVariable});
     React.useEffect(async () => {
+      // let mounted = true;
       if(lisaData == null){
+        // if (mounted){
           const lisaData = await getLisa({
           dataParams: {variable: lisaVariable},
           getScatterPlot: true
-      });
+      })
+    // }
+    ;
       updateCachedLisa({variable: lisaVariable}, lisaData);
       }
+
+      // return () => mounted = false;
     });
 
+    console.log(lisaData)
     const index = storedGeojson[currentData].order.findIndex((o) => o === currentHoverId)
 
     let arrayData = [];
@@ -75,9 +82,9 @@ function LisaWidget(props) {
 }
 
 
-LisaWidget.propTypes = {
-  options: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
-};
+// LisaWidget.propTypes = {
+//   options: PropTypes.object.isRequired,
+//   data: PropTypes.object.isRequired
+// };
 
 export default LisaWidget;

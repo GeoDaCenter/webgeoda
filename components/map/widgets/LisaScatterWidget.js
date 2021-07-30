@@ -6,6 +6,7 @@ import { Scatter, Chart } from 'react-chartjs-2';
 import pluginBoxSelect from './chartjs-plugins/boxselect';
 import useLisa from '@webgeoda/hooks/useLisa';
 import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
+import useGetLisa from '@webgeoda/hooks/useGetLisa';
 import { useDispatch } from 'react-redux';
 import Loader from '../../layout/Loader';
 import usePanMap from '@webgeoda/hooks/usePanMap';
@@ -31,21 +32,29 @@ function LisaScatterWidgetUnwrapped(props) {
     const [getLisa, cacheLisa,] = useLisa();
     const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
     const lisaVariable = useSelector((state) => state.lisaVariable)
-    const lisaData = getCachedLisa({ variable: lisaVariable });
+    //const lisaData = getCachedLisa({ variable: lisaVariable });
 
-    if (typeof window === "undefined") {
-        return null;
-    }
 
-    React.useEffect(async () => {
-        if (lisaData == null) {
-            const lisaData = await getLisa({
-                dataParams: { variable: lisaVariable },
-                getScatterPlot: true
-            });
-            updateCachedLisa({ variable: lisaVariable }, lisaData);
-        }
-    }, []);
+    const lisaData = useGetLisa({
+        variable: lisaVariable,
+        getScatterPlot: true
+    })
+    console.log(lisaData)
+
+    // if (typeof window === "undefined") {
+    //     return null;
+    // }
+
+    // React.useEffect(async () => {
+    //     if (lisaData == null) {
+    //         const lisaData = await getLisa({
+    //             dataParams: { variable: lisaVariable },
+    //             getScatterPlot: true
+    //         });
+    //         updateCachedLisa({ variable: lisaVariable }, lisaData);
+    //     }
+    // }, []);
+
 
     //TODO: box select filtering
 
@@ -290,13 +299,13 @@ function LisaScatterWidgetUnwrapped(props) {
     );
 }
 
-LisaScatterWidgetUnwrapped.propTypes = {
-    options: PropTypes.object.isRequired,
-    data: PropTypes.object.isRequired,
-    id: PropTypes.number.isRequired,
-    fullWidgetConfig: PropTypes.object.isRequired,
-    activeFilters: PropTypes.array.isRequired
-};
+// LisaScatterWidgetUnwrapped.propTypes = {
+//     options: PropTypes.object.isRequired,
+//     data: PropTypes.object.isRequired,
+//     id: PropTypes.number.isRequired,
+//     fullWidgetConfig: PropTypes.object.isRequired,
+//     activeFilters: PropTypes.array.isRequired
+// };
 
 const LisaScatterWidget = React.memo(LisaScatterWidgetUnwrapped);
 

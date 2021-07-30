@@ -45,12 +45,12 @@ function ScatterWidget(props) {
   );
 }
 
-ScatterWidget.propTypes = {
-  options: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired,
-  id: PropTypes.number.isRequired,
-  config: PropTypes.object.isRequired,
-  activeFilters: PropTypes.array.isRequired
-};
+// ScatterWidget.propTypes = {
+//   options: PropTypes.object.isRequired,
+//   data: PropTypes.object.isRequired,
+//   id: PropTypes.number.isRequired,
+//   config: PropTypes.object.isRequired,
+//   activeFilters: PropTypes.array.isRequired
+// };
 
 export default ScatterWidget;

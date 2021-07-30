@@ -181,10 +181,10 @@ function Scatter3DWidgetUnwrapped(props) {
   )
 }
 
-Scatter3DWidgetUnwrapped.propTypes = {
-  options: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
-};
+// Scatter3DWidgetUnwrapped.propTypes = {
+//   options: PropTypes.object.isRequired,
+//   data: PropTypes.object.isRequired
+// };
 
 const Scatter3DWidget = React.memo(Scatter3DWidgetUnwrapped);
 
