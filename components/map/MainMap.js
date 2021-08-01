@@ -144,7 +144,7 @@ export default function MainMap() {
         id: "choropleth",
         data: currentMapGeography,
         getFillColor: (d) => [
-          ...mapData.data[d.properties[currentId]]?.color,
+          ...(mapData.data[d.properties[currentId]]?.color||[0,0,0]),
           itemIsInFilter(d.properties[currentId])*255+80
         ],
         getLineColor: (d) => [
