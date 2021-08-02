@@ -101,4 +101,7 @@ export const INITIAL_STATE = {
   isLoading: true,
   lisaVariable: "Total Population", // TODO: should be blank
   currentHoverId: 0,
+  weights:{},
+  lisaResults: {},
+  lisaData: []
 };

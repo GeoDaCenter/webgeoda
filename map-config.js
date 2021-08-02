@@ -184,26 +184,6 @@ const mapModes = {
 
 const widgets = [
   // {
-  //   display: "pinned",
-  //   type: "histogram",
-  //   variable: "Median age",
-  //   options: {
-  //     header: "Median Age",
-  //     foregroundColor: "#FF00FF",
-  //     yAxisLabel: "Median Age"
-  //   }
-  // },
-  // {
-  //   display: "hidden",
-  //   type: "histogram",
-  //   variable: "Median Household Income",
-  //   options: {
-  //     header: "Median Household Income",
-  //     foregroundColor: "#FF00FF",
-  //     yAxisLabel: "Median Household Income"
-  //   }
-  // },
-  // {
   //   display: "tray",
   //   type: "heatmap",
   //   xVariable: "Median Household Income",
@@ -219,13 +199,34 @@ const widgets = [
   // },
   {
     display: "tray",
-    type: "lisaW",
-    variable: "Total Population",
+    type: "histogram",
+    variable: "Median age",
     options: {
-      header: "Total Population LISA",
+      header: "Median Age",
       foregroundColor: "#FF00FF",
+      yAxisLabel: "Median Age"
     }
   },
+  // {
+  //   display: "hidden",
+  //   type: "histogram",
+  //   variable: "Median Household Income",
+  //   options: {
+  //     header: "Median Household Income",
+  //     foregroundColor: "#FF00FF",
+  //     yAxisLabel: "Median Household Income"
+  //   }
+  // },
+  
+  // {
+  //   display: "tray",
+  //   type: "lisaW",
+  //   variable: "Total Population",
+  //   options: {
+  //     header: "Total Population LISA",
+  //     foregroundColor: "#FF00FF",
+  //   }
+  // },
   {
     display: "tray",
     type: "lisaScatter",
