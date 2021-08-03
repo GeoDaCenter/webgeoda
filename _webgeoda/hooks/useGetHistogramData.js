@@ -91,7 +91,7 @@ export default function useGetHistogramData({
     const data = useGetVariable({
         variable,
         dataset,
-        priority: true
+        priority: false
     });
 
     const {
