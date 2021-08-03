@@ -63,6 +63,8 @@ export default function reducer(state = INITIAL_STATE, action) {
         currentData: action.payload.currentData,
         dataParams,
         mapParams,
+        storedGeojson: action.payload.storedGeojson,
+        storedData: action.payload.storedData,
         initialViewState:
           action.payload.viewState !== null
             ? action.payload.initialViewState
@@ -396,41 +398,19 @@ export default function reducer(state = INITIAL_STATE, action) {
     case "FORMAT_WIDGET_DATA": {
       let cachedVariables = {...state.cachedVariables}
       const widgetData = {...state.widgetData};
-
-      if("widgetSpec" in action.payload){
-        // Only loading one widget's data
-        widgetData[action.payload.widgetSpec.id] = formatWidgetData(action.payload.widgetSpec.variable, state, action.payload.widgetSpec.type, action.payload.widgetSpec.options);
-        if (cachedVariables.hasOwnProperty(state.currentData) 
-          && widgetData[i.id].hasOwnProperty('variableToCache')) {
-            for (let n=0; n<widgetData[i.id].variableToCache.length; n++){
-              cachedVariables = {
-                ...cachedVariables,
-                [state.currentData]: {
-                  ...(cachedVariables[state.currentData]||{}),
-                  [widgetData[i.id].variableToCache[n].variable]: zip(widgetData[i.id].variableToCache[n].order, widgetData[i.id].variableToCache[n].data)
-                }
+      widgetData[action.payload.widgetSpec.id] = formatWidgetData(action.payload.widgetSpec.variable, state, action.payload.widgetSpec.type, action.payload.widgetSpec.options);
+      if (cachedVariables.hasOwnProperty(state.currentData) 
+        && widgetData[i.id].hasOwnProperty('variableToCache')) {
+          for (let n=0; n<widgetData[i.id].variableToCache.length; n++){
+            cachedVariables = {
+              ...cachedVariables,
+              [state.currentData]: {
+                ...(cachedVariables[state.currentData]||{}),
+                [widgetData[i.id].variableToCache[n].variable]: zip(widgetData[i.id].variableToCache[n].order, widgetData[i.id].variableToCache[n].data)
               }
             }
           }
-      } else {
-        // Loading multiple widget data
-        for(const i of action.payload.widgetSpecs){
-          widgetData[i.id] = formatWidgetData(i.variable, state, i.type, i.options);
-          if (cachedVariables.hasOwnProperty(state.currentData) 
-            && widgetData[i.id].hasOwnProperty('variableToCache')) {
-              for (let n=0; n<widgetData[i.id].variableToCache.length; n++){
-                cachedVariables = {
-                  ...cachedVariables,
-                  [state.currentData]: {
-                    ...(cachedVariables[state.currentData]||{}),
-                    [widgetData[i.id].variableToCache[n].variable]: zip(widgetData[i.id].variableToCache[n].order, widgetData[i.id].variableToCache[n].data)
-                  }
-                }
-              }
-            }
         }
-      }
-      
       return {
         ...state, 
         widgetData,
@@ -516,20 +496,20 @@ export default function reducer(state = INITIAL_STATE, action) {
         cachedTimeSeries
       }
     }
-    case "ADD_ACTIVE_DATASETS": {
-      const activeDatasets = [...state.activeDatasets];
+    case "PUSH_DATA_QUEUE": {
+      const datasetFetchQueue = [...state.datasetFetchQueue];
       for(const i of action.payload.datasets){
-        if(!activeDatasets.includes(i)) activeDatasets.push(i);
+        if(!datasetFetchQueue.includes(i)) datasetFetchQueue.push(i);
       }
-      return {...state, activeDatasets};
+      return {...state, datasetFetchQueue};
     }
-    case "REMOVE_ACTIVE_DATASETS": {
-      const activeDatasets = [...state.activeDatasets];
+    case "REMOVE_FROM_DATA_QUEUE": {
+      const datasetFetchQueue = [...state.datasetFetchQueue];
       for(const i of action.payload.datasets){
-        const index = activeDatasets.indexOf(i);
-        if(index >= 0) activeDatasets.splice(index, 1);
+        const index = datasetFetchQueue.indexOf(i);
+        if(index >= 0) datasetFetchQueue.splice(index, 1);
       }
-      return {...state, activeDatasets};
+      return {...state, datasetFetchQueue};
     }
     case "CACHE_VARIABLE": {
       const cachedVariables = {

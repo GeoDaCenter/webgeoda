@@ -95,7 +95,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
     if (widgetType === "histogram"){
         const variableSpec = find(
             dataPresets.variables,
-            (o) => o.variable === variableName
+            (o) => o.variable === variableName[0]
         )
         if (!variableSpec) return []
         console.log(getColumnData(variableSpec, state, false, true))
@@ -118,7 +118,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
             variableToCache: [{
                 data,
                 order: state.storedGeojson[state.currentData].order,
-                variable: variableName
+                variable: variableName[0]
             }]
         }
     }
@@ -400,7 +400,7 @@ export const getWidgetSpec = (widget, i) => {
     } else if(widget.type == 'scatter3d') {
         variable = [widget.xVariable, widget.yVariable, widget.zVariable];
     } else {
-        variable = widget.variable;
+        variable = [widget.variable];
     }
     return {
         id: i,

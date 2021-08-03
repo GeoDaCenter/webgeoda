@@ -14,6 +14,7 @@ import LineWidget from './LineWidget';
 import SummaryWidget from './SummaryWidget';
 import LisaWidget from './LisaWidget';
 import LisaScatterWidget from './LisaScatterWidget';
+import VegaScatter from './VegaScatter';
 
 // As defined in CSS
 //TODO: fix heatmap placement div
@@ -23,11 +24,12 @@ const widgetTypes = {
   'histogram': HistogramWidget,
   'scatter': ScatterWidget,
   'scatter3d': Scatter3DWidget,
+  'heatmap':HeatmapWidget,
   'line': LineWidget,
+  'vegaScatter': VegaScatter,
   'summary': SummaryWidget,
   'lisaW': LisaWidget,
   'lisaScatter': LisaScatterWidget, 
-  'heatmap': HeatmapWidget
 }
 
 const ParentWidget = (props) => {

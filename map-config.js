@@ -183,6 +183,26 @@ const mapModes = {
 
 
 const widgets = [
+  {
+    display: "pinned",
+    type: "histogram",
+    variable: "Median age",
+    options: {
+      header: "Median Age",
+      foregroundColor: "#FF00FF",
+      yAxisLabel: "Median Age"
+    }
+  },
+  {
+    display: "pinned",
+    type: "histogram",
+    variable: "Median Household Income",
+    options: {
+      header: "Median Household Income",
+      foregroundColor: "#FF00FF",
+      yAxisLabel: "Median Household Income"
+    }
+  },
   // {
   //   display: "tray",
   //   type: "heatmap",

@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 
 import {
     findTable
@@ -14,18 +14,42 @@ export default function useGetTables({
     dataset=false,
     variable=false,
     geoids=[],
-    getDates=false
+    getDates=false,
+    priority=true
 }){
+    const dispatch = useDispatch();
     const currentData = useSelector((state) => state.currentData);
     const storedData = useSelector((state) => state.storedData);
     const storedGeojson = useSelector((state) => state.storedGeojson);
-    const dataPresets = useSelector((state) => state.dataPresets)
+    const dataPresets = useSelector((state) => state.dataPresets);
+    const datasetFetchQueue = useSelector((state) => state.datasetFetchQueue);
     const fetchData = useFetchData();
     const [tables, setTables] = useState({
         numerator: {},
         denominator: {},
         dates: []
-    })
+    });
+
+    const queueFetchData = (dataset) => {
+        dispatch({
+            type: "PUSH_DATA_QUEUE",
+            payload: {
+                datasets: [dataset]
+            }
+        });
+    }
+
+    const popDataQueue = async (dataset) => { // TODO: Find optimal strategy to call popDataQueue
+        if(datasetFetchQueue.length === 0) return;
+        const datasetToLoad = datasetFetchQueue[0];
+        dispatch({
+            type: "REMOVE_FROM_DATA_QUEUE",
+            payload: {
+                datasets: [datasetToLoad]
+            }
+        });
+        await fetchData({req: datasetToLoad});
+    }
 
     const getTables = async (
         dataset=false,
@@ -59,21 +83,54 @@ export default function useGetTables({
             dataPresets.data,
         )
 
-        const numeratorData = variableSpec && variableSpec.numerator === 'properties' 
-            ? dataset in storedGeojson
-                ? storedGeojson[dataset].properties
-                : await fetchData({ req:dataset })
-            : numeratorTable && numeratorTable.file in storedData
-                ? storedData[numeratorTable.file]
-                : await fetchData({ req:numeratorTable })
-
-        const denominatorData = variableSpec && variableSpec.denominator === 'properties' 
-            ? dataset in storedGeojson
-                ? storedGeojson[dataset].properties
-                : await fetchData({ req:dataset })
-            : denominatorTable && denominatorTable.file in storedData
-                ? storedData[denominatorTable.file]
-                : await fetchData({ req:denominatorTable })     
+        let numeratorData;
+        if(variableSpec && variableSpec.numerator === 'properties'){
+            if(dataset in storedGeojson) {
+                numeratorData = storedGeojson[dataset].properties;
+            } else {
+                if(priority){
+                    numeratorData = await fetchData({req: dataset});
+                } else {
+                    queueFetchData(dataset);
+                    return null;
+                }
+            }
+        } else {
+            if(numeratorTable && numeratorTable.file in storedData){
+                numeratorData = storedData[numeratorTable.file];
+            } else {
+                if(priority){
+                    numeratorData = await fetchData({req: numeratorTable});
+                } else {
+                    queueFetchData(numeratorTable);
+                    return null;
+                }
+            }
+        }
+        let denominatorData;
+        if(variableSpec && variableSpec.numerator === 'properties'){
+            if(dataset in storedGeojson) {
+                denominatorData = storedGeojson[dataset].properties;
+            } else {
+                if(priority){
+                    denominatorData = await fetchData({req: dataset});
+                } else {
+                    queueFetchData(dataset);
+                    return null;
+                }
+            }
+        } else {
+            if(denominatorTable && denominatorTable.file in storedData){
+                denominatorData = storedData[denominatorTable.file];
+            } else {
+                if(priority){
+                    denominatorData = await fetchData({req: denominatorTable});
+                } else {
+                    queueFetchData(denominatorTable);
+                    return null;
+                }
+            }
+        }
         
         if (geoids.length){
             let numeratorDataList = 'data' in numeratorData ? numeratorData.data : numeratorData;
