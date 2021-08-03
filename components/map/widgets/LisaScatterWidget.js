@@ -44,8 +44,12 @@ function LisaScatterWidgetUnwrapped(props) {
 //     // }
 
     const lisaData = getCachedLisa({ variable: lisaVariable });
+    console.log('1')
+    console.log(lisaData)
+    // console.log(currentData)
+    console.log(storedGeojson)
     React.useEffect(async () => {
-        if (lisaData == null || lisaData == 'undefined') {
+        if (lisaData == null || lisaData == undefined) {
             const lisaData = await getLisa({
                 dataParams: { variable: lisaVariable },
                 getScatterPlot: true
@@ -55,6 +59,7 @@ function LisaScatterWidgetUnwrapped(props) {
         }
     }, []);
 
+    console.log('2')
     console.log(lisaData)
 
 
