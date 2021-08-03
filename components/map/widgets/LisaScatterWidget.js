@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import { useSelector } from "react-redux";
@@ -27,11 +27,10 @@ function LisaScatterWidgetUnwrapped(props) {
     const storedGeojson = useSelector((state) => state.storedGeojson);
     const currentData = useSelector((state) => state.currentData);
     const panToGeoid = usePanMap();
-   const allLisaData = useSelector((state) => state.cachedLisaScatterplotData);
+    const allLisaData = useSelector((state) => state.cachedLisaScatterplotData);
     const [getLisa, cacheLisa,] = useLisa();
     const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
     const lisaVariable = useSelector((state) => state.lisaVariable)
-    const lisaData = getCachedLisa({ variable: lisaVariable });
 
 
     // const lisaData = useGetLisa({
@@ -44,17 +43,19 @@ function LisaScatterWidgetUnwrapped(props) {
 //     //     return null;
 //     // }
 
+    const lisaData = getCachedLisa({ variable: lisaVariable });
     React.useEffect(async () => {
-        if (lisaData == null) {
+        if (lisaData == null || lisaData == 'undefined') {
             const lisaData = await getLisa({
                 dataParams: { variable: lisaVariable },
                 getScatterPlot: true
             });
+            console.log('hi')
             updateCachedLisa({ variable: lisaVariable }, lisaData);
         }
     }, []);
 
-    // console.log(lisaData)
+    console.log(lisaData)
 
 
 //     //TODO: box select filtering
@@ -140,162 +141,162 @@ function LisaScatterWidgetUnwrapped(props) {
 
 
 
-//     const options = React.useMemo(() => {
-//         return {
-//             events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
-//             maintainAspectRatio: false,
-//             animation: false,
-//             elements: {
-//                 point: {
-//                     radius: props.options.pointSize || 0.1
-//                 }
-//             },
-//             onClick: (e, items) => {
-//                 if (items.length == 0) return;
-//                 panToGeoid(items[0].element.$context.raw.id);
-//             },
-//             onHover: (e, items) => {
-//                 if (items.length == 0) {
-//                     dispatch({
-//                         type: "SET_HOVER_ID",
-//                         payload: 0
-//                     });
-//                     return;
-//                 };
-//                 dispatch({
-//                     type: "SET_HOVER_ID",
-//                     payload: items[0].element.$context.raw.id
-//                 })
-//             },
-//             plugins: {
-//                 legend: {
-//                     display: true,
-//                     labels: {
-//                         filter: (legend) => legend.datasetIndex != 0 // hide scatter label
-//                     }
-//                 },
-//                 zoom: {
-//                     zoom: {
-//                         wheel: {
-//                             enabled: true // SET SCROOL ZOOM TO TRUE
-//                         },
-//                         pinch: {
-//                             enabled: true
-//                         },
-//                         mode: "xy",
-//                         speed: 100
-//                     },
-//                     pan: {
-//                         enabled: true,
-//                         mode: "xy",
-//                         speed: 100
-//                     }
-//                 },
-//                 // tooltip: {
-//                 //     callbacks: {
-//                 //         label: (tooltipItem) => {
-//                 //             const point = tooltipItem.raw.id;
-//                 //             if (point != undefined) {
-//                 //                 return `${tooltipItem.raw.id}`
-//                 //             }
-//                 //             else { return "undefined" };
-//                 //         }
-//                 //     }
-//                 // },
-//                 // boxselect: {
-//                 //     select: {
-//                 //         enabled: true,
-//                 //         direction: 'xy'
-//                 //     },
-//                 //     callbacks: {
-//                 //         beforeSelect: function (startX, endX, startY, endY) {
-//                 //             return true;
-//                 //         },
-//                 //         afterSelect: (startX, endX, startY, endY, datasets) => {
-//                 //             dispatch({
-//                 //                 type: "SET_MAP_FILTER",
-//                 //                 payload: {
-//                 //                     widgetIndex: props.id,
-//                 //                     filterId: `${props.id}-x`,
-//                 //                     filter: {
-//                 //                         type: "range",
-//                 //                         field: props.fullWidgetConfig.xVariable,
-//                 //                         from: Math.min(startX, endX),
-//                 //                         to: Math.max(startX, endX)
-//                 //                     }
-//                 //                 }
-//                 //             });
-//                 //             dispatch({
-//                 //                 type: "SET_MAP_FILTER",
-//                 //                 payload: {
-//                 //                     widgetIndex: props.id,
-//                 //                     filterId: `${props.id}-y`,
-//                 //                     filter: {
-//                 //                         type: "range",
-//                 //                         field: props.fullWidgetConfig.yVariable,
-//                 //                         from: Math.min(startY, endY),
-//                 //                         to: Math.max(startY, endY)
-//                 //                     }
-//                 //                 }
-//                 //             });
-//                 //         }
-//                 //     }
-//                 // },
-//                 scales: { // TODO: Support gridlinesInterval option
-//                     x: {
-//                         title: {
-//                             display: "xAxisLabel" in props.options,
-//                             text: props.options.xAxisLabel || ""
-//                         }
-//                     },
-//                     y: {
-//                         title: {
-//                             display: "yAxisLabel" in props.options,
-//                             text: props.options.yAxisLabel || ""
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//         // })
-//     }, [props.options, props.data, props.fullWidgetConfig]);
+    const options = React.useMemo(() => {
+        return {
+            events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
+            maintainAspectRatio: false,
+            animation: false,
+            elements: {
+                point: {
+                    radius: props.options.pointSize || 0.1
+                }
+            },
+            onClick: (e, items) => {
+                if (items.length == 0) return;
+                panToGeoid(items[0].element.$context.raw.id);
+            },
+            onHover: (e, items) => {
+                if (items.length == 0) {
+                    dispatch({
+                        type: "SET_HOVER_ID",
+                        payload: 0
+                    });
+                    return;
+                };
+                dispatch({
+                    type: "SET_HOVER_ID",
+                    payload: items[0].element.$context.raw.id
+                })
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        filter: (legend) => legend.datasetIndex != 0 // hide scatter label
+                    }
+                },
+                zoom: {
+                    zoom: {
+                        wheel: {
+                            enabled: true // SET SCROOL ZOOM TO TRUE
+                        },
+                        pinch: {
+                            enabled: true
+                        },
+                        mode: "xy",
+                        speed: 100
+                    },
+                    pan: {
+                        enabled: true,
+                        mode: "xy",
+                        speed: 100
+                    }
+                },
+                // tooltip: {
+                //     callbacks: {
+                //         label: (tooltipItem) => {
+                //             const point = tooltipItem.raw.id;
+                //             if (point != undefined) {
+                //                 return `${tooltipItem.raw.id}`
+                //             }
+                //             else { return "undefined" };
+                //         }
+                //     }
+                // },
+                // boxselect: {
+                //     select: {
+                //         enabled: true,
+                //         direction: 'xy'
+                //     },
+                //     callbacks: {
+                //         beforeSelect: function (startX, endX, startY, endY) {
+                //             return true;
+                //         },
+                //         afterSelect: (startX, endX, startY, endY, datasets) => {
+                //             dispatch({
+                //                 type: "SET_MAP_FILTER",
+                //                 payload: {
+                //                     widgetIndex: props.id,
+                //                     filterId: `${props.id}-x`,
+                //                     filter: {
+                //                         type: "range",
+                //                         field: props.fullWidgetConfig.xVariable,
+                //                         from: Math.min(startX, endX),
+                //                         to: Math.max(startX, endX)
+                //                     }
+                //                 }
+                //             });
+                //             dispatch({
+                //                 type: "SET_MAP_FILTER",
+                //                 payload: {
+                //                     widgetIndex: props.id,
+                //                     filterId: `${props.id}-y`,
+                //                     filter: {
+                //                         type: "range",
+                //                         field: props.fullWidgetConfig.yVariable,
+                //                         from: Math.min(startY, endY),
+                //                         to: Math.max(startY, endY)
+                //                     }
+                //                 }
+                //             });
+                //         }
+                //     }
+                // },
+                scales: { // TODO: Support gridlinesInterval option
+                    x: {
+                        title: {
+                            display: "xAxisLabel" in props.options,
+                            text: props.options.xAxisLabel || ""
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: "yAxisLabel" in props.options,
+                            text: props.options.yAxisLabel || ""
+                        }
+                    }
+                }
+            }
+        }
+        // })
+    }, [props.options, props.data, props.fullWidgetConfig]);
 
-//     let graphic = null;
+    let graphic = null;
 
-//     const chart = React.useMemo(() => {
-//         if (lisaData) {
-//             graphic = <Scatter
-//                 data={dataProp}
-//                 options={options}
-//                 //plugins={[pluginBoxSelect]}
-//                 ref={chartRef}
-//             />
-//             let buttonFunc = null;
-//             import('chartjs-plugin-zoom').then(({ resetZoom }) => {
-//                 buttonFunc = resetZoom
-//             })
-//             return (
-//                 <div>
-//                     {graphic}
-//                     <button onClick={() => { buttonFunc(chartRef.current) }}>Reset Zoom</button>
-//                 </div>
-//             );
-//         }
-//         else {
-//             return (
-//                 <div>
-//                     <Loader />
-//                     <br />
-//                     <br />
-//                     <center><small><i>LISA data generating...</i></small></center>
-//                 </div>
-//             )
-//         }
-//     }, [dataProp, options]);
+    const chart = React.useMemo(() => {
+        if (lisaData) {
+            graphic = <Scatter
+                data={dataProp}
+                options={options}
+                //plugins={[pluginBoxSelect]}
+                ref={chartRef}
+            />
+            let buttonFunc = null;
+            import('chartjs-plugin-zoom').then(({ resetZoom }) => {
+                buttonFunc = resetZoom
+            })
+            return (
+                <div>
+                    {graphic}
+                    <button onClick={() => { buttonFunc(chartRef.current) }}>Reset Zoom</button>
+                </div>
+            );
+        }
+        else {
+            return (
+                <div>
+                    <Loader />
+                    <br />
+                    <br />
+                    <center><small><i>LISA data generating...</i></small></center>
+                </div>
+            )
+        }
+    }, [dataProp, options]);
 
     return (
         <div>
-            hi
+            {chart}
         </div>
     );
 }

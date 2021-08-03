@@ -60,6 +60,7 @@ export default function useLisa() {
             dataParams: dataParams,
             fixedOrder: storedGeojson[geographyName].order
         })
+        //console.log(lisaData)
 
         const { weights, lisaResults } = await getLisaResults({
             geoda,
