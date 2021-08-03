@@ -48,7 +48,7 @@ export default function useGetLisa({
     const getLisa = async (
         columnData,
         dataset,
-        getScatterPlot=false
+        getScatterPlot=true
     ) => {
         if (!Object.keys(columnData).length || !(dataset in storedGeojson)) return;
         
@@ -66,7 +66,6 @@ export default function useGetLisa({
             dataset
         })
 
-        if (getScatterPlot) {
             let scatterPlotDataStan = [];
             const standardizedVals = standardize(Object.values(columnData));
             const spatialLags = await geoda.spatialLag(weights, standardizedVals);
@@ -79,11 +78,11 @@ export default function useGetLisa({
                 })
             }
             setData({ weights, lisaResults, scatterPlotDataStan, lisaData:columnData, spatialLags });
-        } else {
-            setData({ weights, lisaResults, lisaData:columnData });
-        }
-    }
+        } 
+
     useEffect(() => {
+        let isMounted = true;
+        if (isMounted){
         getLisa( 
             columnData,
             dataset||currentData,

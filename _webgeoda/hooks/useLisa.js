@@ -37,7 +37,9 @@ export default function useLisa() {
         dataParams,
         geographyName=currentData,
     }) => {
-        if (!storedGeojson[geographyName]) return;
+        // console.log(storedGeojson)
+        // console.log(currentData)
+        if (!storedGeojson[geographyName]) {console.log('oops'); return;}
         // TODO: load data if missing
         const numeratorTable = findTable(
             dataPresets.data,
@@ -60,7 +62,6 @@ export default function useLisa() {
             dataParams: dataParams,
             fixedOrder: storedGeojson[geographyName].order
         })
-        //console.log(lisaData)
 
         const { weights, lisaResults } = await getLisaResults({
             geoda,
