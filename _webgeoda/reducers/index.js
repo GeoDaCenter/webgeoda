@@ -62,6 +62,8 @@ export default function reducer(state = INITIAL_STATE, action) {
         currentData: action.payload.currentData,
         dataParams,
         mapParams,
+        storedGeojson: action.payload.storedGeojson,
+        storedData: action.payload.storedData,
         initialViewState:
           action.payload.viewState !== null
             ? action.payload.initialViewState
