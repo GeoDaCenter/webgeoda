@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {linearRegression, linearRegressionLine, kMeansCluster} from "simple-statistics";
 import { config } from '@fortawesome/fontawesome-svg-core';
 import usePanMap from './usePanMap';
-import { useRequireDatasetsForVariables } from './useRequireDatasets';
 
 const formatScatterData = ({
     xData,
@@ -248,13 +247,6 @@ export default function useGetScatterData({
     targetRange=100,
     geoids=[]
 }){
-    let variables = [];
-    if(config.type === 'lisaScatter') variables = [];
-    else if(config.type === 'scatter3d') variables = [config.xVariable, config.yVariable, config.zVariable];
-    else variables = [config.xVariable, config.yVariable];
-    // const isLoaded = useRequireDatasetsForVariables(variables); // TODO: Get rid of dataset parameter?
-    // if(!isLoaded) return null;
-
     const currentData = useSelector((state) => state.currentData)
     const currentDataset = useSelector((state) => state.storedGeojson[dataset||currentData]);
     const idKeys = currentDataset?.order||[];
