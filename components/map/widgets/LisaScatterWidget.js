@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import { useSelector } from "react-redux";
@@ -12,7 +12,7 @@ import Loader from '../../layout/Loader';
 import usePanMap from '@webgeoda/hooks/usePanMap';
 import * as ss from 'simple-statistics';
 import { getVarId } from '@webgeoda/utils/data';
-import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic';
 
 
 
@@ -24,14 +24,19 @@ function LisaScatterWidgetUnwrapped(props) {
 
     const chartRef = React.useRef();
     const dispatch = useDispatch();
-    const storedGeojson = useSelector((state) => state.storedGeojson);
-    const currentData = useSelector((state) => state.currentData);
+    // const storedGeojson = useSelector((state) => state.storedGeojson);
+    // const currentData = useSelector((state) => state.currentData);
     const panToGeoid = usePanMap();
-    const allLisaData = useSelector((state) => state.cachedLisaScatterplotData);
-    const [getLisa, cacheLisa,] = useLisa();
-    const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
-    const lisaVariable = useSelector((state) => state.lisaVariable)
+    // const allLisaData = useSelector((state) => state.cachedLisaScatterplotData);
+    // const [getLisa, cacheLisa,] = useLisa();
+    // const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
+    const lisaVariable = useSelector((state) => state.lisaVariable)    
+    const lisaData = useGetLisa({
+      variable: lisaVariable,
+      getScatterPlot: true
+    });
 
+    console.log(lisaData)
 
     // const lisaData = useGetLisa({
     //     variable: lisaVariable,
@@ -43,19 +48,18 @@ function LisaScatterWidgetUnwrapped(props) {
 //     //     return null;
 //     // }
 
-    const lisaData = getCachedLisa({ variable: lisaVariable });
-    React.useEffect(async () => {
-        if (lisaData == null || lisaData == 'undefined') {
-            const lisaData = await getLisa({
-                dataParams: { variable: lisaVariable },
-                getScatterPlot: true
-            });
-            console.log('hi')
-            updateCachedLisa({ variable: lisaVariable }, lisaData);
-        }
-    }, []);
+    // const lisaData = getCachedLisa({ variable: lisaVariable });
+    // React.useEffect(async () => {
+    //     if (lisaData == null || lisaData == 'undefined') {
+    //         const lisaData = await getLisa({
+    //             dataParams: { variable: lisaVariable },
+    //             getScatterPlot: true
+    //         });
+    //         console.log('hi')
+    //         updateCachedLisa({ variable: lisaVariable }, lisaData);
+    //     }
+    // }, []);
 
-    console.log(lisaData)
 
 
 //     //TODO: box select filtering
@@ -73,12 +77,13 @@ function LisaScatterWidgetUnwrapped(props) {
 //     //     };
 //     // }
 
-    const dataProp = React.useMemo(() => {
+    const dataProp = useMemo(() => {
         let dataProp;
         if (lisaData == null) {
             dataProp = { datasets: [] };
         } else {
-            const dataSub = lisaData.scatterPlotDataStan.filter(point => point.cluster!=0)
+            const dataSub = lisaData.scatterPlotDataStan && lisaData.scatterPlotDataStan.filter(point => point.cluster!=0)
+            if (!dataSub) return []
             dataProp = {
                 datasets: [
                     {
@@ -141,7 +146,7 @@ function LisaScatterWidgetUnwrapped(props) {
 
 
 
-    const options = React.useMemo(() => {
+    const options = useMemo(() => {
         return {
             events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
             maintainAspectRatio: false,
@@ -263,7 +268,7 @@ function LisaScatterWidgetUnwrapped(props) {
 
     let graphic = null;
 
-    const chart = React.useMemo(() => {
+    const chart = useMemo(() => {
         if (lisaData) {
             graphic = <Scatter
                 data={dataProp}

@@ -33,7 +33,7 @@ export default function useGetLisa({
     const storedGeojson = useSelector((state) => state.storedGeojson);
     const dataPresets = useSelector((state) => state.dataPresets);
     const columnData = useGetVariable({
-        dataset,
+        dataset: dataset||currentData,
         variable
     })
 
@@ -50,7 +50,7 @@ export default function useGetLisa({
         dataset,
         getScatterPlot=false
     ) => {
-        if (!columnData.length || !(dataset in storedGeojson)) return;
+        if (!Object.keys(columnData).length || !(dataset in storedGeojson)) return;
         
         const variableSpec = find(
             dataPresets.variables,
@@ -62,20 +62,20 @@ export default function useGetLisa({
             storedGeojson,
             currentData: dataset,
             dataParams: variableSpec,
-            lisaData: columnData,
+            lisaData: Object.values(columnData),
             dataset
         })
 
         if (getScatterPlot) {
             let scatterPlotDataStan = [];
-            const standardizedVals = standardize(columnData);
+            const standardizedVals = standardize(Object.values(columnData));
             const spatialLags = await geoda.spatialLag(weights, standardizedVals);
             for (let i=0; i<standardizedVals.length; i++){
                 scatterPlotDataStan.push({
                     x: standardizedVals[i],
                     y: spatialLags[i],
                     cluster: lisaResults.clusters[i],
-                    id: storedGeojson[state.currentData].order[i]
+                    id: storedGeojson[currentData].order[i]
                 })
             }
             setData({ weights, lisaResults, scatterPlotDataStan, lisaData:columnData, spatialLags });
@@ -89,7 +89,7 @@ export default function useGetLisa({
             dataset||currentData,
             getScatterPlot
         )
-    },[dataset, columnData, getScatterPlot])
+    },[dataset, Object.keys(columnData).length, getScatterPlot, Object.keys(storedGeojson).length])
 
 //   const updateLisa = async () => {
 
