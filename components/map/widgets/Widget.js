@@ -11,9 +11,13 @@ import ScatterWidget from './ScatterWidget';
 import Scatter3DWidget from './Scatter3DWidget';
 import HeatmapWidget from './HeatmapWidget';
 import LineWidget from './LineWidget';
+import SummaryWidget from './SummaryWidget';
+import LisaWidget from './LisaWidget';
+import LisaScatterWidget from './LisaScatterWidget';
 import VegaScatter from './VegaScatter';
 
 // As defined in CSS
+//TODO: fix heatmap placement div
 export const WIDGET_WIDTH = 400;
 
 const widgetTypes = {
@@ -22,7 +26,10 @@ const widgetTypes = {
   'scatter3d': Scatter3DWidget,
   'heatmap':HeatmapWidget,
   'line': LineWidget,
-  'vegaScatter': VegaScatter
+  'vegaScatter': VegaScatter,
+  'summary': SummaryWidget,
+  'lisaW': LisaWidget,
+  'lisaScatter': LisaScatterWidget, 
 }
 
 const ParentWidget = (props) => {
@@ -37,9 +44,17 @@ const ParentWidget = (props) => {
 function Widget(props) {
   const dispatch = useDispatch();
   const mapFilters = useSelector(state => state.mapFilters);
+  const lisaVariable = useSelector(state => state.lisaVariable)
   const [showSettings, setShowSettings] = React.useState(false);
   const activeFilters = mapFilters.filter(i => i.source == props.id);
   const hasActiveFilter = activeFilters.length > 0;
+  let header = '';
+  if (props.type=='lisaW' || props.type=='lisaScatter'){
+    header = lisaVariable + " LISA"
+  }
+  else {
+    header = props.options.header
+  }
 
   return (
     <Draggable draggableId={props.id.toString()} index={props.index}>
@@ -68,18 +83,19 @@ function Widget(props) {
                   <FontAwesomeIcon icon={faFilter} />
                 </span>
               </button>
+              
             ) : null
           }
           {
-            <h3 className={styles.widgetHeader} {...provided.dragHandleProps}>
+                  <h3 className={styles.widgetHeader} {...provided.dragHandleProps}>
               {
-                props.options.header == null ? 
+                header == null ? 
                   <FontAwesomeIcon icon={faGripLines} style={{color: "#00000055"}} /> :
-                  props.options.header
-              }
-            </h3>
+                  header
+                }
+                </h3>
           }
-          <div id='myDiv' className={styles.widgetContent}>
+          <div id='myDiv' className={styles.widgetContent}> 
             <ParentWidget 
               type={props.type}
               options={props.options}
@@ -101,7 +117,7 @@ function Widget(props) {
 }
 
 Widget.propTypes = {
-  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d", "heatmap"]).isRequired,
+  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d","summary", "lisaW", "lisaScatter", "heatmap"]).isRequired,
   options: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,

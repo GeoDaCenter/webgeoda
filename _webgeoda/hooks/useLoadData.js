@@ -34,8 +34,8 @@ const lisaBins = {
     'Not significant',
     'High-High',
     'Low-Low',
-    'High-Low',
     'Low-High',
+    'High-Low',
     'Undefined',
     'Isolated'
   ],
@@ -43,8 +43,8 @@ const lisaBins = {
     'Not significant',
     'High-High',
     'Low-Low',
-    'High-Low',
     'Low-High',
+    'High-Low',
     'Undefined',
     'Isolated'
   ]

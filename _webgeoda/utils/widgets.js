@@ -5,7 +5,8 @@ import {
 import {TARGET_RANGE} from "../../components/map/widgets/Scatter3DWidget";
 
 import { bin as d3bin } from "d3-array";
-import {linearRegression, linearRegressionLine, kMeansCluster} from "simple-statistics";
+import useLisa from '@webgeoda/hooks/useLisa';
+import {linearRegression, linearRegressionLine, kMeansCluster, min, max, standardDeviation, median, mean} from "simple-statistics";
 
 const findFirstTable = (tableName, storedData, dataPresets) => {
     for (let i=0; i<dataPresets.length; i++){
@@ -68,7 +69,7 @@ const getTables = (variableSpec, state) => {
     return returnTables
 }
 
-const getColumnData = (variableSpec, state, returnKeys=false, returnDataset=false) => {
+export const getColumnData = (variableSpec, state, returnKeys=false, returnDataset=false) => {
     const {storedGeojson, currentData, cachedVariables} = state;
     if (!storedGeojson[currentData]) return []
     const {numeratorData, denominatorData, dataset} = getTables(variableSpec, state);
@@ -84,7 +85,7 @@ const getColumnData = (variableSpec, state, returnKeys=false, returnDataset=fals
     const ret = {
         data: columnData
     };
-    if (returnKeys) ret.keys = Object.keys(storedGeojson[currentData].order);
+    if (returnKeys) ret.keys = Object.values(storedGeojson[currentData].order);
     if(returnDataset) ret.dataset = dataset;
     return ret;
 }
@@ -168,7 +169,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         for(let i = 0; i < idKeys.length; i++){
 
             // TODO: Find a smarter way to remove zero values
-            if(options.removeZeroValues === true && (xData[i] === 0 || yData[i] === 0)) continue;
+            //if(options.removeZeroValues === true && (xData[i] === 0 || yData[i] === 0)) continue;
             if(xData[i] < min) min = xData[i];
             if(xData[i] > max) max = xData[i];
             formattedData.push({
@@ -291,6 +292,105 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
         // Time series data is handled by useGetTimeSeriesData
         return {};
     }
+
+    if (widgetType === 'heatmap') {return {}}
+    
+    if(widgetType === "summary"){
+        const variableSpec = find(
+            dataPresets.variables,
+            (o) => o.variable === variableName
+        )
+        if (!variableSpec) return []
+        const {data, keys} = getColumnData(variableSpec, state, true);
+        if (!data) return []
+        return {
+            median: median(data).toFixed(3),
+            mean: mean(data).toFixed(3),
+            stdev: standardDeviation(data).toFixed(3),
+            min: min(data).toFixed(3),
+            max: max(data).toFixed(3),
+        }
+    }
+
+    if (widgetType === "lisaW"){
+        
+        const variableSpec = find(
+            dataPresets.variables,
+            (o) => o.variable === state.lisaVariable
+        )
+        if (!variableSpec) return []
+        const {data, keys} = getColumnData(variableSpec, state, true)
+        if (!data) return []
+
+
+        return {
+            dataColumn: data,
+            mean: mean(data).toFixed(3),
+            stdev: standardDeviation(data).toFixed(3),
+            variable: variableSpec,
+        }
+    }
+    if (widgetType === "lisaScatter"){
+
+        //const isCluster = options.foregroundColor === "cluster";
+        let xData;
+        let yData;
+        let idKeys;
+        //let isLisa = false;
+        const lisaData = state.cachedLisaScatterplotData;
+        const variableSpec = find(
+            dataPresets.variables,
+            (o) => o.variable === state.lisaVariable
+        );
+        if (!variableSpec){
+            console.warn("Scatter plot: could not find variableSpec for " + variableName[i]);
+            return null;
+        }
+        const {data, keys} = getColumnData(variableSpec, state, true);
+        if (!data){
+            console.warn("Scatter plot: could not find column data for " + variableName[i]);
+        return null;
+        }
+        idKeys = keys;
+        xData = data;
+        yData = data;
+        if(xData.length == 0){
+            console.warn("Scatter plot: xData length is 0");
+            return null;
+        }
+        const formattedData = [];
+        const statisticsFormattedData = [];
+        for(let i = 0; i < idKeys.length; i++){
+
+            // TODO: Find a smarter way to remove zero values
+            if (options.removeZeroValues === true && (xData[i] === 0 || yData[i] === 0)) continue;
+            formattedData.push({
+                x: xData[i],
+                y: yData[i],
+                id: idKeys[i]
+            });
+            if (options.showBestFitLine === true) {
+                statisticsFormattedData.push([
+                    xData[i], yData[i]
+                ])
+            }
+        }
+       
+
+        return {
+            data: formattedData,
+            variableSpec,
+            variableToCache: [{
+                data: xData,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName[0]
+            },{
+                data: yData,
+                order: state.storedGeojson[state.currentData].order,
+                variable: variableName[1]
+            }]
+        };
+    }
 }
 
 export const getWidgetSpec = (widget, i) => {
@@ -306,6 +406,37 @@ export const getWidgetSpec = (widget, i) => {
         id: i,
         type: widget.type,
         options: widget.options,
-        variable
+        variable,
     };
+};
+
+export const updateLisaVariable = async (newLisa, dispatch) => {
+    dispatch({
+        type: "SET_LISA_VARIABLE",
+        payload: newLisa
+    })
+}
+
+export const updateHoverId = async (newId, dispatch) => {
+    dispatch({
+        type: "SET_HOVER_ID",
+        payload: newId
+    })
+}
+
+export const loadWidget = async (widgetConfig, widgetIndex, dispatch) => {
+    const config = widgetConfig[widgetIndex];
+    const widgetSpec = getWidgetSpec(config, widgetIndex);
+    dispatch({
+        type: "FORMAT_WIDGET_DATA",
+        payload: {widgetSpec}
+    })
+}
+
+export const loadWidgets = async (widgetConfig, dispatch) => {
+    const widgetSpecs = widgetConfig.map(getWidgetSpec);
+    dispatch({
+        type: "FORMAT_WIDGET_DATA",
+        payload: {widgetSpecs}
+    });
 };

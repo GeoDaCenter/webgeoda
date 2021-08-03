@@ -40,11 +40,11 @@ function HistogramWidget(props) {
   );
 }
 
-HistogramWidget.propTypes = {
-  options: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired,
-  id: PropTypes.number.isRequired,
-  config: PropTypes.object.isRequired
-};
+// HistogramWidget.propTypes = {
+//   options: PropTypes.object.isRequired,
+//   data: PropTypes.object.isRequired,
+//   id: PropTypes.number.isRequired,
+//   config: PropTypes.object.isRequired
+// };
 
 export default HistogramWidget;
