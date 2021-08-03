@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import useGetVariable from './useGetVariable';
 import { bin as d3bin } from "d3-array";
 import { useDispatch } from 'react-redux';
+import { useRequireDatasetsForVariables } from './useRequireDatasets';
 
 const formatData = (data, options, geoids=null, presetBins=null) => {
     
@@ -87,6 +88,9 @@ export default function useGetHistogramData({
     id=0,
     geoids=[]
 }){
+    const isLoaded = useRequireDatasetsForVariables([variable]); // TODO
+    if(!isLoaded) return null;
+
     const dispatch = useDispatch();
     const data = useGetVariable({
         variable,
