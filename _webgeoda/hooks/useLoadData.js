@@ -179,7 +179,9 @@ export default function useLoadData(dateLists = {}) {
 
     if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
     
-    const binData = dataParams.categorical 
+    const binData = dataParams.fixedScale 
+      ? null
+      : dataParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
         dataParams)
@@ -190,7 +192,9 @@ export default function useLoadData(dateLists = {}) {
         geojsonOrder
     });
 
-    const bins = dataParams.lisa 
+    const bins = dataParams.fixedScale 
+      ? {bins:dataParams.fixedLabels || dataParams.fixedScale, breaks:dataParams.fixedScale}
+      : dataParams.lisa 
       ? lisaBins
       : await getBins({
         geoda,
@@ -198,7 +202,9 @@ export default function useLoadData(dateLists = {}) {
         binData
       })    
       
-    const colorScale = dataParams.lisa 
+    const colorScale = dataParams.fixedScale && dataParams.colorScale.length
+      ? dataParams.colorScale
+      : dataParams.lisa  
       ? lisaColors
       : getColorScale({
         dataParams,

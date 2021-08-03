@@ -19,14 +19,22 @@ export default function useUpdateBins() {
   const updateBins = async () => {
     if (!storedGeojson[currentData]) return;
     
-    const {bins, colorScale} = await generateBins({
-      geoda,
-      dataPresets,
-      currentData,
-      dataParams, 
-      storedData,
-      storedGeojson 
-    })
+    const {bins, colorScale} = dataParams.fixedScale
+    ? () => { return {
+      bins: {
+        bins: dataParams.fixedLabels || dataParams.fixedScale,
+        breaks: dataParams.fixedScale
+      }, 
+      colorScale: dataParams.colorScale.length ? dataParams.colorScale : dataParams.colorScale[dataParams.numberOfBins]
+      }}
+    : await generateBins({
+        geoda,
+        dataPresets,
+        currentData,
+        dataParams, 
+        storedData,
+        storedGeojson 
+      })
 
     if (!bins) return;
 

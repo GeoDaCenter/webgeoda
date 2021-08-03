@@ -20,10 +20,11 @@ export const INITIAL_STATE = {
   initialViewState: {},
   dataParams: {
     ...dataPresets.variables[0],
-    colorScale:
-      dataPresets.variables[0].colorScale[
-        dataPresets.variables[0].numberOfBins || 5
-      ],
+    colorScale: dataPresets.variables[0].colorScale?.length
+      ? dataPresets.variables[0].colorScale
+      : dataPresets.variables[0].colorScale[
+          dataPresets.variables[0].numberOfBins || 5
+        ]
   },
   dataPresets: dataPresets,
   mapParams: {
