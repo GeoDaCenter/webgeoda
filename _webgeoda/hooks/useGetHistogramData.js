@@ -90,7 +90,8 @@ export default function useGetHistogramData({
     const dispatch = useDispatch();
     const data = useGetVariable({
         variable,
-        dataset
+        dataset,
+        priority: true
     });
 
     const {

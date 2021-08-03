@@ -455,20 +455,20 @@ export default function reducer(state = INITIAL_STATE, action) {
         cachedTimeSeries
       }
     }
-    case "ADD_ACTIVE_DATASETS": {
-      const activeDatasets = [...state.activeDatasets];
+    case "PUSH_DATA_QUEUE": {
+      const datasetFetchQueue = [...state.datasetFetchQueue];
       for(const i of action.payload.datasets){
-        if(!activeDatasets.includes(i)) activeDatasets.push(i);
+        if(!datasetFetchQueue.includes(i)) datasetFetchQueue.push(i);
       }
-      return {...state, activeDatasets};
+      return {...state, datasetFetchQueue};
     }
-    case "REMOVE_ACTIVE_DATASETS": {
-      const activeDatasets = [...state.activeDatasets];
+    case "REMOVE_FROM_DATA_QUEUE": {
+      const datasetFetchQueue = [...state.datasetFetchQueue];
       for(const i of action.payload.datasets){
-        const index = activeDatasets.indexOf(i);
-        if(index >= 0) activeDatasets.splice(index, 1);
+        const index = datasetFetchQueue.indexOf(i);
+        if(index >= 0) datasetFetchQueue.splice(index, 1);
       }
-      return {...state, activeDatasets};
+      return {...state, datasetFetchQueue};
     }
     case "CACHE_VARIABLE": {
       const cachedVariables = {

@@ -95,9 +95,6 @@ export default function useLoadData() {
   const cachedVariables = useSelector((state) => state.cachedVariables);
   const dataPresets = useSelector((state) => state.dataPresets);
   const dataParams = useSelector((state) => state.dataParams);
-  const activeDatasets = useSelector((state) => state.activeDatasets);
-  const storedData = useSelector((state) => state.storedData);
-  const storedGeojson = useSelector((state) => state.storedGeojson);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -114,14 +111,6 @@ export default function useLoadData() {
 
 
   useEffect(() => loadDataForMap(dataPresets, currentData), [])
-
-  // useEffect(() => {
-  //   for(const dataset of activeDatasets){
-  //     if(!(dataset in storedData) || !(dataset in storedGeojson)){
-  //       loadTable(activeDatasets[dataset]);
-  //     }
-  //   }
-  // }, [activeDatasets]);
 
   /**
    * @async

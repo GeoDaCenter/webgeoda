@@ -34,7 +34,8 @@ export default function useGetLisa({
     const dataPresets = useSelector((state) => state.dataPresets);
     const columnData = useGetVariable({
         dataset,
-        variable
+        variable,
+        priority: false
     })
 
     const [data, setData] = useState({
