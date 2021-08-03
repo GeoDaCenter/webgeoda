@@ -80,15 +80,15 @@ export default function useGetLisa({
             setData({ weights, lisaResults, scatterPlotDataStan, lisaData:columnData, spatialLags });
         } 
 
-    useEffect(() => {
-        let isMounted = true;
-        if (isMounted){
+    useEffect(() => 
+        // let isMounted = true;
+        // if (isMounted){
         getLisa( 
             columnData,
             dataset||currentData,
             getScatterPlot
-        )
-    },[dataset, Object.keys(columnData).length, getScatterPlot, Object.keys(storedGeojson).length])
+        ),
+        [dataset, Object.keys(columnData).length, getScatterPlot, Object.keys(storedGeojson).length])
 
 //   const updateLisa = async () => {
 
