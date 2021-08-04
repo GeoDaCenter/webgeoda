@@ -251,7 +251,7 @@ const widgets = [
     display: "tray",
     type: "lisaScatter",
     variable: "Total Population",
-    clusterFilter: "All",
+    clusterFilter: "High-High",
     options: {
       header: "Total Population LISA Scatter",
       foregroundColor: "#000000",
