@@ -62,7 +62,7 @@ function LisaScatterWidgetUnwrapped(props) {
         if (lisaData == null) {
             dataProp = { datasets: [] };
         } else {
-            const dataSub = lisaData.scatterPlotDataStan && lisaData.scatterPlotDataStan.filter(point => point.cluster!=0)
+            const dataSub = lisaData.scatterPlotDataStan && Object.keys(lisaData.clusterFiltered).map(i => lisaData.scatterPlotDataStan[i])
             if (!dataSub) return []
             dataProp = {
                 datasets: [

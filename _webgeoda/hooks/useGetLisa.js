@@ -54,6 +54,8 @@ export default function useGetLisa({
     const clusterFilter = config.clusterFilter
     console.log(clusterFilter)
 
+    let clusterFiltered = {};
+    let lisaResultsFiltered = {clusters:[], lisaValues:[], neighbors: [], pvalues:[]};
     
 
     const getLisa = async (
@@ -83,12 +85,18 @@ export default function useGetLisa({
         if (clusterFilter!='All')
         {
         const index = lisaResults.labels.findIndex(cl => cl == clusterFilter)
-        let clusterFiltered = [];
+        
 
         for (let i=0; i<lisaResults.clusters.length; i++)
         {
             if (lisaResults.clusters[i]==index)
-                clusterFiltered.push(columnData[storedGeojson[currentData].order[i]]);
+            {
+                clusterFiltered[i] = columnData[storedGeojson[currentData].order[i]];
+                lisaResultsFiltered.clusters.push(lisaResults.clusters[i])
+                lisaResultsFiltered.lisaValues.push(lisaResults.lisaValues[i])
+                lisaResultsFiltered.neighbors.push(lisaResults.neighbors[i])
+                lisaResultsFiltered.pvalues.push(lisaResults.pvalues[i])
+            }
         }
 
 
@@ -101,7 +109,7 @@ export default function useGetLisa({
                     filter: {
                         type: "set",
                         field: lisaVariable,
-                        values: clusterFiltered,
+                        values: Object.values(clusterFiltered),
                     }
                 }
             });
@@ -120,7 +128,7 @@ export default function useGetLisa({
                 id: storedGeojson[currentData].order[i]
             })
         }
-        setData({ weights, lisaResults, scatterPlotDataStan, lisaData: columnData, spatialLags: spatialLagsNonStan, order: storedGeojson[currentData].order });
+        setData({ weights, lisaResults, scatterPlotDataStan, lisaData: columnData, spatialLags: spatialLagsNonStan, order: storedGeojson[currentData].order, clusterFiltered, lisaResultsFiltered });
     }
 
     useEffect(() =>
