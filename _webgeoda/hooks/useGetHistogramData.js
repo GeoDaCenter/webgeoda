@@ -93,7 +93,6 @@ export default function useGetHistogramData({
         dataset,
         priority: false
     });
-    console.log(data);
     const {
         formattedData,
         labels,

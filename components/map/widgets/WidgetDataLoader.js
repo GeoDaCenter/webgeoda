@@ -19,6 +19,7 @@ function WidgetDataLoader(props){
         const datasetToLoad = datasetFetchQueue[0];
         await fetchData({req: datasetToLoad});
         setIsFetching(false);
+        console.log("Loading ", datasetToLoad);
         dispatch({
             type: "REMOVE_FROM_DATA_QUEUE",
             payload: {
@@ -33,7 +34,7 @@ function WidgetDataLoader(props){
 
     return (
         <div className={`${styles.widgetDataLoader} ${datasetFetchQueue.length > 0 ? styles.active : ""}`}>
-            <FontAwesomeIcon icon={faSpinner} className={loaderStyles.spinner} />
+            <FontAwesomeIcon icon={faSpinner} className={`${loaderStyles.spinner} ${styles.spinner}`} />
         </div>
     );
 }

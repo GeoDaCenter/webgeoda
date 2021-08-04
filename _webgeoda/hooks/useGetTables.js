@@ -76,28 +76,30 @@ export default function useGetTables({
         if(variableSpec && variableSpec.numerator === 'properties'){
             if(dataset in storedGeojson) {
                 numeratorData = storedGeojson[dataset].properties;
+                console.log("N Data was available: ", dataset, variable);
             } else {
                 if(priority){
                     numeratorData = await fetchData({req: dataset});
                 } else {
                     queueFetchData(dataset);
-                    return null;
+                    numeratorData = {};
                 }
             }
         } else {
             if(numeratorTable && numeratorTable.file in storedData){
                 numeratorData = storedData[numeratorTable.file];
+                console.log("D Data was available: ", dataset, variable);
             } else {
                 if(priority){
                     numeratorData = await fetchData({req: numeratorTable});
                 } else {
-                    queueFetchData(numeratorTable);
-                    return null;
+                    if(numeratorTable) queueFetchData(numeratorTable);
+                    numeratorData = {};
                 }
             }
         }
         let denominatorData;
-        if(variableSpec && variableSpec.numerator === 'properties'){
+        if(variableSpec && variableSpec.denominator === 'properties'){
             if(dataset in storedGeojson) {
                 denominatorData = storedGeojson[dataset].properties;
             } else {
@@ -105,7 +107,7 @@ export default function useGetTables({
                     denominatorData = await fetchData({req: dataset});
                 } else {
                     queueFetchData(dataset);
-                    return null;
+                    numeratorData = {};
                 }
             }
         } else {
@@ -115,8 +117,8 @@ export default function useGetTables({
                 if(priority){
                     denominatorData = await fetchData({req: denominatorTable});
                 } else {
-                    queueFetchData(denominatorTable);
-                    return null;
+                    if(denominatorTable) queueFetchData(denominatorTable);
+                    denominatorData = {};
                 }
             }
         }
@@ -158,7 +160,7 @@ export default function useGetTables({
             variable, 
             geoids
         )
-    },[dataset, variable, geoids.length])
+    },[dataset, variable, geoids.length, storedData, storedGeojson])
 
     return tables
 }

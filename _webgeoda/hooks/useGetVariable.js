@@ -22,7 +22,7 @@ export default function useGetVariable({
         geoids,
         priority
     });
-
+    console.log("Got variable: ", dataset, variable);
     const [data, setData] = useState([]); 
 
     const getColumn = async (

@@ -36,8 +36,6 @@ function LisaScatterWidgetUnwrapped(props) {
       getScatterPlot: true
     });
 
-    console.log(lisaData)
-
     // const lisaData = useGetLisa({
     //     variable: lisaVariable,
     //     getScatterPlot: true
