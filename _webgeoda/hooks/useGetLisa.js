@@ -26,7 +26,9 @@ import useGetVariable from "./useGetVariable";
 export default function useGetLisa({
     dataset = false,
     variable = false,
-    getScatterPlot = false
+    getScatterPlot = false,
+    id=0,
+    config={},
 }) {
     const geoda = useContext(GeodaContext);
     const currentData = useSelector((state) => state.currentData);
@@ -49,12 +51,15 @@ export default function useGetLisa({
 
     const dispatch = useDispatch();
 
+    const clusterFilter = config.clusterFilter
+    console.log(clusterFilter)
+
+    
+
     const getLisa = async (
         columnData,
         dataset,
         getScatterPlot = true,
-        id=0,
-        config={},
     ) => {
         if (!Object.keys(columnData).length || !(dataset in storedGeojson)) return;
 
@@ -74,7 +79,6 @@ export default function useGetLisa({
             dataset
         })
 
-        const clusterFilter = config.clusterFilter
 
         if (clusterFilter!='All')
         {
