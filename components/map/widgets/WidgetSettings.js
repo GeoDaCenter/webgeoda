@@ -22,6 +22,13 @@ const WIDGET_OPTION_TYPES = [
         //setHeader: (w, v) => {w.options.header = v + " LISA"}
     },
     {
+        displayName: "Cluster Type",
+        datatype: "clusterVariable",
+        supportedTypes: ["lisaScatter"],
+        get: (w) => w.clusterFilter,
+        set: (w, v) => { w.clusterFilter = v},
+    },
+    {
         displayName: "X Variable",
         datatype: "variable",
         supportedTypes: ["scatter", "scatter3d"],
@@ -91,6 +98,7 @@ function WidgetSettings(props){
     const variableConfig = useSelector(state => state.dataPresets.variables);
     const lisaVariable = useSelector(state => state.lisaVariable)
     const variableOptions = variableConfig.filter(config => config.categorical !== true).map(config => config.variable);
+    const clusterOptions = ["All", "High-High", "Low-Low", "Low-High", "High-Low"]
 
     const [data, setData] = React.useState(props.config);
     const [doesWidgetNeedRefresh, setDoesWidgetNeedRefresh] = React.useState(false);
@@ -151,6 +159,22 @@ function WidgetSettings(props){
                         {
                             variableOptions.map(v => (
                                 <option value={v} key={`variable-choice-${v}`}>{v}</option>
+                            ))
+                        }
+                    </select>
+                )
+                break;
+            }
+            case "clusterVariable": {
+                elem = (
+                        <select value={i.get(data)} onChange={(e) => {
+                        modifyData(data, i.set, e.target.value);
+                        setDoesWidgetNeedRefresh(true);
+                        // modify filter
+                    }}>
+                        {
+                            clusterOptions.map(v => (
+                                <option value={v} key={`cluster-choice-${v}`}>{v}</option>
                             ))
                         }
                     </select>

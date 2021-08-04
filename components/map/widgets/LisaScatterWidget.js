@@ -33,32 +33,12 @@ function LisaScatterWidgetUnwrapped(props) {
     const lisaVariable = useSelector((state) => state.lisaVariable)    
     const lisaData = useGetLisa({
       variable: lisaVariable,
-      getScatterPlot: true
+      getScatterPlot: true,
+      id: props.id,
+      config: props.config
     });
 
     console.log(lisaData)
-
-    // const lisaData = useGetLisa({
-    //     variable: lisaVariable,
-    //     getScatterPlot: true
-    // })
-    // console.log(lisaData)
-
-//     // if (typeof window === "undefined") {
-//     //     return null;
-//     // }
-
-    // const lisaData = getCachedLisa({ variable: lisaVariable });
-    // React.useEffect(async () => {
-    //     if (lisaData == null || lisaData == 'undefined') {
-    //         const lisaData = await getLisa({
-    //             dataParams: { variable: lisaVariable },
-    //             getScatterPlot: true
-    //         });
-    //         console.log('hi')
-    //         updateCachedLisa({ variable: lisaVariable }, lisaData);
-    //     }
-    // }, []);
 
 
 

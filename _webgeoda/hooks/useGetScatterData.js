@@ -258,7 +258,7 @@ export default function useGetScatterData({
             : config.xVariable,
         dataset,
         geoids: config.type === 'heatmap'? geoids : [],
-        priority: false
+        priority: true
     });
 
     const yData = useGetVariable({
@@ -267,7 +267,7 @@ export default function useGetScatterData({
             : config.yVariable,
         dataset,
         geoids: config.type === 'heatmap'? geoids : [],
-        priority: false
+        priority: true
     });
 
     const zData = useGetVariable({
@@ -275,7 +275,7 @@ export default function useGetScatterData({
             ? config.zVariable
             : false,
         dataset,
-        priority: false
+        priority: true
     });
 
     const lisaData = useGetLisa({

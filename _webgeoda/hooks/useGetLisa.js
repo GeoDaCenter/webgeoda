@@ -3,16 +3,16 @@ import { useState, useContext, useEffect } from "react";
 import { GeodaContext } from "../contexts";
 
 import {
-  parseColumnData,
-  findTable
+    parseColumnData,
+    findTable
 } from "../utils/data";
 
 import {
-  hexToRgb
+    hexToRgb
 } from "../utils/map";
 
 import {
-  getLisaResults
+    getLisaResults
 } from "../utils/geoda-helpers";
 
 
@@ -24,22 +24,25 @@ import useGetVariable from "./useGetVariable";
 
 
 export default function useGetLisa({
-    dataset=false,
-    variable=false,
-    getScatterPlot=false
+    dataset = false,
+    variable = false,
+    getScatterPlot = false
 }) {
     const geoda = useContext(GeodaContext);
     const currentData = useSelector((state) => state.currentData);
     const storedGeojson = useSelector((state) => state.storedGeojson);
     const dataPresets = useSelector((state) => state.dataPresets);
+    const lisaVariable = useSelector((state) => state.lisaVariable);
+    console.log(lisaVariable)
+    console.log(variable)
     const columnData = useGetVariable({
-        dataset: dataset||currentData,
+        dataset: dataset || currentData,
         variable,
-        priority: false
+        priority: true
     })
 
     const [data, setData] = useState({
-        weights:{},
+        weights: {},
         lisaResults: {},
         lisaData: []
     });
@@ -49,14 +52,18 @@ export default function useGetLisa({
     const getLisa = async (
         columnData,
         dataset,
-        getScatterPlot=true
+        getScatterPlot = true,
+        id=0,
+        config={},
     ) => {
         if (!Object.keys(columnData).length || !(dataset in storedGeojson)) return;
-        
-        const variableSpec = find(
-            dataPresets.variables,
-            (o) => o.variable === variable
-        )
+
+        // const variableSpec = find(
+        //     dataPresets.variables,
+        //     (o) => o.variable === variable
+        // )
+
+        const variableSpec = {variable: lisaVariable}
 
         const { weights, lisaResults } = await getLisaResults({
             geoda,
@@ -67,51 +74,58 @@ export default function useGetLisa({
             dataset
         })
 
-            let scatterPlotDataStan = [];
-            const standardizedVals = standardize(Object.values(columnData));
-            const spatialLags = await geoda.spatialLag(weights, standardizedVals);
-            for (let i=0; i<standardizedVals.length; i++){
-                scatterPlotDataStan.push({
-                    x: standardizedVals[i],
-                    y: spatialLags[i],
-                    cluster: lisaResults.clusters[i],
-                    id: storedGeojson[currentData].order[i]
-                })
-            }
-            setData({ weights, lisaResults, scatterPlotDataStan, lisaData:columnData, spatialLags });
-        } 
+        const clusterFilter = config.clusterFilter
 
-    useEffect(() => 
-        // let isMounted = true;
-        // if (isMounted){
-        getLisa( 
+        if (clusterFilter!='All')
+        {
+        const index = lisaResults.labels.findIndex(cl => cl == clusterFilter)
+        let clusterFiltered = [];
+
+        for (let i=0; i<lisaResults.clusters.length; i++)
+        {
+            if (lisaResults.clusters[i]==index)
+                clusterFiltered.push(columnData[storedGeojson[currentData].order[i]]);
+        }
+
+
+        // const handleFilter = () => {
+            dispatch({
+                type: "SET_MAP_FILTER",
+                payload: {
+                    widgetIndex: id,
+                    filterId: id,
+                    filter: {
+                        type: "set",
+                        field: lisaVariable,
+                        values: clusterFiltered,
+                    }
+                }
+            });
+        // }
+        }
+
+        let scatterPlotDataStan = [];
+        const standardizedVals = standardize(Object.values(columnData));
+        const spatialLags = await geoda.spatialLag(weights, standardizedVals);
+        const spatialLagsNonStan = await geoda.spatialLag(weights, Object.values(columnData));
+        for (let i = 0; i < standardizedVals.length; i++) {
+            scatterPlotDataStan.push({
+                x: standardizedVals[i],
+                y: spatialLags[i],
+                cluster: lisaResults.clusters[i],
+                id: storedGeojson[currentData].order[i]
+            })
+        }
+        setData({ weights, lisaResults, scatterPlotDataStan, lisaData: columnData, spatialLags: spatialLagsNonStan, order: storedGeojson[currentData].order });
+    }
+
+    useEffect(() =>
+        getLisa(
             columnData,
-            dataset||currentData,
+            dataset || currentData,
             getScatterPlot
         ),
         [dataset, Object.keys(columnData).length, getScatterPlot, Object.keys(storedGeojson).length])
 
-//   const updateLisa = async () => {
-
-//     const { weights, lisaResults, lisaData } = await getLisa ({
-//         geographyName: currentData,
-//         dataParams
-//     })
-
-//     dispatch({
-//         type: "UPDATE_LISA",
-//         payload: {
-//             lisaResults,
-//             weights,
-//             colorScale: (dataParams.lisaColors||lisaResults.colors).map(c => hexToRgb(c)),
-//             cachedVariable: {
-//                 variable: dataParams.variable,
-//                 data: lisaData,
-//                 geoidOrder: storedGeojson[currentData].order
-//             }
-//         },
-//     });
-//   };
-
-  return data;
+    return data;
 }
