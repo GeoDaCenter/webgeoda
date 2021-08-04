@@ -182,26 +182,26 @@ const mapModes = {
 };
 
 const widgets = [
-  {
-    display: "pinned",
-    type: "histogram",
-    variable: "Median age",
-    options: {
-      header: "Median Age",
-      foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Age"
-    }
-  },
-  {
-    display: "pinned",
-    type: "histogram",
-    variable: "Median Household Income",
-    options: {
-      header: "Median Household Income",
-      foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Household Income"
-    }
-  },
+  // {
+  //   display: "pinned",
+  //   type: "histogram",
+  //   variable: "Median age",
+  //   options: {
+  //     header: "Median Age",
+  //     foregroundColor: "#FF00FF",
+  //     yAxisLabel: "Median Age"
+  //   }
+  // },
+  // {
+  //   display: "pinned",
+  //   type: "histogram",
+  //   variable: "Median Household Income",
+  //   options: {
+  //     header: "Median Household Income",
+  //     foregroundColor: "#FF00FF",
+  //     yAxisLabel: "Median Household Income"
+  //   }
+  // },
   // {
   //   display: "tray",
   //   type: "heatmap",
@@ -218,7 +218,7 @@ const widgets = [
   // },
   {
     display: "tray",
-    type: "scatter",
+    type: "vegaScatter",
     xVariable: "Median Household Income",
     yVariable: "Median Gross Rent",
     options: {
@@ -234,20 +234,20 @@ const widgets = [
       removeZeroValues: true
     }
   },
-  {
-    display: "hidden",
-    type: "scatter3d",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
-    zVariable: "Median age",
-    options: {
-      foregroundColor: "#00AAFF",
-      xAxisLabel: "Median Household Income",
-      yAxisLabel: "Median Gross Rent",
-      zAxisLabel: "Median Age",
-      gridlinesInterval: [50000, 500, 5]
-    }
-  }
+  // {
+  //   display: "hidden",
+  //   type: "scatter3d",
+  //   xVariable: "Median Household Income",
+  //   yVariable: "Median Gross Rent",
+  //   zVariable: "Median age",
+  //   options: {
+  //     foregroundColor: "#00AAFF",
+  //     xAxisLabel: "Median Household Income",
+  //     yAxisLabel: "Median Gross Rent",
+  //     zAxisLabel: "Median Age",
+  //     gridlinesInterval: [50000, 500, 5]
+  //   }
+  // }
 ];
 
 // const style = {

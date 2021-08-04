@@ -5,6 +5,7 @@ import {useState, useEffect, useRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import useGetScatterData from '@webgeoda/hooks/useGetScatterData';
+import usePanMap from '@webgeoda/hooks/usePanMap';
 
 const renderVega = (
     chartRef,
@@ -23,7 +24,8 @@ const renderVega = (
 export default function VegaScatter(props) {
     const boxFilterGeoids = useSelector((state) => state.boxFilterGeoids);
     const [view, setView] = useState({});
-    const chartRef = useRef()
+    const chartRef = useRef();
+    const panToGeoid = usePanMap();
 
     const {
         chartData
@@ -70,192 +72,144 @@ export default function VegaScatter(props) {
         },
     
         "signals": [
-        {
-            "name": "margin",
-            "value": 20
-        },
-        {
-            "name": "hover",
-            "on": [
-            {"events": "*:mouseover", "encode": "hover"},
-            {"events": "*:mouseout",  "encode": "leave"},
-            {"events": "*:mousedown", "encode": "select"},
-            {"events": "*:mouseup",   "encode": "release"}
-            ]
-        },
-        {
-            "name": "xoffset",
-            "update": "-(height + padding.bottom)"
-        },
-        {
-            "name": "yoffset",
-            "update": "-(width + padding.left)"
-        },
-        { "name": "xrange", "update": "[0, width]" },
-        { "name": "yrange", "update": "[height, 0]" },
-    
-        {
-            "name": "down", "value": null,
-            "on": [
-            {"events": "touchend", "update": "null"},
-            {"events": "mousedown, touchstart", "update": "xy()"}
-            ]
-        },
-        {
-            "name": "xcur", "value": null,
-            "on": [
             {
-                "events": "mousedown, touchstart, touchend",
-                "update": "slice(xdom)"
-            }
-            ]
-        },
-        {
-            "name": "ycur", "value": null,
-            "on": [
-            {
-                "events": "mousedown, touchstart, touchend",
-                "update": "slice(ydom)"
-            }
-            ]
-        },
-        {
-            "name": "delta", "value": [0, 0],
-            "on": [
-            {
-                "events": [
-                {
-                    "source": "window", "type": "mousemove", "consume": true,
-                    "between": [{"type": "mousedown"}, {"source": "window", "type": "mouseup"}]
-                },
-                {
-                    "type": "touchmove", "consume": true,
-                    "filter": "event.touches.length === 1"
-                }
-                ],
-                "update": "down ? [down[0]-x(), y()-down[1]] : [0,0]"
-            }
-            ]
-        },
-    
-        {
-            "name": "anchor", "value": [0, 0],
-            "on": [
-            {
-                "events": "wheel",
-                "update": "[invert('xscale', x()), invert('yscale', y())]"
+                "name": "margin",
+                "value": 20
             },
             {
-                "events": {"type": "touchstart", "filter": "event.touches.length===2"},
-                "update": "[(xdom[0] + xdom[1]) / 2, (ydom[0] + ydom[1]) / 2]"
-            }
-            ]
-        },
-        {
-            "name": "zoom", "value": 1,
-            "on": [
-            {
-                "events": "wheel!",
-                "force": true,
-                "update": "pow(1.001, event.deltaY * pow(16, event.deltaMode))"
-            },
-            {
-                "events": {"signal": "dist2"},
-                "force": true,
-                "update": "dist1 / dist2"
-            }
-            ]
-        },
-        {
-            "name": "dist1", "value": 0,
-            "on": [
-            {
-                "events": {"type": "touchstart", "filter": "event.touches.length===2"},
-                "update": "pinchDistance(event)"
-            },
-            {
-                "events": {"signal": "dist2"},
-                "update": "dist2"
-            }
-            ]
-        },
-        {
-            "name": "dist2", "value": 0,
-            "on": [{
-            "events": {"type": "touchmove", "consume": true, "filter": "event.touches.length===2"},
-            "update": "pinchDistance(event)"
-            }]
-        },
-    
-        {
-            "name": "xdom", "update": "slice(xext)",
-            "on": [
-            {
-                "events": {"signal": "delta"},
-                "update": "[xcur[0] + span(xcur) * delta[0] / width, xcur[1] + span(xcur) * delta[0] / width]"
-            },
-            {
-                "events": {"signal": "zoom"},
-                "update": "[anchor[0] + (xdom[0] - anchor[0]) * zoom, anchor[0] + (xdom[1] - anchor[0]) * zoom]"
-            }
-            ]
-        },
-        {
-            "name": "ydom", "update": "slice(yext)",
-            "on": [
-            {
-                "events": {"signal": "delta"},
-                "update": "[ycur[0] + span(ycur) * delta[1] / height, ycur[1] + span(ycur) * delta[1] / height]"
-            },
-            {
-                "events": {"signal": "zoom"},
-                "update": "[anchor[1] + (ydom[0] - anchor[1]) * zoom, anchor[1] + (ydom[1] - anchor[1]) * zoom]"
-            }
-            ]
-        },
-        {
-            "name": "size",
-            "update": "clamp(100 / span(xdom), 5, 1000)"
-        }
-        ],
-    
-        "data": [
-            {
-                "name": "table",
-                "transform": [
-                    { "type": "extent", "field": "x", "signal": "xext" },
-                    { "type": "extent", "field": "y", "signal": "yext" }
+                "name": "hover",
+                "on": [
+                    // {"events": "*:mousedown", "encode": "select"},
+                    // {"events": "*:mouseup",   "encode": "release"}
                 ]
             },
             {
-                "name": "active",
+                "name": "click",
+                "on": [
+                {"events": "*:click", "encode": "click"}
+                ]
+            },
+            {
+                "name": "xoffset",
+                "update": "-(height + padding.bottom)"
+            },
+            {
+                "name": "yoffset",
+                "update": "-(width + padding.left)"
+            },
+            { "name": "xrange", "update": "[0, width]" },
+            { "name": "yrange", "update": "[height, 0]" },
+            { "name": "xcur", "value": null, "update": "slice(xdom)"},
+            { "name": "ycur", "value": null, "update": "slice(ydom)"},     
+            {
+                "name": "anchor", "value": [0, 0],
+                "on": [
+                {
+                    "events": "wheel",
+                    "update": "[invert('xscale', x()), invert('yscale', y())]"
+                },
+                {
+                    "events": {"type": "touchstart", "filter": "event.touches.length===2"},
+                    "update": "[(xdom[0] + xdom[1]) / 2, (ydom[0] + ydom[1]) / 2]"
+                }
+                ]
+            },
+            {
+                "name": "zoom", "value": 1,
+                "on": [
+                {
+                    "events": "wheel!",
+                    "force": true,
+                    "update": "pow(1.001, event.deltaY * pow(16, event.deltaMode))"
+                },
+                {
+                    "events": {"signal": "dist2"},
+                    "force": true,
+                    "update": "dist1 / dist2"
+                }
+                ]
+            },
+            {
+                "name": "dist1", "value": 0,
+                "on": [
+                {
+                    "events": {"type": "touchstart", "filter": "event.touches.length===2"},
+                    "update": "pinchDistance(event)"
+                },
+                {
+                    "events": {"signal": "dist2"},
+                    "update": "dist2"
+                }
+                ]
+            },
+            {
+                "name": "dist2", "value": 0,
+                "on": [{
+                "events": {"type": "touchmove", "consume": true, "filter": "event.touches.length===2"},
+                "update": "pinchDistance(event)"
+                }]
+            },
+            {
+                "name": "xdom", "update": "slice(xext)",
+                "on": [
+                    {
+                        "events": {"signal": "zoom"},
+                        "update": "[anchor[0] + (xdom[0] - anchor[0]) * zoom, anchor[0] + (xdom[1] - anchor[0]) * zoom]"
+                    }
+                ]
+            },
+            {
+                "name": "ydom", "update": "slice(yext)",
+                "on": [
+                    {
+                        "events": {"signal": "zoom"},
+                        "update": "[anchor[1] + (ydom[0] - anchor[1]) * zoom, anchor[1] + (ydom[1] - anchor[1]) * zoom]"
+                    }
+                ]
+            },
+            {
+                "name": "size",
+                "update": "clamp(100 / span(xdom), 5, 1000)"
             },
         ],
-    
-        "scales": [
-        {
-            "name": "xscale", "zero": false,
-            "domain": {"signal": "xdom"},
-            "range": {"signal": "xrange"}
-        },
-        {
-            "name": "yscale", "zero": false,
-            "domain": {"signal": "ydom"},
-            "range": {"signal": "yrange"}
-        }
-        ],
-    
-        "axes": [
-        {
-            "scale": "xscale",
-            "orient": "top",
-            "offset": {"signal": "xoffset"}
-        },
-        {
-            "scale": "yscale",
-            "orient": "right",
-            "offset": {"signal": "yoffset"}
-        }
+        
+            "data": [
+                {
+                    "name": "table",
+                    "transform": [
+                        { "type": "extent", "field": "x", "signal": "xext" },
+                        { "type": "extent", "field": "y", "signal": "yext" }
+                    ]
+                },
+                {
+                    "name": "active",
+                },
+            ],
+        
+            "scales": [
+            {
+                "name": "xscale", "zero": false,
+                "domain": {"signal": "xdom"},
+                "range": {"signal": "xrange"}
+            },
+            {
+                "name": "yscale", "zero": false,
+                "domain": {"signal": "ydom"},
+                "range": {"signal": "yrange"}
+            }
+            ],
+        
+            "axes": [
+            {
+                "scale": "xscale",
+                "orient": "top",
+                "offset": {"signal": "xoffset"}
+            },
+            {
+                "scale": "yscale",
+                "orient": "right",
+                "offset": {"signal": "yoffset"}
+            }
         ],
     
         "marks": [
@@ -266,14 +220,13 @@ export default function VegaScatter(props) {
                 "encode": {
                 "enter": {
                     "fillOpacity": {"value": 0.6},
+                    "fill": {"value": props.options.foregroundColor || 'black'}
                 },
                 "update": {
                     "x": {"scale": "xscale", "field": "x"},
                     "y": {"scale": "yscale", "field": "y"},
                     "size": {"signal": "size"}
                 },
-                "hover":   { "fill": {"value": "firebrick"} },
-                "leave":   { "fill": {"value": "steelblue"} },
                 "select":  { "size": {"signal": "size", "mult": 5} },
                 "release": { "size": {"signal": "size"} }
                 }
@@ -292,8 +245,6 @@ export default function VegaScatter(props) {
                         "y": {"scale": "yscale", "field": "y"},
                         "size": {"value": 20}
                     },
-                    "hover":   { "fill": {"value": "firebrick"} },
-                    "leave":   { "fill": {"value": "steelblue"} },
                     "select":  { "size": {"signal": "size", "mult": 5} },
                     "release": { "size": {"signal": "size"} }
                 }
@@ -306,7 +257,13 @@ export default function VegaScatter(props) {
         console.log(args);
     }
 
-    const signalListeners = { hover: handleHover };
+    function handleClick(e, target){
+        try {
+            panToGeoid(target.datum.id, 500)
+        } catch {}
+    }
+
+    const signalListeners = { hover: handleHover, click: handleClick };
     
     const vegaChart = useMemo(() => renderVega(
         chartRef,
