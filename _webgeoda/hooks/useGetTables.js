@@ -22,7 +22,6 @@ export default function useGetTables({
     const storedData = useSelector((state) => state.storedData);
     const storedGeojson = useSelector((state) => state.storedGeojson);
     const dataPresets = useSelector((state) => state.dataPresets);
-    const datasetFetchQueue = useSelector((state) => state.datasetFetchQueue);
     const fetchData = useFetchData();
     const [tables, setTables] = useState({
         numerator: {},
@@ -39,17 +38,7 @@ export default function useGetTables({
         });
     }
 
-    const popDataQueue = async (dataset) => { // TODO: Find optimal strategy to call popDataQueue
-        if(datasetFetchQueue.length === 0) return;
-        const datasetToLoad = datasetFetchQueue[0];
-        dispatch({
-            type: "REMOVE_FROM_DATA_QUEUE",
-            payload: {
-                datasets: [datasetToLoad]
-            }
-        });
-        await fetchData({req: datasetToLoad});
-    }
+    
 
     const getTables = async (
         dataset=false,

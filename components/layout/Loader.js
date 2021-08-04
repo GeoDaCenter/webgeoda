@@ -5,7 +5,7 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 function Loader(props){
     return (
-        <div className={`${styles.shade} ${props.displayShade ? "dimmed " : ""}`}>
+        <div className={`${styles.shade} ${props.displayShade ? "dimmed " : ""}`} style={props.style}>
             {props.globe 
                 ? <img src="images/globe_min.svg" alt="" style={{width:'150px', height:'150px'}}/>
                 : <FontAwesomeIcon icon={faSpinner} className={styles.spinner} />
@@ -16,7 +16,8 @@ function Loader(props){
 
 Loader.propTypes = {
     displayShade: PropTypes.bool,
-    globe: PropTypes.bool
+    globe: PropTypes.bool,
+    style: PropTypes.object
 };
 Loader.defaultProps = {
     displayShade: true,
