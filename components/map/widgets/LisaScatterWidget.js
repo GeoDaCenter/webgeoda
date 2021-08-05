@@ -30,39 +30,40 @@ function LisaScatterWidgetUnwrapped(props) {
     // const allLisaData = useSelector((state) => state.cachedLisaScatterplotData);
     // const [getLisa, cacheLisa,] = useLisa();
     // const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
-    const lisaVariable = useSelector((state) => state.lisaVariable)    
-    const lisaData = useGetLisa({
-      variable: lisaVariable,
-      getScatterPlot: true,
-      id: props.id,
-      config: props.config
-    });
+    const lisaVariable = useSelector((state) => state.lisaVariable)
+    const lisaData = 
+        useGetLisa({
+            variable: lisaVariable,
+            getScatterPlot: true,
+            id: props.id,
+            config: props.config
+        })
 
     console.log(lisaData)
 
 
 
-//     //TODO: box select filtering
+    //     //TODO: box select filtering
 
-//     // const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
-//     // const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
+    //     // const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
+    //     // const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
 
-//     // if (chartRef.current) {
-//     //     chartRef.current.boxselect.state = {
-//     //         display: xFilter != undefined && yFilter != undefined,
-//     //         xMin: xFilter?.from,
-//     //         xMax: xFilter?.to,
-//     //         yMin: yFilter?.from,
-//     //         yMax: yFilter?.to
-//     //     };
-//     // }
+    //     // if (chartRef.current) {
+    //     //     chartRef.current.boxselect.state = {
+    //     //         display: xFilter != undefined && yFilter != undefined,
+    //     //         xMin: xFilter?.from,
+    //     //         xMax: xFilter?.to,
+    //     //         yMin: yFilter?.from,
+    //     //         yMax: yFilter?.to
+    //     //     };
+    //     // }
 
     const dataProp = useMemo(() => {
         let dataProp;
         if (lisaData == null) {
             dataProp = { datasets: [] };
         } else {
-            const dataSub = lisaData.scatterPlotDataStan && Object.keys(lisaData.clusterFiltered).map(i => lisaData.scatterPlotDataStan[i])
+            const dataSub = lisaData.scatterPlotDataStan && Object.keys(lisaData.allFiltered).map(i => lisaData.scatterPlotDataStan[i])
             if (!dataSub) return []
             dataProp = {
                 datasets: [

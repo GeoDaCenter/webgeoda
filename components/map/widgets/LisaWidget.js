@@ -45,7 +45,9 @@ function LisaWidget(props) {
 
     // console.log(lisaData)
 
-    const index = lisaData.order.findIndex((o) => o === currentHoverId)
+    let index = 0;
+
+    if (currentHoverId) {index = lisaData.order.findIndex((o) => o === currentHoverId)}
 
     let arrayData = [];
     for (const num in cachedVariables[lisaVariable]){

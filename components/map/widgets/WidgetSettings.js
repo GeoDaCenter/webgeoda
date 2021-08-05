@@ -29,6 +29,20 @@ const WIDGET_OPTION_TYPES = [
         set: (w, v) => { w.clusterFilter = v},
     },
     {
+        displayName: "P-Value Lower Bound",
+        datatype: "pValVar",
+        supportedTypes: ["lisaScatter"],
+        get: (w) => w.pValFilterL,
+        set: (w, v) => { w.pValFilterL = v},
+    },
+    {
+        displayName: "P-Value Upper Bound",
+        datatype: "pValVar",
+        supportedTypes: ["lisaScatter"],
+        get: (w) => w.pValFilterU,
+        set: (w, v) => { w.pValFilterU = v},
+    },
+    {
         displayName: "X Variable",
         datatype: "variable",
         supportedTypes: ["scatter", "scatter3d"],
@@ -179,6 +193,13 @@ function WidgetSettings(props){
                         }
                     </select>
                 )
+                break;
+            }
+            case "pValVar": {
+                elem = <input type="number" step='0.0001' min='0' max='1' value={i.get(data)} onChange={(e) => {
+                    modifyData(data, i.set, e.target.value);
+                    setDoesWidgetNeedRefresh(true);
+                }} />;
                 break;
             }
             case "string": {
