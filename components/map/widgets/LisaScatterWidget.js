@@ -43,21 +43,6 @@ function LisaScatterWidgetUnwrapped(props) {
 
 
 
-    //     //TODO: box select filtering
-
-    //     // const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
-    //     // const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
-
-    //     // if (chartRef.current) {
-    //     //     chartRef.current.boxselect.state = {
-    //     //         display: xFilter != undefined && yFilter != undefined,
-    //     //         xMin: xFilter?.from,
-    //     //         xMax: xFilter?.to,
-    //     //         yMin: yFilter?.from,
-    //     //         yMax: yFilter?.to
-    //     //     };
-    //     // }
-
     const dataProp = useMemo(() => {
         let dataProp;
         if (lisaData == null) {
@@ -178,56 +163,6 @@ function LisaScatterWidgetUnwrapped(props) {
                         speed: 100
                     }
                 },
-                // tooltip: {
-                //     callbacks: {
-                //         label: (tooltipItem) => {
-                //             const point = tooltipItem.raw.id;
-                //             if (point != undefined) {
-                //                 return `${tooltipItem.raw.id}`
-                //             }
-                //             else { return "undefined" };
-                //         }
-                //     }
-                // },
-                // boxselect: {
-                //     select: {
-                //         enabled: true,
-                //         direction: 'xy'
-                //     },
-                //     callbacks: {
-                //         beforeSelect: function (startX, endX, startY, endY) {
-                //             return true;
-                //         },
-                //         afterSelect: (startX, endX, startY, endY, datasets) => {
-                //             dispatch({
-                //                 type: "SET_MAP_FILTER",
-                //                 payload: {
-                //                     widgetIndex: props.id,
-                //                     filterId: `${props.id}-x`,
-                //                     filter: {
-                //                         type: "range",
-                //                         field: props.fullWidgetConfig.xVariable,
-                //                         from: Math.min(startX, endX),
-                //                         to: Math.max(startX, endX)
-                //                     }
-                //                 }
-                //             });
-                //             dispatch({
-                //                 type: "SET_MAP_FILTER",
-                //                 payload: {
-                //                     widgetIndex: props.id,
-                //                     filterId: `${props.id}-y`,
-                //                     filter: {
-                //                         type: "range",
-                //                         field: props.fullWidgetConfig.yVariable,
-                //                         from: Math.min(startY, endY),
-                //                         to: Math.max(startY, endY)
-                //                     }
-                //                 }
-                //             });
-                //         }
-                //     }
-                // },
                 scales: { // TODO: Support gridlinesInterval option
                     x: {
                         title: {
@@ -254,7 +189,6 @@ function LisaScatterWidgetUnwrapped(props) {
             graphic = <Scatter
                 data={dataProp}
                 options={options}
-                //plugins={[pluginBoxSelect]}
                 ref={chartRef}
             />
             let buttonFunc = null;

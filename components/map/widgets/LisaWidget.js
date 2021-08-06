@@ -31,25 +31,16 @@ function LisaWidget(props) {
 
     if (!Object.keys(lisaData.lisaData).length || currentHoverId===undefined) return null;
 
-    console.log(lisaData.order)
-
     const index = lisaData.order.findIndex((o) => o === currentHoverId)
-
-    // let arrayData = [];
-    // for (const num in cachedVariables[lisaVariable]){
-    //   arrayData.push(cachedVariables[lisaVariable][num])
-    // }
 
     let cl, pval, numNeighbors, spatialLag;
     if (lisaData && index!=-1) {
         cl = lisaData.lisaResults.labels[lisaData.lisaResults.clusters[index]]
         pval = lisaData.lisaResults.pvalues[index].toFixed(3)
         numNeighbors = lisaData.lisaResults.neighbors[index]
-        //lisaVal = lisaData.lisaResults.lisaValues[index]
         spatialLag = lisaData.spatialLags[index].toFixed(3)
 
     }
-    else {cl='Undefined'}
 
 
     let avg = null;

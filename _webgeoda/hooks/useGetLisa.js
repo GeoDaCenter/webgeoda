@@ -27,8 +27,8 @@ export default function useGetLisa({
     dataset = false,
     variable = false,
     getScatterPlot = false,
-    id=0,
-    config={},
+    id = 0,
+    config = {},
 }) {
     const geoda = useContext(GeodaContext);
     const currentData = useSelector((state) => state.currentData);
@@ -55,8 +55,8 @@ export default function useGetLisa({
 
 
     let allFiltered = {};
-    let lisaResultsFiltered = {clusters:[], lisaValues:[], neighbors: [], pvalues:[]};
-    
+    let lisaResultsFiltered = { clusters: [], lisaValues: [], neighbors: [], pvalues: [] };
+
 
     const getLisa = async (
         columnData,
@@ -70,7 +70,7 @@ export default function useGetLisa({
         //     (o) => o.variable === variable
         // )
 
-        const variableSpec = {variable: lisaVariable}
+        const variableSpec = { variable: lisaVariable }
 
         const { weights, lisaResults } = await getLisaResults({
             geoda,
@@ -94,38 +94,33 @@ export default function useGetLisa({
             })
         }
 
-        if (clusterFilter!='All')
-        {
-        const index = lisaResults.labels.findIndex(cl => cl == clusterFilter)
-        
+        if (clusterFilter != 'All') {
+            const index = lisaResults.labels.findIndex(cl => cl == clusterFilter)
 
-        for (let i=0; i<lisaResults.clusters.length; i++)
-        {
-            if (lisaResults.clusters[i]==index && (lisaResults.pvalues[i]>pValFilterL && lisaResults.pvalues[i]<=pValFilterU))
-            {
-                allFiltered[i] = columnData[storedGeojson[currentData].order[i]];
-                lisaResultsFiltered.clusters.push(lisaResults.clusters[i])
-                lisaResultsFiltered.lisaValues.push(lisaResults.lisaValues[i])
-                lisaResultsFiltered.neighbors.push(lisaResults.neighbors[i])
-                lisaResultsFiltered.pvalues.push(lisaResults.pvalues[i])
+
+            for (let i = 0; i < lisaResults.clusters.length; i++) {
+                if (lisaResults.clusters[i] == index && (lisaResults.pvalues[i] > pValFilterL && lisaResults.pvalues[i] <= pValFilterU)) {
+                    allFiltered[i] = columnData[storedGeojson[currentData].order[i]];
+                    lisaResultsFiltered.clusters.push(lisaResults.clusters[i])
+                    lisaResultsFiltered.lisaValues.push(lisaResults.lisaValues[i])
+                    lisaResultsFiltered.neighbors.push(lisaResults.neighbors[i])
+                    lisaResultsFiltered.pvalues.push(lisaResults.pvalues[i])
+                }
             }
         }
-    }
-    else {
-        for (let i=0; i<lisaResults.clusters.length; i++)
-        {
-            if (lisaResults.pvalues[i]>pValFilterL && lisaResults.pvalues[i]<=pValFilterU)
-            {
-                allFiltered[i] = columnData[storedGeojson[currentData].order[i]];
-                lisaResultsFiltered.clusters.push(lisaResults.clusters[i])
-                lisaResultsFiltered.lisaValues.push(lisaResults.lisaValues[i])
-                lisaResultsFiltered.neighbors.push(lisaResults.neighbors[i])
-                lisaResultsFiltered.pvalues.push(lisaResults.pvalues[i])
+        else {
+            for (let i = 0; i < lisaResults.clusters.length; i++) {
+                if (lisaResults.pvalues[i] > pValFilterL && lisaResults.pvalues[i] <= pValFilterU) {
+                    allFiltered[i] = columnData[storedGeojson[currentData].order[i]];
+                    lisaResultsFiltered.clusters.push(lisaResults.clusters[i])
+                    lisaResultsFiltered.lisaValues.push(lisaResults.lisaValues[i])
+                    lisaResultsFiltered.neighbors.push(lisaResults.neighbors[i])
+                    lisaResultsFiltered.pvalues.push(lisaResults.pvalues[i])
+                }
             }
         }
-    }
 
-
+        if (Object.values(allFiltered).length != Object.values(columnData).length) {
             dispatch({
                 type: "SET_MAP_FILTER",
                 payload: {
@@ -138,6 +133,7 @@ export default function useGetLisa({
                     }
                 }
             });
+        }
         setData({ weights, lisaResults, scatterPlotDataStan, lisaData: columnData, spatialLags: spatialLagsNonStan, order: storedGeojson[currentData].order, allFiltered, lisaResultsFiltered });
     }
 
