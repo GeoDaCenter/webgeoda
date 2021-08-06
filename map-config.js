@@ -238,15 +238,15 @@ const widgets = [
   //   }
   // },
   
-  // {
-  //   display: "tray",
-  //   type: "lisaW",
-  //   variable: "Total Population",
-  //   options: {
-  //     header: "Total Population LISA",
-  //     foregroundColor: "#FF00FF",
-  //   }
-  // },
+  {
+    display: "tray",
+    type: "lisaW",
+    variable: "Total Population",
+    options: {
+      header: "Total Population LISA",
+      foregroundColor: "#FF00FF",
+    }
+  },
   {
     display: "tray",
     type: "lisaScatter",

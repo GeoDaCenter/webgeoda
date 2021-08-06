@@ -21,7 +21,7 @@ function LisaWidget(props) {
     // const storedData = useSelector((state) => state.storedData)
     // const currentData = useSelector((state) => state.currentData)
     const lisaVariable = useSelector((state) => state.lisaVariable)
-    const cachedVariables = useSelector((state) => state.cachedVariables[state.currentData])
+  //const cachedVariables = useSelector((state) => state.cachedVariables[state.currentData])
   
 
     const lisaData = useGetLisa({
@@ -29,30 +29,16 @@ function LisaWidget(props) {
       getScatterPlot: true
     });
 
-    console.log(lisaData)
+    if (!Object.keys(lisaData.lisaData).length || currentHoverId===undefined) return null;
 
-    // const lisaData = getCachedLisa({ variable: lisaVariable });
-    // React.useEffect(async () => {
-    //     if (lisaData == null || lisaData == 'undefined') {
-    //         const lisaData = await getLisa({
-    //             dataParams: { variable: lisaVariable },
-    //             getScatterPlot: true
-    //         });
-    //         console.log('hi')
-    //         updateCachedLisa({ variable: lisaVariable }, lisaData);
-    //     }
-    // }, []);
+    console.log(lisaData.order)
 
-    // console.log(lisaData)
+    const index = lisaData.order.findIndex((o) => o === currentHoverId)
 
-    let index = 0;
-
-    if (currentHoverId) {index = lisaData.order.findIndex((o) => o === currentHoverId)}
-
-    let arrayData = [];
-    for (const num in cachedVariables[lisaVariable]){
-      arrayData.push(cachedVariables[lisaVariable][num])
-    }
+    // let arrayData = [];
+    // for (const num in cachedVariables[lisaVariable]){
+    //   arrayData.push(cachedVariables[lisaVariable][num])
+    // }
 
     let cl, pval, numNeighbors, spatialLag;
     if (lisaData && index!=-1) {
@@ -68,8 +54,8 @@ function LisaWidget(props) {
 
     let avg = null;
     let lisaVal = null;
-    arrayData.length==0 ? avg = 'N/A' : avg = ss.mean(arrayData).toFixed(3)
-    cachedVariables==undefined ? lisaVal = 'N/A' : lisaVal = cachedVariables[lisaVariable][currentHoverId]
+    Object.values(lisaData.lisaData).length==0 ? avg = 'N/A' : avg = ss.mean(Object.values(lisaData.lisaData)).toFixed(3)
+    lisaVal = lisaData.lisaData[currentHoverId]
 
     return (
     <div>
