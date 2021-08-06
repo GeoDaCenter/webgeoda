@@ -91,9 +91,8 @@ export default function useGetHistogramData({
     const data = useGetVariable({
         variable,
         dataset,
-        priority: true
+        priority: false
     });
-
     const {
         formattedData,
         labels,
@@ -129,7 +128,7 @@ export default function useGetHistogramData({
         variable,
         handleFilter        
     ),
-    [data.length, variable, dataset, JSON.stringify(options), geoids.length, JSON.stringify(secondaryData)]);
+    [data, data.length, variable, dataset, JSON.stringify(options), geoids.length, JSON.stringify(secondaryData)]);
     
     return {
         chartData,
