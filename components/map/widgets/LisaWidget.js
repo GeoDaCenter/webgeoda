@@ -26,7 +26,9 @@ function LisaWidget(props) {
 
     const lisaData = useGetLisa({
       variable: lisaVariable,
-      getScatterPlot: true
+      getScatterPlot: true,
+      id: props.id,
+      config: props.config
     });
 
     if (!Object.keys(lisaData.lisaData).length || currentHoverId===undefined) return null;
