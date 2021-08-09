@@ -76,7 +76,6 @@ export default function useGetTables({
         if(variableSpec && variableSpec.numerator === 'properties'){
             if(dataset in storedGeojson) {
                 numeratorData = storedGeojson[dataset].properties;
-                console.log("N Data was available: ", dataset, variable);
             } else {
                 if(priority){
                     numeratorData = await fetchData({req: dataset});
@@ -88,7 +87,6 @@ export default function useGetTables({
         } else {
             if(numeratorTable && numeratorTable.file in storedData){
                 numeratorData = storedData[numeratorTable.file];
-                console.log("D Data was available: ", dataset, variable);
             } else {
                 if(priority){
                     numeratorData = await fetchData({req: numeratorTable});

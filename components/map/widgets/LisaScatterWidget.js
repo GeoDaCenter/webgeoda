@@ -39,10 +39,6 @@ function LisaScatterWidgetUnwrapped(props) {
             config: props.config
         })
 
-    console.log(lisaData)
-
-
-
     const dataProp = useMemo(() => {
         let dataProp;
         if (lisaData == null) {
