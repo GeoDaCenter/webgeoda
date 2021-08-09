@@ -22,6 +22,27 @@ const WIDGET_OPTION_TYPES = [
         //setHeader: (w, v) => {w.options.header = v + " LISA"}
     },
     {
+        displayName: "Cluster Type",
+        datatype: "clusterVariable",
+        supportedTypes: ["lisaScatter"],
+        get: (w) => w.clusterFilter,
+        set: (w, v) => { w.clusterFilter = v},
+    },
+    {
+        displayName: "P-Value Lower Bound",
+        datatype: "pValVar",
+        supportedTypes: ["lisaScatter"],
+        get: (w) => w.pValFilterL,
+        set: (w, v) => { w.pValFilterL = v},
+    },
+    {
+        displayName: "P-Value Upper Bound",
+        datatype: "pValVar",
+        supportedTypes: ["lisaScatter"],
+        get: (w) => w.pValFilterU,
+        set: (w, v) => { w.pValFilterU = v},
+    },
+    {
         displayName: "X Variable",
         datatype: "variable",
         supportedTypes: ["scatter", "scatter3d"],
@@ -91,6 +112,7 @@ function WidgetSettings(props){
     const variableConfig = useSelector(state => state.dataPresets.variables);
     const lisaVariable = useSelector(state => state.lisaVariable)
     const variableOptions = variableConfig.filter(config => config.categorical !== true).map(config => config.variable);
+    const clusterOptions = ["All", "High-High", "Low-Low", "Low-High", "High-Low"]
 
     const [data, setData] = React.useState(props.config);
     const [doesWidgetNeedRefresh, setDoesWidgetNeedRefresh] = React.useState(false);
@@ -155,6 +177,29 @@ function WidgetSettings(props){
                         }
                     </select>
                 )
+                break;
+            }
+            case "clusterVariable": {
+                elem = (
+                        <select value={i.get(data)} onChange={(e) => {
+                        modifyData(data, i.set, e.target.value);
+                        setDoesWidgetNeedRefresh(true);
+                        // modify filter
+                    }}>
+                        {
+                            clusterOptions.map(v => (
+                                <option value={v} key={`cluster-choice-${v}`}>{v}</option>
+                            ))
+                        }
+                    </select>
+                )
+                break;
+            }
+            case "pValVar": {
+                elem = <input type="number" step='0.0001' min='0' max='1' value={i.get(data)} onChange={(e) => {
+                    modifyData(data, i.set, e.target.value);
+                    setDoesWidgetNeedRefresh(true);
+                }} />;
                 break;
             }
             case "string": {

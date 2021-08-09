@@ -30,57 +30,25 @@ function LisaScatterWidgetUnwrapped(props) {
     // const allLisaData = useSelector((state) => state.cachedLisaScatterplotData);
     // const [getLisa, cacheLisa,] = useLisa();
     // const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
-    const lisaVariable = useSelector((state) => state.lisaVariable)    
-    const lisaData = useGetLisa({
-      variable: lisaVariable,
-      getScatterPlot: true
-    });
+    const lisaVariable = useSelector((state) => state.lisaVariable)
+    const lisaData = 
+        useGetLisa({
+            variable: lisaVariable,
+            getScatterPlot: true,
+            id: props.id,
+            config: props.config
+        })
 
-    // const lisaData = useGetLisa({
-    //     variable: lisaVariable,
-    //     getScatterPlot: true
-    // })
-    // console.log(lisaData)
-
-//     // if (typeof window === "undefined") {
-//     //     return null;
-//     // }
-
-    // const lisaData = getCachedLisa({ variable: lisaVariable });
-    // React.useEffect(async () => {
-    //     if (lisaData == null || lisaData == 'undefined') {
-    //         const lisaData = await getLisa({
-    //             dataParams: { variable: lisaVariable },
-    //             getScatterPlot: true
-    //         });
-    //         console.log('hi')
-    //         updateCachedLisa({ variable: lisaVariable }, lisaData);
-    //     }
-    // }, []);
+    console.log(lisaData)
 
 
-
-//     //TODO: box select filtering
-
-//     // const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
-//     // const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
-
-//     // if (chartRef.current) {
-//     //     chartRef.current.boxselect.state = {
-//     //         display: xFilter != undefined && yFilter != undefined,
-//     //         xMin: xFilter?.from,
-//     //         xMax: xFilter?.to,
-//     //         yMin: yFilter?.from,
-//     //         yMax: yFilter?.to
-//     //     };
-//     // }
 
     const dataProp = useMemo(() => {
         let dataProp;
         if (lisaData == null) {
             dataProp = { datasets: [] };
         } else {
-            const dataSub = lisaData.scatterPlotDataStan && lisaData.scatterPlotDataStan.filter(point => point.cluster!=0)
+            const dataSub = lisaData.scatterPlotDataStan && Object.keys(lisaData.allFiltered).map(i => lisaData.scatterPlotDataStan[i])
             if (!dataSub) return []
             dataProp = {
                 datasets: [
@@ -195,56 +163,6 @@ function LisaScatterWidgetUnwrapped(props) {
                         speed: 100
                     }
                 },
-                // tooltip: {
-                //     callbacks: {
-                //         label: (tooltipItem) => {
-                //             const point = tooltipItem.raw.id;
-                //             if (point != undefined) {
-                //                 return `${tooltipItem.raw.id}`
-                //             }
-                //             else { return "undefined" };
-                //         }
-                //     }
-                // },
-                // boxselect: {
-                //     select: {
-                //         enabled: true,
-                //         direction: 'xy'
-                //     },
-                //     callbacks: {
-                //         beforeSelect: function (startX, endX, startY, endY) {
-                //             return true;
-                //         },
-                //         afterSelect: (startX, endX, startY, endY, datasets) => {
-                //             dispatch({
-                //                 type: "SET_MAP_FILTER",
-                //                 payload: {
-                //                     widgetIndex: props.id,
-                //                     filterId: `${props.id}-x`,
-                //                     filter: {
-                //                         type: "range",
-                //                         field: props.fullWidgetConfig.xVariable,
-                //                         from: Math.min(startX, endX),
-                //                         to: Math.max(startX, endX)
-                //                     }
-                //                 }
-                //             });
-                //             dispatch({
-                //                 type: "SET_MAP_FILTER",
-                //                 payload: {
-                //                     widgetIndex: props.id,
-                //                     filterId: `${props.id}-y`,
-                //                     filter: {
-                //                         type: "range",
-                //                         field: props.fullWidgetConfig.yVariable,
-                //                         from: Math.min(startY, endY),
-                //                         to: Math.max(startY, endY)
-                //                     }
-                //                 }
-                //             });
-                //         }
-                //     }
-                // },
                 scales: { // TODO: Support gridlinesInterval option
                     x: {
                         title: {
@@ -271,7 +189,6 @@ function LisaScatterWidgetUnwrapped(props) {
             graphic = <Scatter
                 data={dataProp}
                 options={options}
-                //plugins={[pluginBoxSelect]}
                 ref={chartRef}
             />
             let buttonFunc = null;

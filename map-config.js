@@ -238,19 +238,22 @@ const widgets = [
   //   }
   // },
   
-  // {
-  //   display: "tray",
-  //   type: "lisaW",
-  //   variable: "Total Population",
-  //   options: {
-  //     header: "Total Population LISA",
-  //     foregroundColor: "#FF00FF",
-  //   }
-  // },
+  {
+    display: "tray",
+    type: "lisaW",
+    variable: "Total Population",
+    options: {
+      header: "Total Population LISA",
+      foregroundColor: "#FF00FF",
+    }
+  },
   {
     display: "tray",
     type: "lisaScatter",
     variable: "Total Population",
+    clusterFilter: "All",
+    pValFilterL: 0,
+    pValFilterU: 1,
     options: {
       header: "Total Population LISA Scatter",
       foregroundColor: "#000000",
