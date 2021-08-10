@@ -1,3 +1,4 @@
+var exports={};
 importScripts("https://unpkg.com/comlink/dist/umd/comlink.js", "./jsgeoda.js");
 
 // thanks @ https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class/31055217
@@ -70,11 +71,11 @@ class GeodaWorkerProxy {
       }
     }
     
-    for (var i=0; i<10; i++){
-      try {
-        var id = this.readGeoJSON(ab);
-        return [id, geojsonData];
-      } catch {}
+    try {
+      var id = this.readGeoJSON(ab);
+      return [id, geojsonData];
+    } catch {
+      return [null, geojsonData]
     }
   }
 
