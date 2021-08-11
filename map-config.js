@@ -219,8 +219,8 @@ const widgets = [
   // },
   {
     display: "tray",
-    type: "scatter",
-    variable: "Median Household Income",
+    type: "histogram",
+    variable: "Median Age",
     options: {
       header: "Median Age",
       foregroundColor: "#FF00FF",

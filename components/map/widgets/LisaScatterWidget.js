@@ -103,10 +103,8 @@ function LisaScatterWidget(props) {
 
 
 
-    const options = useMemo(() => {
-        // const storedGjson = useSelector((state) => state.storedGeojson);
-        // const currData = useSelector((state) => state.currentData);
-        return {
+    const options = 
+        {
             events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
             maintainAspectRatio: false,
             animation: false,
@@ -173,7 +171,8 @@ function LisaScatterWidget(props) {
             }
         }
         // })
-    }, [props.options, props.data, props.fullWidgetConfig]);
+    // }
+    // , [props.options, props.data, props.fullWidgetConfig]);
 
     let graphic = null;
 

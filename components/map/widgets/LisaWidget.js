@@ -1,5 +1,5 @@
 import React from 'react';
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import PropTypes from 'prop-types';
 import { useSelector } from "react-redux";
 import useLisa from '@webgeoda/hooks/useLisa';
