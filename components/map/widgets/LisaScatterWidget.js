@@ -16,7 +16,7 @@ import dynamic from 'next/dynamic';
 
 
 
-function LisaScatterWidgetUnwrapped(props) {
+function LisaScatterWidget(props) {
 
     import('chartjs-plugin-zoom').then(({ default: zoomPlugin }) => {
         Chart.register(zoomPlugin)
@@ -225,6 +225,6 @@ function LisaScatterWidgetUnwrapped(props) {
 //     activeFilters: PropTypes.array.isRequired
 // };
 
-const LisaScatterWidget = React.memo(LisaScatterWidgetUnwrapped);
+// const LisaScatterWidget = React.memo(LisaScatterWidgetUnwrapped);
 
 export default LisaScatterWidget;
