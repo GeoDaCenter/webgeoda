@@ -251,6 +251,7 @@ $WIDGET_COLUMN_WIDTH: 400px;
       max-height: none;
       .widget {
         opacity: 1;
+        visibility: visible;
       }
       #hidingMenuTitle .caret {
         transform: rotate(180deg);
