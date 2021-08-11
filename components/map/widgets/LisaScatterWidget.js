@@ -25,7 +25,8 @@ function LisaScatterWidgetUnwrapped(props) {
     const chartRef = React.useRef();
     const dispatch = useDispatch();
     const panToGeoid = usePanMap();
-    const lisaVariable = useSelector((state) => state.lisaVariable)
+    const storedGeojson = useSelector((state) => state.storedGeojson);
+    const lisaVariable = useSelector((state) => state.lisaVariable);
     const lisaData = 
         useGetLisa({
             variable: lisaVariable,
@@ -97,7 +98,7 @@ function LisaScatterWidgetUnwrapped(props) {
         }
 
         return dataProp;
-    }, [props.data, props.options, lisaData]);
+    }, [props.data, props.options, lisaData, Object.keys(storedGeojson).length]);
 
 
 
@@ -173,7 +174,7 @@ function LisaScatterWidgetUnwrapped(props) {
             }
         }
         // })
-    }, [props.options, props.data, props.fullWidgetConfig]);
+    }, [props.options, props.data, props.fullWidgetConfig, Object.keys(storedGeojson).length]);
 
     let graphic = null;
 
@@ -208,7 +209,7 @@ function LisaScatterWidgetUnwrapped(props) {
             )
         }
     }
-     ,[dataProp, options]);
+     ,[dataProp, options, Object.keys(storedGeojson).length]);
 
     return (
         <div>

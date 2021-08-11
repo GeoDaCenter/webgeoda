@@ -34,10 +34,11 @@ export default function usePanMap(){
     const setViewport = useSetViewport();
     
     const panToGeoid = (geoid, timing=250) => {
+        
         const bounds = findBounds(
             find(
-                storedGjson[currData].data.features,
-                (o) => +o.properties[currentId] === +geoid
+                storedGeojson[currentData].data.features,
+                (o) => +o.properties['GEOID'] === +geoid // temp fix currentId lost ?
             )
             ?.geometry?.coordinates
         )
