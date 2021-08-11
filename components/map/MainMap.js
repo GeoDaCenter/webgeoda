@@ -145,7 +145,7 @@ export default function MainMap() {
         data: currentMapGeography,
         getFillColor: (d) => [
           ...(mapData.data[d.properties[currentId]]?.color||[0,0,0]),
-          itemIsInFilter(d.properties[currentId])*255+80
+          itemIsInFilter(d.properties[currentId])*255+40
         ],
         getLineColor: (d) => [
           0,

@@ -13,13 +13,13 @@ const renderVega = (
     scatterData,
     signalListeners,
     setView
-) => scatterData.table?.length ? <Vega 
+) => <Vega 
     ref={chartRef}
     spec={spec} 
     data={scatterData} 
     signalListeners={signalListeners} 
     onNewView={(view) => setView(view)}
-    /> : null
+    />  
 
 const parseFilters = (filters) => {
     let returnObj = {}
@@ -409,7 +409,8 @@ export default function VegaScatter(props) {
         ]
     }
     
-    function handleDragEnd(...args){
+    function handleDragEnd(e, result){
+        if (isNaN(result[1][0])||isNaN(result[1][1])) return
         dispatch({
             type: "SET_MAP_FILTER",
             payload: {   
@@ -418,8 +419,8 @@ export default function VegaScatter(props) {
                 filter: {
                 type: "range",
                 field: props.config.xVariable,
-                from: Math.min(args[1][0][0], args[1][1][0]),
-                to: Math.max(args[1][0][0], args[1][1][0])
+                from: Math.min(result[0][0], result[1][0]),
+                to: Math.max(result[0][0], result[1][0])
                 }
             }
         });
@@ -431,8 +432,8 @@ export default function VegaScatter(props) {
                 filter: {
                 type: "range",
                 field: props.config.yVariable,
-                from: Math.min(args[1][0][1], args[1][1][1]),
-                to: Math.max(args[1][0][1], args[1][1][1])
+                from: Math.min(result[0][1], result[1][1]),
+                to: Math.max(result[0][1], result[1][1])
                 }
             }
         });
