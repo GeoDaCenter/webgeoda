@@ -12,7 +12,7 @@ import Scatter3DWidget from './Scatter3DWidget';
 import HeatmapWidget from './HeatmapWidget';
 import LineWidget from './LineWidget';
 import VegaScatter from './VegaScatter';
-
+import VegaHistogram from './vegaHistogram';
 // As defined in CSS
 export const WIDGET_WIDTH = 400;
 
@@ -22,7 +22,8 @@ const widgetTypes = {
   'scatter3d': Scatter3DWidget,
   'heatmap':HeatmapWidget,
   'line': LineWidget,
-  'vegaScatter': VegaScatter
+  'vegaScatter': VegaScatter,
+  'vegaHistogram': VegaHistogram
 }
 
 const ParentWidget = (props) => {

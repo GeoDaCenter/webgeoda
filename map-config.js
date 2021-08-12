@@ -46,34 +46,34 @@ const data = [
       }
     },
   },
-  {
-    name: 'US States', // Plain english name for dataset
-    geodata: 'states.geojson', // geospatial data to join to
-    id: 'GEOID', // fid / geoid join column
-    bounds: [-125.109215,-66.925621,25.043926,49.295128],
-    tables: {
-      acs_data: {
-        file: 'state_acs.csv',
-        type: 'characteristic',
-        join: 'FIPS',
-      },
-      household_data: {
-        file: 'texas_heating.csv',
-        type:'characteristic',
-        join: 'FIPS'
-      },
-      income_data: {
-        file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
-        type:'characteristic',
-        join: 'FIPS'
-      },
-      covid_data: {
-        file: 'nyt_covid_state.csv',
-        type: 'time-series',
-        join: 'fips',
-      }
-    },
-  },
+  // {
+  //   name: 'US States', // Plain english name for dataset
+  //   geodata: 'states.geojson', // geospatial data to join to
+  //   id: 'GEOID', // fid / geoid join column
+  //   bounds: [-125.109215,-66.925621,25.043926,49.295128],
+  //   tables: {
+  //     acs_data: {
+  //       file: 'state_acs.csv',
+  //       type: 'characteristic',
+  //       join: 'FIPS',
+  //     },
+  //     household_data: {
+  //       file: 'texas_heating.csv',
+  //       type:'characteristic',
+  //       join: 'FIPS'
+  //     },
+  //     income_data: {
+  //       file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
+  //       type:'characteristic',
+  //       join: 'FIPS'
+  //     },
+  //     covid_data: {
+  //       file: 'nyt_covid_state.csv',
+  //       type: 'time-series',
+  //       join: 'fips',
+  //     }
+  //   },
+  // },
   {
     name: 'US Tracts',
     geodata: 'US Tracts [tiles]',
@@ -182,16 +182,16 @@ const mapModes = {
 };
 
 const widgets = [
-  // {
-  //   display: "pinned",
-  //   type: "histogram",
-  //   variable: "Median age",
-  //   options: {
-  //     header: "Median Age",
-  //     foregroundColor: "#FF00FF",
-  //     yAxisLabel: "Median Age"
-  //   }
-  // },
+  {
+    display: "tray",
+    type: "vegaHistogram",
+    variable: "Median age",
+    options: {
+      header: "Median Age",
+      foregroundColor: "#FF00FF",
+      yAxisLabel: "Median Age"
+    }
+  },
   // {
   //   display: "pinned",
   //   type: "histogram",
@@ -216,21 +216,21 @@ const widgets = [
   //     removeZeroValues: true
   //   }
   // },
-  {
-    display: "tray",
-    type: "vegaScatter",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
-    options: {
-      header: "Household Income vs. Gross Rent",
-      foregroundColor: "#777",
-      pointSize: .2,
-      xAxisLabel: "Median Household Income",
-      yAxisLabel: "Median Gross Rent",
-      removeZeroValues: true,
-      regression:true
-    }
-  },
+  // {
+  //   display: "tray",
+  //   type: "vegaScatter",
+  //   xVariable: "Median Household Income",
+  //   yVariable: "Median Gross Rent",
+  //   options: {
+  //     header: "Household Income vs. Gross Rent",
+  //     foregroundColor: "#777",
+  //     pointSize: .2,
+  //     xAxisLabel: "Median Household Income",
+  //     yAxisLabel: "Median Gross Rent",
+  //     removeZeroValues: true,
+  //     regression:true
+  //   }
+  // },
   // {
   //   display: "hidden",
   //   type: "scatter3d",

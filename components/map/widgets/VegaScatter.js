@@ -64,7 +64,6 @@ export default function VegaScatter(props) {
 
 
     useEffect(() => {
-        console.log(currFilters)
         // if (currFilters.length === 1) return;
         function updateExtent() {
             const cs = vega
