@@ -38,7 +38,7 @@ export default function useGetLisa({
     const columnData = useGetVariable({
         dataset: dataset || currentData,
         variable,
-        priority: true
+        priority: false
     })
 
     const [data, setData] = useState({
