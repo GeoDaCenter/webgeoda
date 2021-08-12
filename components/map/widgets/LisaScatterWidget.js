@@ -25,7 +25,8 @@ function LisaScatterWidget(props) {
     const chartRef = React.useRef();
     const dispatch = useDispatch();
     const panToGeoid = usePanMap();
-    const lisaVariable = useSelector((state) => state.lisaVariable)
+    const storedGeojson = useSelector((state) => state.storedGeojson);
+    const lisaVariable = useSelector((state) => state.lisaVariable);
     const lisaData = 
         useGetLisa({
             variable: lisaVariable,
@@ -97,7 +98,7 @@ function LisaScatterWidget(props) {
         }
 
         return dataProp;
-    }, [props.data, props.options, lisaData]);
+    }, [props.data, props.options, lisaData, Object.keys(storedGeojson).length]);
 
 
 
@@ -207,7 +208,7 @@ function LisaScatterWidget(props) {
             )
         }
     }
-     ,[dataProp, options]);
+     ,[dataProp, options, Object.keys(storedGeojson).length]);
 
     return (
         <div>
