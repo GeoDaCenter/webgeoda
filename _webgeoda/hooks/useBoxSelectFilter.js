@@ -44,8 +44,13 @@ export default function useBoxSelectFilter(){
                     )
                 })
             }, 5))
+        } else {
+            dispatch({
+                type:'SET_FILTERED_GEOIDS',
+                payload: []
+            })
         }
-    },[JSON.stringify(boxSelect), JSON.stringify(viewport), Object.keys(centroids).length])
-    if (!boxSelect.active) return [];
+    },[boxSelect.active, JSON.stringify(boxSelect), JSON.stringify(viewport), Object.keys(centroids).length])
+
     return boxFilterGeoids
 }

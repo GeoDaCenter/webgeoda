@@ -20,15 +20,6 @@ const renderVega = (
     onNewView={(view) => setView(view)}
     />  
 
-const parseFilters = (filters) => {
-    let returnObj = {}
-    for (let i=0; i<filters.length; i++){
-        returnObj[`${filters[i].id.slice(-1,)[0]}max`] = filters[i].to
-        returnObj[`${filters[i].id.slice(-1,)[0]}min`] = filters[i].from
-    }
-    return [returnObj]
-}
-
 export default function HistogramWidget(props) {
     const boxFilterGeoids = useSelector((state) => state.boxFilterGeoids);
     const [view, setView] = useState({});
@@ -58,6 +49,20 @@ export default function HistogramWidget(props) {
         Object.keys(view).length && updateGraph();
     }, [view, boxFilterGeoids]);
 
+    useEffect(() => {
+        function updateExtent() {
+            const cs = vega
+                .changeset()
+                .remove(() => true)
+                .insert(currFilters.length 
+                    ? {'bin0':currFilters[0].from, 'bin1':currFilters[0].to} 
+                    : {}
+                );
+            view.change('filterExtent', cs).run();
+        }
+        Object.keys(view).length && updateExtent();
+    }, [view, currFilters]);
+
 
     const spec = {
         "width": 300,
@@ -70,6 +75,9 @@ export default function HistogramWidget(props) {
             },
             {
               "name": "active"
+            },
+            {
+              "name": "filterExtent"
             },
             {
                 "name": "binned",
@@ -86,7 +94,8 @@ export default function HistogramWidget(props) {
                         "type": "aggregate",
                         "key": "bin0", "groupby": ["bin0", "bin1"],
                         "fields": ["bin0"], "ops": ["count"], "as": ["count"]
-                    }
+                    },
+                    { "type": "extent", "field": "count", "signal": "max" }
                 ]
             },
             {
@@ -112,6 +121,38 @@ export default function HistogramWidget(props) {
             {
                 "name": "click",
                 "on": [{"events": "*:click", "encode": "click"}]
+            },
+            {
+                "name": "startDrag", "value": null,
+                "on": [
+                    {"events": "mouseup, touchend", "update": "0"},
+                    {"events": "mousedown, touchstart", "update": "1"},
+                ]
+            }, 
+            {
+                "name": "startDragCoords", "value": null,
+                "on": [
+                    {"events": "mousedown, touchstart", "update": "[datum.bin0,datum.bin1]"},
+                ]
+            },   
+            {
+                "name": "dragBox", "value": null,
+                on: [{
+                        "events": {"signal": "startDragCoords"},
+                        "force": true,
+                        "update":"startDragCoords"
+                    },
+                    { 
+                        "events": "mousemove, touchmove", 
+                        "update": "startDrag ? [min(datum.bin0,dragBox[0]),max(datum.bin1,dragBox[1])] : dragBox"
+                    }
+                ]
+            }, 
+            {
+                "name": "endDrag", "value": null,
+                "on": [
+                    {"events": "mouseup, touchend", "update": "dragBox"},
+                ]
             },
         ],      
         "scales": [
@@ -147,6 +188,22 @@ export default function HistogramWidget(props) {
             {
                 "type": "rect",
                 "from": {"data": "binned"},
+                "clip": true,
+                "encode": {
+                "update": {
+                    "x": {"scale": "xscale", "field": "bin0"},
+                    "x2": {"scale": "xscale", "field": "bin1"},
+                    "y": {"scale": "yscale", "signal": "max[1]"},
+                    "y2": {"scale": "yscale", "value": 0},
+                    "fill": {"value": "#00000000"}
+                },
+                "hover": { "fill": {"value": "#00000055"} }
+                }
+            },
+            {
+                "type": "rect",
+                "interactive":false,
+                "from": {"data": "binned"},
                 "encode": {
                     "update": {
                         "x": {"scale": "xscale", "field": "bin0", "offset": 1},
@@ -159,6 +216,7 @@ export default function HistogramWidget(props) {
             },
             {
                 "type": "rect",
+                "interactive":false,
                 "from": {"data": "activeBinned"},
                 "encode": {
                     "update": {
@@ -172,22 +230,48 @@ export default function HistogramWidget(props) {
             },
             {
                 "type": "rect",
-                "from": {"data": "binned"},
-                "clip": true,
+                "interactive":false,
                 "encode": {
-                "update": {
-                    "x": {"scale": "xscale", "field": "bin0"},
-                    "x2": {"scale": "xscale", "field": "bin1"},
-                    "y": {"scale": "yscale", "value": chartData.length},
-                    "y2": {"scale": "yscale", "value": 0},
-                    "fill": {"value": "#00000000"}
-                },
-                "hover": { "fill": {"value": "#00000055"} }
+                    "update": {
+                        "x": {"scale": "xscale", "signal": "startDrag ? dragBox[0] : 0"},
+                        "x2": {"scale": "xscale", "signal": "startDrag ? dragBox[1] : 0"},
+                        "y": {"scale": "yscale", "signal": "max[1]"},
+                        "y2": {"scale": "yscale", "value": 0},
+                        "fill": {"value": "#ffff0077"}
+                    }
                 }
             },
+            {
+                "type": "rect",
+                "interactive":false,
+                "from": {"data": "filterExtent"},
+                "encode": {
+                    "update": {
+                        "x": {"scale": "xscale", "field": "bin0"},
+                        "x2": {"scale": "xscale", "field": "bin1"},
+                        "y": {"scale": "yscale", "signal": "max[1]"},
+                        "y2": {"scale": "yscale", "value": 0},
+                        "fill": {"value": "#ffff0077"}
+                    }
+                }
+            },
+            {
+                "type": "rect",
+                "interactive":false,
+                "from": {"data": "activeBinned"},
+                "encode": {
+                    "update": {
+                        "x": {"scale": "xscale", "field": "bin0", "offset": 4},
+                        "x2": {"scale": "xscale", "field": "bin1", "offset": -4},
+                        "y": {"scale": "yscaleActive", "field": "count"},
+                        "y2": {"scale": "yscaleActive", "value": 0},
+                        "fill": {"value": "black"}
+                    }
+                }
+            }
         ]
     }
-    const handleClick = (e,target) => {
+    const handleDrag = (e,target) => {
         dispatch({
             type: "SET_MAP_FILTER",
             payload: {   
@@ -196,15 +280,15 @@ export default function HistogramWidget(props) {
                 filter: {
                 type: "range",
                 field: props.config.variable,
-                from: target.datum.bin0,
-                to: target.datum.bin1
+                from: target[0],
+                to: target[1]
                 }
             }
         });
     }
     
     const signalListeners = { 
-        click: handleClick
+        endDrag: handleDrag
     };
     
     const vegaChart = useMemo(() => renderVega(

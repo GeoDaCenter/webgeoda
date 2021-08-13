@@ -182,9 +182,17 @@ const mapModes = {
 };
 
 const widgets = [
+  // {
+  //   display:"tray",
+  //   type:"line",
+  //   variable:"Covid April",
+  //   options: {
+  //     header: "test"
+  //   }
+  // },
   {
     display: "tray",
-    type: "vegaHistogram",
+    type: "histogram",
     variable: "Median age",
     options: {
       header: "Median Age",
@@ -218,7 +226,22 @@ const widgets = [
   // },
   {
     display: "tray",
-    type: "vegaScatter",
+    type: "scatter",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
+    options: {
+      header: "Household Income vs. Gross Rent",
+      foregroundColor: "#777",
+      pointSize: .2,
+      xAxisLabel: "Median Household Income",
+      yAxisLabel: "Median Gross Rent",
+      removeZeroValues: true,
+      regression:true
+    }
+  },
+  {
+    display: "tray",
+    type: "heatmap",
     xVariable: "Median Household Income",
     yVariable: "Median Gross Rent",
     options: {
