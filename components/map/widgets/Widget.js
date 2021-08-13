@@ -23,7 +23,7 @@ const widgetTypes = {
   'heatmap':HeatmapWidget,
   'line': LineWidget,
   'vegaScatter': VegaScatter,
-  'vegaHistogram': VegaHistogram
+  'vegaHistogram': HistogramWidget
 }
 
 const ParentWidget = (props) => {
@@ -102,7 +102,7 @@ function Widget(props) {
 }
 
 Widget.propTypes = {
-  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d", "heatmap"]).isRequired,
+  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d", "heatmap","vegaHistogram","vegaScatter"]).isRequired,
   options: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,

@@ -216,21 +216,21 @@ const widgets = [
   //     removeZeroValues: true
   //   }
   // },
-  // {
-  //   display: "tray",
-  //   type: "vegaScatter",
-  //   xVariable: "Median Household Income",
-  //   yVariable: "Median Gross Rent",
-  //   options: {
-  //     header: "Household Income vs. Gross Rent",
-  //     foregroundColor: "#777",
-  //     pointSize: .2,
-  //     xAxisLabel: "Median Household Income",
-  //     yAxisLabel: "Median Gross Rent",
-  //     removeZeroValues: true,
-  //     regression:true
-  //   }
-  // },
+  {
+    display: "tray",
+    type: "vegaScatter",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
+    options: {
+      header: "Household Income vs. Gross Rent",
+      foregroundColor: "#777",
+      pointSize: .2,
+      xAxisLabel: "Median Household Income",
+      yAxisLabel: "Median Gross Rent",
+      removeZeroValues: true,
+      regression:true
+    }
+  },
   // {
   //   display: "hidden",
   //   type: "scatter3d",

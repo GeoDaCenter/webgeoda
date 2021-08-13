@@ -1,12 +1,12 @@
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import useGetVariable from './useGetVariable';
-import { useDispatch } from 'react-redux';
 
 const formatData = (data) => {
     let returnArray = [];
     const vals = Object.values(data)
+    const ids = Object.keys(data)
     for (let i=0; i<vals.length;i++){
-        returnArray.push({value:vals[i]})
+        returnArray.push({value:vals[i], id: +ids[i]})
     }
     return returnArray
 }
@@ -14,19 +14,18 @@ const formatData = (data) => {
 export default function useGetColumnarData({
     variable=false,
     dataset=false,
-    options={},
-    id=0,
-    geoids=[]
 }){
-    
+    const [data, setData] = useState([])
     const columnData = useGetVariable({
         variable,
         dataset
     });
     
-    const chartData = useMemo(() => formatData(columnData), [columnData, options]);
+    useEffect(() => {
+        setData(formatData(columnData))
+    }, [columnData, variable, dataset])
 
     return {
-        chartData
+        chartData: data
     }
 }
