@@ -92,9 +92,9 @@ export default function useLisa() {
                     id: storedGeojson[geographyName].order[i]
             })
         }
-            return { weights, lisaResults, scatterPlotData, scatterPlotDataStan};
+            return { weights, lisaResults, lisaData, scatterPlotData, scatterPlotDataStan};
     }
-
+    console.log(dataParams)
     const cacheLisa = async ({
         dataParams,
         geographyName=currentData,
@@ -114,7 +114,7 @@ export default function useLisa() {
     }
   const updateLisa = async () => {
 
-    const { weights, lisaResults, scatterPlotData, scatterPlotDataStan} = await getLisa ({
+    const { weights, lisaResults, lisaData} = await getLisa ({
         geographyName: currentData,
         dataParams
     })

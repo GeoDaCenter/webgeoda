@@ -100,6 +100,12 @@ const variables = [
     colorScale: colors.colorbrewer.Greens,
   },
   {
+    variable: "Hotspot: Total Population",
+    numerator: "acs_data",
+    nProperty: "Total Population",
+    lisa: true
+  },
+  {
     variable: "Covid April",
     numerator: "covid_data",
     nIndex: null,
@@ -183,24 +189,35 @@ const mapModes = {
 
 
 const widgets = [
-  {
-    display: "pinned",
-    type: "histogram",
-    variable: "Median age",
-    options: {
-      header: "Median Age",
-      foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Age"
-    }
-  },
+  // {
+  //   display: "pinned",
+  //   type: "histogram",
+  //   variable: "Median age",
+  //   options: {
+  //     header: "Median Age",
+  //     foregroundColor: "#FF00FF",
+  //     yAxisLabel: "Median Age"
+  //   }
+  // },
   {
     display: "pinned",
     type: "histogram",
     variable: "Median Household Income",
     options: {
       header: "Median Household Income",
-      foregroundColor: "#FF00FF",
+      foregroundColor: "#6932c2",
       yAxisLabel: "Median Household Income"
+    }
+  },
+  {
+    display: "pinned",
+    type: "line",
+    variable: "Covid April",
+    options: {
+      header: "COVID-19: April Data",
+      foregroundColor: "#AAAA00",
+      yAxisLabel: "Y Axis",
+      dateFormat: "MM/DD/YYYY"
     }
   },
   // {
@@ -217,16 +234,6 @@ const widgets = [
   //     removeZeroValues: true
   //   }
   // },
-  {
-    display: "tray",
-    type: "histogram",
-    variable: "Median age",
-    options: {
-      header: "Median Age",
-      foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Age"
-    }
-  },
   // {
   //   display: "hidden",
   //   type: "histogram",
@@ -238,33 +245,33 @@ const widgets = [
   //   }
   // },
   
+  // {
+  //   display: "tray",
+  //   type: "lisaW",
+  //   variable: "Total Population",
+  //   options: {
+  //     header: "Total Population LISA",
+  //     foregroundColor: "#FF00FF",
+  //   }
+  // },
+  // {
+  //   display: "tray",
+  //   type: "lisaScatter",
+  //   variable: "Total Population",
+  //   clusterFilter: "All",
+  //   pValFilterL: 0,
+  //   pValFilterU: 1,
+  //   options: {
+  //     header: "Total Population LISA Scatter",
+  //     foregroundColor: "#000000",
+  //     pointSize: .2,
+  //     xAxisLabel: "Total Population",
+  //     yAxisLabel: "Spatial Lag",
+  //     removeZeroValues: true
+  //   }
+  // },
   {
-    display: "tray",
-    type: "lisaW",
-    variable: "Total Population",
-    options: {
-      header: "Total Population LISA",
-      foregroundColor: "#FF00FF",
-    }
-  },
-  {
-    display: "tray",
-    type: "lisaScatter",
-    variable: "Total Population",
-    clusterFilter: "All",
-    pValFilterL: 0,
-    pValFilterU: 1,
-    options: {
-      header: "Total Population LISA Scatter",
-      foregroundColor: "#000000",
-      pointSize: .2,
-      xAxisLabel: "Total Population",
-      yAxisLabel: "Spatial Lag",
-      removeZeroValues: true
-    }
-  },
-  {
-    display: "tray",
+    display: "pinned",
     type: "scatter",
     xVariable: "Median Household Income",
     yVariable: "Median Gross Rent",
@@ -281,20 +288,20 @@ const widgets = [
       removeZeroValues: true
     }
   },
-  // {
-  //   display: "hidden",
-  //   type: "scatter3d",
-  //   xVariable: "Median Household Income",
-  //   yVariable: "Median Gross Rent",
-  //   zVariable: "Median age",
-  //   options: {
-  //     foregroundColor: "#00AAFF",
-  //     xAxisLabel: "Median Household Income",
-  //     yAxisLabel: "Median Gross Rent",
-  //     zAxisLabel: "Median Age",
-  //     gridlinesInterval: [50000, 500, 5]
-  //   }
-  // }
+  {
+    display: "tray",
+    type: "scatter3d",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
+    zVariable: "Median age",
+    options: {
+      foregroundColor: "#00AAFF",
+      xAxisLabel: "Median HH Income",
+      yAxisLabel: "Median Gross Rent",
+      zAxisLabel: "Median Age",
+      gridlinesInterval: [100000, 500, 20]
+    }
+  }
 ];
 
 // const style = {
