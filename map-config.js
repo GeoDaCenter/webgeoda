@@ -190,16 +190,16 @@ const widgets = [
   //     header: "test"
   //   }
   // },
-  {
-    display: "tray",
-    type: "histogram",
-    variable: "Median age",
-    options: {
-      header: "Median Age",
-      foregroundColor: "#FF00FF",
-      yAxisLabel: "Median Age"
-    }
-  },
+  // {
+  //   display: "tray",
+  //   type: "histogram",
+  //   variable: "Median age",
+  //   options: {
+  //     header: "Median Age",
+  //     foregroundColor: "#FF00FF",
+  //     yAxisLabel: "Median Age"
+  //   }
+  // },
   // {
   //   display: "pinned",
   //   type: "histogram",
@@ -229,31 +229,39 @@ const widgets = [
     type: "scatter",
     xVariable: "Median Household Income",
     yVariable: "Median Gross Rent",
-    options: {
-      header: "Household Income vs. Gross Rent",
-      foregroundColor: "#777",
-      pointSize: .2,
-      xAxisLabel: "Median Household Income",
-      yAxisLabel: "Median Gross Rent",
-      removeZeroValues: true,
-      regression:true
-    }
+    options: {}
   },
   {
     display: "tray",
-    type: "heatmap",
+    type: "scatter",
     xVariable: "Median Household Income",
     yVariable: "Median Gross Rent",
-    options: {
-      header: "Household Income vs. Gross Rent",
-      foregroundColor: "#777",
-      pointSize: .2,
-      xAxisLabel: "Median Household Income",
-      yAxisLabel: "Median Gross Rent",
-      removeZeroValues: true,
-      regression:true
-    }
+    aggregate:'scale',
+    options: {}
   },
+  {
+    display: "tray",
+    type: "scatter",
+    xVariable: "Median Household Income",
+    yVariable: "Median Gross Rent",
+    aggregate:'heatmap',
+    options: {}
+  },
+  // {
+  //   display: "tray",
+  //   type: "heatmap",
+  //   xVariable: "Median Household Income",
+  //   yVariable: "Median Gross Rent",
+  //   options: {
+  //     header: "Household Income vs. Gross Rent",
+  //     foregroundColor: "#777",
+  //     pointSize: .2,
+  //     xAxisLabel: "Median Household Income",
+  //     yAxisLabel: "Median Gross Rent",
+  //     removeZeroValues: true,
+  //     regression:true
+  //   }
+  // },
   // {
   //   display: "hidden",
   //   type: "scatter3d",

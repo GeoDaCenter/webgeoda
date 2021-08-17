@@ -37,7 +37,7 @@ export default function ScatterWidget(props) {
     const panToGeoid = usePanMap();
     const mapFilters = useSelector((state) => state.mapFilters);
     const currFilters = mapFilters.filter(f => f.source === props.config.id);
-
+    
     const {
         chartData
     } = useGetScatterData({
@@ -134,7 +134,7 @@ export default function ScatterWidget(props) {
             {
                 "name": "startDragCoords", "value": null,
                 "on": [
-                    {"events": "mousedown, touchstart", "update": "xy()"},
+                    {"events": "mousedown, touchstart", "update": "[invert('xscale', x()),invert('yscale', y())]"},
                 ]
             },   
             {
@@ -145,13 +145,13 @@ export default function ScatterWidget(props) {
                         "update":"[[startDragCoords[0], startDragCoords[1]],[]]"
                     },
                     {   
-                        "events": "mousemove, touchmove", "update": "startDrag ? [dragBox[0],xy()] : dragBox"
+                        "events": "mousemove, touchmove", "update": "startDrag ? [dragBox[0],[invert('xscale', x()),invert('yscale', y())]] : dragBox"
                     }]
             }, 
             {
                 "name": "endDrag", "value": null,
                 "on": [
-                    {"events": "mouseup, touchend", "update": "[[(xdom[1] - xdom[0])*((dragBox[0][0])/(width)),(ydom[1] - ydom[0])*(1-(dragBox[0][1])/height)],[(xdom[1] - xdom[0])*((dragBox[1][0])/(width)),(ydom[1] - ydom[0])*(1-(dragBox[1][1])/height)]]"},
+                    {"events": "mouseup, touchend", "update": "dragBox"},
                 ]
             },
             {
@@ -230,18 +230,65 @@ export default function ScatterWidget(props) {
                 {
                     "name": "table",
                     "transform": [
+                        { "type": "filter", "expr": "datum.x != 0 && datum.y != 0"},
                         { "type": "extent", "field": "x", "signal": "xext" },
                         { "type": "extent", "field": "y", "signal": "yext" },
-                        { "type": "filter", "expr": "datum.x != 0 && datum.y != 0"}
-
                     ]
                 },
+                props.config.aggregate !== undefined? 
+                    {
+                        "source": "table",
+                        "name": "tableBinned",
+                        "transform": [
+                            { "type": "filter", "expr": "datum.x != 0 && datum.y != 0"},
+                            {
+                                "type": "bin", "field": "x", "maxbins": 40,
+                                "extent": {"signal": "xext"},
+                                "as": ["x0", "x1"]
+                            },
+                            {
+                                "type": "bin", "field": "y", "maxbins": 20,
+                                "extent": {"signal": "yext"},
+                                "as": ["y0", "y1"]
+                            },
+                            {
+                                "type": "aggregate",
+                                "groupby": ["x0","x1","y0","y1"]
+                            } 
+                        ]
+                    }
+                    :   {"name": "tablebinned"}
+                ,
                 {
                     "name": "active",
                     "transform": [
-                        { "type": "filter", "expr": "datum.x != 0 && datum.y != 0"}
+                        { "type": "filter", "expr": "datum.x != 0 && datum.y != 0"},
                     ]
                 },
+                props.config.aggregate !== undefined ? 
+                    {
+                        "source": "active",
+                        "name": "activeBinned",
+                        "transform": [
+                            { "type": "filter", "expr": "datum.x != 0 && datum.y != 0"},
+                            {
+                                "type": "bin", "field": "x", "maxbins": 40,
+                                "extent": {"signal": "xext"},
+                                "as": ["x0", "x1"]
+                            },
+                            {
+                                "type": "bin", "field": "y", "maxbins": 20,
+                                "extent": {"signal": "yext"},
+                                "as": ["y0", "y1"]
+                            },
+                            {
+                                "type": "aggregate",
+                                "groupby": ["x0","x1","y0","y1"]
+                            } 
+                        ]
+                    }
+                    :   {"name": "activeBinned"}
+                ,
                 {
                     "name":"filterExtent"
                 },
@@ -283,7 +330,22 @@ export default function ScatterWidget(props) {
                     "name": "yscale", "zero": false,
                     "domain": {"signal": "ydom"},
                     "range": {"signal": "yrange"}
+                },
+                props.config.aggregate === 'scale' ? {
+                    "name": "size",
+                    "type": "linear",
+                    "zero": true,
+                    "domain": {"data": "tableBinned", "field": "count"},
+                    "range": [0,360]
                 }
+                : props.config.aggregate === 'heatmap' ? {
+                    "name": "color",
+                    "type": "linear",
+                    "range": {"scheme": "Viridis"},
+                    "domain": {"data": "tableBinned", "field": "count"},
+                    "zero": false, 
+                    "nice": true
+                } : { 'name': 'null'}
             ],
         
             "axes": [
@@ -322,10 +384,10 @@ export default function ScatterWidget(props) {
                         "stroke": {"value": "#0099FF"}
                     },
                     "update": {
-                        "x": {"signal": "startDrag ? dragBox[0][0] : 0"},
-                        "x2": {"signal": "startDrag ? dragBox[1][0] : 0"},
-                        "y": {"signal": "startDrag ? dragBox[0][1] : 0"},
-                        "y2": {"signal": "startDrag ? dragBox[1][1] : 0"}
+                        "x": {"scale":"xscale", "signal": "startDrag ? dragBox[0][0] : 0"},
+                        "x2": {"scale":"xscale", "signal": "startDrag ? dragBox[1][0] : 0"},
+                        "y": {"scale":"yscale", "signal": "startDrag ? dragBox[0][1] : 0"},
+                        "y2": {"scale":"yscale", "signal": "startDrag ? dragBox[1][1] : 0"}
                     }
                 }
             },
@@ -345,7 +407,32 @@ export default function ScatterWidget(props) {
                     }
                 }
             },
+            props.config.aggregate === 'scale' ? {
+                "type": "symbol",
+                "from": {"data": "tableBinned"},
+                "encode": {
+                  "update": {
+                    "x": {"scale": "xscale", "signal": "(datum.x0 + datum.x1) / 2"},
+                    "y": {"scale": "yscale", "signal": "(datum.y0 + datum.y1) / 2"},
+                    "size": {"scale": "size", "field": "count"},
+                    "shape": {"value": "circle"},
+                    "fill": {"value": "#4682b4"}
+                  }
+                }
+            } : props.config.aggregate === 'heatmap' ? 
             {
+              "type": "rect",
+              "from": {"data": "tableBinned"},
+              "encode": {
+                "enter": {
+                    "x": {"scale": "xscale", "field": "x0"},
+                    "x2": {"scale": "xscale", "field": "x1"},
+                    "y": {"scale": "yscale", "field": "y0"},
+                    "y2": {"scale": "yscale", "field": "y1"},
+                    "fill": {"scale": "color", "field": "count"}
+                }
+              }
+            } : {
                 "type": "symbol",
                 "from": {"data": "table"},
                 "clip": true,
@@ -363,7 +450,32 @@ export default function ScatterWidget(props) {
                 "release": { "size": {"signal": "size"} }
                 }
             },
+            props.config.aggregate === 'scale' ? {
+                "type": "symbol",
+                "from": {"data": "activeBinned"},
+                "encode": {
+                  "update": {
+                    "x": {"scale": "xscale", "signal": "(datum.x0 + datum.x1) / 2"},
+                    "y": {"scale": "yscale", "signal": "(datum.y0 + datum.y1) / 2"},
+                    "size": {"scale": "size", "field": "count"},
+                    "shape": {"value": "circle"},
+                    "fill": {"value": "red"}
+                  }
+                }
+            } : props.config.aggregate === 'heatmap' ? 
             {
+              "type": "rect",
+              "from": {"data": "activeBinned"},
+              "encode": {
+                "enter": {
+                    "x": {"scale": "xscale", "field": "x0"},
+                    "x2": {"scale": "xscale", "field": "x1"},
+                    "y": {"scale": "yscale", "field": "y0"},
+                    "y2": {"scale": "yscale", "field": "y1"},
+                    "fill": {"scale": "color", "field": "count"}
+                }
+              }
+            } : {
                 "type": "symbol",
                 "from": {"data": "active"},
                 "clip": true,
@@ -437,7 +549,7 @@ export default function ScatterWidget(props) {
             }
         });
     }
-
+    
     function handleClick(e, target){
         try {
             panToGeoid(target.datum.id, 500)
@@ -447,6 +559,7 @@ export default function ScatterWidget(props) {
     const signalListeners = { 
         click: handleClick,
         endDrag: handleDragEnd,
+        tempDrag: (e, target) => console.log(e, target)
     };
     
     const vegaChart = useMemo(() => renderVega(
