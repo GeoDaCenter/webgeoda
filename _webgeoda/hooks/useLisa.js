@@ -37,10 +37,8 @@ export default function useLisa() {
         dataParams,
         geographyName=currentData,
     }) => {
-        // console.log(storedGeojson)
-        // console.log(currentData)
-        if (!storedGeojson[geographyName]) {console.log('oops'); return;}
-        // TODO: load data if missing
+
+        if (!storedGeojson[geographyName]) {return;}
         const numeratorTable = findTable(
             dataPresets.data,
             geographyName,

@@ -35,7 +35,7 @@ export default function usePanMap(){
     const setViewport = useSetViewport();
     
     const panToGeoid = (geoid, timing=250) => {
-        if(!currentFeatures) return;
+        
         const bounds = findBounds(
             find(
                 currentFeatures,

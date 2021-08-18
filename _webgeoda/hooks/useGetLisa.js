@@ -136,7 +136,7 @@ export default function useGetLisa({
             }
             setData({ weights, lisaResults, scatterPlotDataStan, lisaData: columnData, spatialLags: spatialLagsNonStan, order: storedGeojson[currentData].order, allFiltered, lisaResultsFiltered });
         }
-        else { setData({ weights, lisaResults, scatterPlotDataStan, lisaData: columnData, order: storedGeojson[currentData].order, spatialLags }) }
+        else { setData({ weights, lisaResults, scatterPlotDataStan, lisaData: columnData, order: storedGeojson[currentData].order, spatialLags: spatialLagsNonStan }) }
     }
 
     useEffect(() =>

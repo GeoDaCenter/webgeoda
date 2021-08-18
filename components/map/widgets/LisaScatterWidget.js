@@ -16,7 +16,7 @@ import dynamic from 'next/dynamic';
 
 
 
-function LisaScatterWidgetUnwrapped(props) {
+function LisaScatterWidget(props) {
 
     import('chartjs-plugin-zoom').then(({ default: zoomPlugin }) => {
         Chart.register(zoomPlugin)
@@ -24,13 +24,9 @@ function LisaScatterWidgetUnwrapped(props) {
 
     const chartRef = React.useRef();
     const dispatch = useDispatch();
-    // const storedGeojson = useSelector((state) => state.storedGeojson);
-    // const currentData = useSelector((state) => state.currentData);
     const panToGeoid = usePanMap();
-    // const allLisaData = useSelector((state) => state.cachedLisaScatterplotData);
-    // const [getLisa, cacheLisa,] = useLisa();
-    // const [getCachedLisa, updateCachedLisa] = useGetScatterplotLisa();
-    const lisaVariable = useSelector((state) => state.lisaVariable)
+    const storedGeojson = useSelector((state) => state.storedGeojson);
+    const lisaVariable = useSelector((state) => state.lisaVariable);
     const lisaData = 
         useGetLisa({
             variable: lisaVariable,
@@ -38,7 +34,7 @@ function LisaScatterWidgetUnwrapped(props) {
             id: props.id,
             config: props.config
         })
-
+    
     const dataProp = useMemo(() => {
         let dataProp;
         if (lisaData == null) {
@@ -102,14 +98,14 @@ function LisaScatterWidgetUnwrapped(props) {
         }
 
         return dataProp;
-    }, [props.data, props.options, lisaData]);
+    }, [props.data, props.options, lisaData, Object.keys(storedGeojson).length]);
 
 
 
 
 
-    const options = useMemo(() => {
-        return {
+    const options = 
+        {
             events: ["click", "touchstart", "touchmove", "mousemove", "mouseout"],
             maintainAspectRatio: false,
             animation: false,
@@ -176,11 +172,14 @@ function LisaScatterWidgetUnwrapped(props) {
             }
         }
         // })
-    }, [props.options, props.data, props.fullWidgetConfig]);
+    // }
+    // , [props.options, props.data, props.fullWidgetConfig]);
 
     let graphic = null;
 
-    const chart = useMemo(() => {
+    const chart = 
+    useMemo(() => 
+    {
         if (lisaData) {
             graphic = <Scatter
                 data={dataProp}
@@ -208,7 +207,8 @@ function LisaScatterWidgetUnwrapped(props) {
                 </div>
             )
         }
-    }, [dataProp, options]);
+    }
+     ,[dataProp, options, Object.keys(storedGeojson).length]);
 
     return (
         <div>
@@ -225,6 +225,6 @@ function LisaScatterWidgetUnwrapped(props) {
 //     activeFilters: PropTypes.array.isRequired
 // };
 
-const LisaScatterWidget = React.memo(LisaScatterWidgetUnwrapped);
+// const LisaScatterWidget = React.memo(LisaScatterWidgetUnwrapped);
 
 export default LisaScatterWidget;
