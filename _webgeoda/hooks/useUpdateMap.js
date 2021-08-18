@@ -7,7 +7,7 @@ export default function useUpdateMap() {
     const dataParams = useSelector((state) => state.dataParams);
     const currentData = useSelector((state) => state.currentData);
     const [updateBins] = useUpdateBins();
-    const [, updateLisa] = useLisa();
+    const [getLisa, cacheLisa, updateLisa] = useLisa();
 
     useEffect(() => {
         if (!dataParams.lisa) {
