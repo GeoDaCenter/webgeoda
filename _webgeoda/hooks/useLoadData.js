@@ -173,10 +173,11 @@ export default function useLoadData() {
       [denominatorTable?.file] : denominatorData 
     };
 
-    const binData = cachedVariables.hasOwnProperty(currentData) && 
-        cachedVariables[currentData].hasOwnProperty(tempParams.variable)
-      ? Object.values(cachedVariables[currentData][tempParams.variable])
-      : tempParams.categorical 
+    if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
+    
+    const binData = dataParams.fixedScale 
+      ? null
+      : dataParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
         tempParams)
@@ -186,14 +187,20 @@ export default function useLoadData() {
         dataParams: tempParams,
         fixedOrder: geojsonOrder
     });
-    const bins = tempParams.lisa 
+
+    const bins = dataParams.fixedScale 
+      ? {bins:dataParams.fixedLabels || dataParams.fixedScale, breaks:dataParams.fixedScale}
+      : dataParams.lisa 
       ? lisaBins
       : await getBins({
         geoda,
         dataParams: tempParams,
         binData
-      })
-    const colorScale = tempParams.lisa 
+      })    
+      
+    const colorScale = dataParams.fixedScale && dataParams.colorScale.length
+      ? dataParams.colorScale
+      : dataParams.lisa  
       ? lisaColors
       : getColorScale({
         dataParams: tempParams,
