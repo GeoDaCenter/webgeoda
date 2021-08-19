@@ -18,6 +18,7 @@ button {
   --selected-color: #1816cc77;
   --selected-color-light: #acaccc;
   --medium-gray: rgb(156, 156, 156);
+  --dark-gray: rgb(40, 40, 40);
   --orange: #e27213;
   --green: #06cd57;
   --sky: #0bbedb;
@@ -59,6 +60,11 @@ div [data-reach-menu-items] {
   background: hsla(0, 0%, 100%, 0.6);
   backdrop-filter: blur(5px) brightness(90%) contrast(100%);
 }
+
+* [data-reach-listbox-popover] {
+  z-index:5;
+}
+
 div [data-reach-menu-list] {
   padding: 0;
   border-radius: 0.25em;
@@ -78,4 +84,27 @@ div [data-reach-menu-item] {
 
 div [data-reach-menu-item][data-selected] {
   background: var(--selected-color);
+}
+
+div#view-default-view {
+  z-index:5;
+}
+
+.hideScrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hideScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+button.unstyled {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+}
+
+reach-portal {
+  z-index:5;
 }

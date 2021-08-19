@@ -1,27 +1,50 @@
-import React from 'react';
+import { useSelector } from 'react-redux';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-// import styles from './Widgets.module.css';
-import {BarChart, ResponsiveContainer, Bar, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts'; // Cell, Legend
-// import { bin } from "d3-array";
+import {Bar} from 'react-chartjs-2';
+import pluginBarSelect from './chartjs-plugins/barselect';
+import useGetHistogramData from '@webgeoda/hooks/useGetHistogramData';
 
 function HistogramWidget(props) {
+  const chartRef = useRef();
+  const boxFilterGeoids = useSelector((state) => state.boxFilterGeoids)
+  const {
+    chartData,
+    chartOptions
+  } = useGetHistogramData({
+    variable: props.config.variable,
+    config: props.config,
+    options: props.options,
+    id: props.id,
+    geoids: boxFilterGeoids
+  })
   
+  const filter = props.activeFilters.find(i => i.id == props.id);
+
+  if ( chartRef.current ) {
+    chartRef.current.barselect.state = {
+      display: filter != undefined,
+      xMin: filter?.minIndex,
+      xMax: filter?.maxIndex
+    };
+  }
+
   return (
-    <ResponsiveContainer height="90%">
-      <BarChart data={props.data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Bar dataKey="val" name={props.options.yAxisLabel} fill={props.options.foregroundColor} isAnimationActive={false} />
-      </BarChart>
-    </ResponsiveContainer>
+    <div>
+      {chartData.datasets.length && <Bar 
+        data={chartData} 
+        options={chartOptions} 
+        plugins={[pluginBarSelect]} 
+        ref={chartRef} />}
+    </div>
   );
 }
 
 HistogramWidget.propTypes = {
   options: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  data: PropTypes.object.isRequired,
+  id: PropTypes.number.isRequired,
+  config: PropTypes.object.isRequired
 };
 
 export default HistogramWidget;

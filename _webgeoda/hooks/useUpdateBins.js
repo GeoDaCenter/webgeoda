@@ -13,6 +13,7 @@ export default function useUpdateBins() {
   const storedData = useSelector((state) => state.storedData);
   const dataParams = useSelector((state) => state.dataParams);
   const dataPresets = useSelector((state) => state.dataPresets);
+  const cachedVariables = useSelector((state) => state.cachedVariables);
   
   const dispatch = useDispatch();
 
@@ -43,6 +44,11 @@ export default function useUpdateBins() {
       payload: {
         bins,
         colorScale,
+        cachedVariable: {
+          variable: dataParams.variable,
+          data: binData,
+          geoidOrder: storedGeojson[currentData].order
+        }
       },
     });
   };

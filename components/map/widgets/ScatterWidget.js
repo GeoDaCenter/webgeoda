@@ -1,54 +1,55 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-// import styles from './Widgets.module.css';
+import { useSelector } from 'react-redux';
+import {useRef} from 'react';
+// import PropTypes from 'prop-types';
 import {Scatter} from 'react-chartjs-2';
+import pluginBoxSelect from './chartjs-plugins/boxselect';
+import useGetScatterData from '@webgeoda/hooks/useGetScatterData';
 
-function ScatterWidgetUnwrapped(props) {
-  const dataProp = {
-    datasets: [
-      {
-        label: props.options.header,
-        data: props.data,
-        backgroundColor: props.options.foregroundColor
-      }
-    ]
-  };
+function ScatterWidget(props) {
+  const chartRef = useRef();
+  const boxFilterGeoids = useSelector((state) => state.boxFilterGeoids);
 
-  const options = {
-    maintainAspectRatio: false,
-    animation: false,
-    elements: {
-      point: {
-        radius: 1
-      }
-    },
-    plugins: {
-      legend: {
-        display: false
-      },
-      tooltip: {
-        callbacks: {
-          label: (tooltipItem) => {
-            const point = props.data[tooltipItem.dataIndex];
-            return `${point.id} (${point.x}, ${point.y})`;
-          }
-        }
-      }
-    }
-  };
+  const {
+    chartData,
+    chartOptions
+  } = useGetScatterData({
+    config: props.config,
+    options: props.options,
+    id: props.id,
+    geoids: boxFilterGeoids
+  })
+
+  const xFilter = props.activeFilters.find(i => i.id == `${props.id}-x`);
+  const yFilter = props.activeFilters.find(i => i.id == `${props.id}-y`);
+
+  if(chartRef.current){
+    chartRef.current.boxselect.state = {
+      display: xFilter != undefined && yFilter != undefined,
+      xMin: xFilter?.from,
+      xMax: xFilter?.to,
+      yMin: yFilter?.from,
+      yMax: yFilter?.to
+    };
+  }
 
   return (
-    <div style={{height: "90%"}}>
-      <Scatter data={dataProp} options={options} />
+    <div>{(chartData.datasets.length && chartData.datasets[0].data.length) && 
+      <Scatter
+        data={chartData}
+        options={chartOptions}
+        plugins={[pluginBoxSelect]}
+        ref={chartRef}
+      />}
     </div>
   );
 }
 
-ScatterWidgetUnwrapped.propTypes = {
-  options: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
-};
-
-const ScatterWidget = React.memo(ScatterWidgetUnwrapped);
+// ScatterWidget.propTypes = {
+//   options: PropTypes.object.isRequired,
+//   data: PropTypes.object.isRequired,
+//   id: PropTypes.number.isRequired,
+//   config: PropTypes.object.isRequired,
+//   activeFilters: PropTypes.array.isRequired
+// };
 
 export default ScatterWidget;

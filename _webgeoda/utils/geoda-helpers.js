@@ -72,7 +72,8 @@ export const generateBins = async ({
     currentData,
     dataParams, 
     storedData,
-    storedGeojson   
+    storedGeojson,
+    cachedVariables
 }) => {
     const numeratorTable = findTable(
         dataPresets.data,
@@ -86,14 +87,18 @@ export const generateBins = async ({
         dataParams.denominator
     )
 
-    const binData = dataParams.categorical 
+    const binData = cachedVariables.hasOwnProperty(currentData) && 
+            cachedVariables[currentData].hasOwnProperty(dataParams.variable)
+        ? Object.values(cachedVariables[currentData][dataParams.variable])
+        : dataParams.categorical 
         ? getUniqueVals(
             storedData[numeratorTable]?.data||storedGeojson[currentData].properties,
             dataParams)
         : parseColumnData({
             numeratorData: storedData[numeratorTable]?.data || storedGeojson[currentData].properties,
             denominatorData: storedData[denominatorTable]?.data || storedGeojson[currentData].properties,
-            dataParams: dataParams
+            dataParams: dataParams,
+            fixedOrder: storedGeojson[currentData].order
         });
     
     const bins = await getBins({
@@ -110,7 +115,8 @@ export const generateBins = async ({
 
     return {
         bins,
-        colorScale
+        colorScale,
+        binData
     }
 }
 
@@ -119,14 +125,14 @@ export const getLisaResults = async ({
     storedGeojson,
     currentData,
     dataParams,
-    lisaData
-}) => {
-    
-    const weights = storedGeojson[currentData].weights[dataParams.weightsFunction||'getQueenWeights']
-      ? storedGeojson[currentData].weights[dataParams.weightsFunction||'getQueenWeights']
+    lisaData,
+    dataset=false
+}) => {    
+    const weights = storedGeojson[dataset||currentData].weights[dataParams.weightsFunction||'getQueenWeights']
+      ? storedGeojson[dataset||currentData].weights[dataParams.weightsFunction||'getQueenWeights']
       : (dataParams.weightsParams && dataParams.weightsFunction)
-      ? await geoda[dataParams.weightsFunction](storedGeojson[currentData].id, ...dataParams.weightsParams)
-      : await geoda[dataParams.weightsFunction||'getQueenWeights'](storedGeojson[currentData].id)
+      ? await geoda[dataParams.weightsFunction](storedGeojson[dataset||currentData].id, ...dataParams.weightsParams)
+      : await geoda[dataParams.weightsFunction||'getQueenWeights'](storedGeojson[dataset||currentData].id)
 
     const lisaResults = (dataParams.lisaParams && dataParams.lisaFunction)
       ? await geoda[dataParams.lisaFunction](weights, lisaData, ...dataParams.lisaParams)

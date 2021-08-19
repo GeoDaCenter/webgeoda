@@ -47,7 +47,7 @@ export default function VariablePanel(props) {
         <Listbox
         value={currentData}
         onChange={(value) =>
-          dispatch({ type: "CHANGE_DATASET", payload: value })
+          dispatch({ type: "CHANGE_MAP_DATASET", payload: value })
         }
         >
           {dataPresets.data.map((entry, i) => (

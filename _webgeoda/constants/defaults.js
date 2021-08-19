@@ -1,9 +1,27 @@
 import { dataPresets } from "../../map-config";
 
+const generateWidgetPresets = (widgetConfig) => {
+  const defaultWidgetLocations = [];
+  let leftIndex = 0;
+  let rightIndex = 0;
+  let hiddenIndex = 0;
+  for(const i of widgetConfig){
+    defaultWidgetLocations.push({
+      side: i.display,
+      index: i.display === "pinned" ? leftIndex++ : (i.display === "tray" ? rightIndex++ : hiddenIndex++)
+    });
+  }
+  return defaultWidgetLocations
+}
+
 export const INITIAL_STATE = {
   storedGeojson: {},
   storedData: {},
+  cachedVariables: {},
+  cachedTimeSeries: {},
   currentData: dataPresets.data[0].geodata,
+  datasetToLoad: null,
+  datasetFetchQueue: [],
   currentMethod: "natural_breaks",
   currentOverlay: "",
   currentResource: "",
@@ -48,6 +66,9 @@ export const INITIAL_STATE = {
     context: false,
     contextPos: { x: null, y: null },
   },
+  boxSelect: {
+    active: false
+  },
   selectionKeys: [],
   selectionNames: [],
   sidebarData: {},
@@ -57,6 +78,8 @@ export const INITIAL_STATE = {
     mapboxStyle: dataPresets.style?.mapboxStyle || 'mapbox://styles/dhalpern/ckp07gekw2p2317phroaarzej',
     underLayerId: dataPresets.style?.underLayerId || 'water'
   },
+  mapFilters: [],
+  boxFilterGeoids: [],
   notification: {
     info: null,
     location: "",
@@ -66,5 +89,20 @@ export const INITIAL_STATE = {
     y: 0,
     data: null,
   },
-  isLoading: true
+  widgetConfig: dataPresets.widgets.map((preset, i) => {
+    return {
+      ...preset,
+      id:i
+    }
+  }),
+  widgetData: {},
+  showWidgetTray: true,
+  widgetLocations: generateWidgetPresets(dataPresets.widgets),
+  cachedLisaScatterplotData: {},
+  isLoading: true,
+  lisaVariable: "Total Population", // TODO: should be blank
+  currentHoverId: 0,
+  weights:{},
+  lisaResults: {},
+  lisaData: []
 };

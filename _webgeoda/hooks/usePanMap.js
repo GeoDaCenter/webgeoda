@@ -30,14 +30,16 @@ const findBounds = (geom) => {
 export default function usePanMap(){
     const storedGeojson = useSelector((state) => state.storedGeojson);
     const currentData = useSelector((state) => state.currentData);
+    const currentFeatures = storedGeojson[currentData]?.data?.features;
     const currentId = useSelector((state) => state.currentId);
     const setViewport = useSetViewport();
-
+    
     const panToGeoid = (geoid, timing=250) => {
+        
         const bounds = findBounds(
             find(
-                storedGeojson[currentData].data.features,
-                (o) => o.properties[currentId] === geoid
+                currentFeatures,
+                (o) => +o.properties[currentId] === +geoid
             )
             ?.geometry?.coordinates
         )

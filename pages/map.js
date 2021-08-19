@@ -1,11 +1,15 @@
+import React from 'react';
 import Head from "next/head";
 import styles from "../styles/Map.module.css";
 
 import MainNav from "../components/layout/MainNav";
+import WidgetLayer from "../components/map/widgets/WidgetLayer";
+import MapContainer from '../components/map/MapContainer';
 
-import MainMap from "../components/map/MainMap";
-import VariablePanel from "../components/map/VariablePanel";
-import MapTooltip from "../components/map/MapTooltip";
+// import MainMap from "../components/map/MainMap";
+// import VariablePanel from "../components/map/VariablePanel";
+// import MapTooltip from "../components/map/MapTooltip";
+// import TimeSlider from '../components/map/slider/TimeSlider';
 
 // import useLoadData from '@webgeoda/hooks/useLoadData'
 // import useUpdateData from '@webgeoda/hooks/useUpdateData'
@@ -81,9 +85,8 @@ export default function Map() {
       <Provider store={store}>
         {geodaReady && (
           <GeodaContext.Provider value={geoda}>
-            <MainMap geoda={geoda} />
-            <VariablePanel />
-            <MapTooltip />
+            <WidgetLayer />
+            <MapContainer />
           </GeodaContext.Provider>
         )}
       </Provider>

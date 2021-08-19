@@ -14,16 +14,21 @@ import Loader from "../layout/Loader";
 import { useViewport, useSetViewport } from '@webgeoda/contexts';
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateMap from "@webgeoda/hooks/useUpdateMap";
+// import useGetLisa from "../../_webgeoda/hooks/useGetLisa";
 // import usePanMap from "@webgeoda/hooks/usePanMap";
 
 import Legend from "./Legend";
 import MapControls from "./MapControls";
+import MapSelection from '../../components/map/MapSelection';
+// import useGetVariable from "../../_webgeoda/hooks/useGetVariable";
+import useBoxSelectFilter from "@webgeoda/hooks/useBoxSelectFilter";
 
 export default function MainMap() {
   const initialViewState = useSelector((state) => state.initialViewState);
   const dataParams = useSelector((state) => state.dataParams);
   const mapParams = useSelector((state) => state.mapParams);
   const currentData = useSelector((state) => state.currentData);
+  const cachedVariables = useSelector((state) => state.cachedVariables);
   const currentTiles = useSelector((state) => state.currentTiles);
   const currentId = useSelector((state) => state.currentId);
   const currentHoverId = useSelector((state) => state.currentHoverId);
@@ -32,6 +37,7 @@ export default function MainMap() {
   const mapData = useSelector((state) => state.mapData);
   const mapStyle = useSelector((state) => state.mapStyle);
   const isLoading = useSelector((state) => state.isLoading);
+  const mapFilters = useSelector((state) => state.mapFilters);
   const [glContext, setGLContext] = useState();
   const dispatch = useDispatch();
   // const panToGeoid = usePanMap();
@@ -44,10 +50,11 @@ export default function MainMap() {
   const viewport = useViewport();
   // eslint-disable-next-line no-empty-pattern
   const setViewport = useSetViewport();
+  const boxFilteredGeoids = useBoxSelectFilter();
 
   const deckRef = useRef();
   const mapRef = useRef();
-  
+
   useEffect(() => {
     if (initialViewState.longitude)
       setViewport({
@@ -98,6 +105,22 @@ export default function MainMap() {
       new MapboxLayer({ id: "choropleth-hover", deck })
     );
   }, []);
+  // Apply map filters
+  const itemIsInFilter = (id) => {
+    // TODO: Instead of currentData, store `dataset` index with filter, use here
+    const cachedData = cachedVariables[currentData];
+    if (boxFilteredGeoids.length && !boxFilteredGeoids.includes(id)) return false;
+    if(cachedData === null) return false;
+    for(const filter of mapFilters){
+      if(filter.type === "set"){
+        if(!filter.values.includes(cachedData[filter.field][id])) return false;
+      } else if(filter.type === "range"){
+        const val = cachedData[filter.field][id];
+        if(!(val >= filter.from && val <= filter.to)) return false;
+      }
+    }
+    return true;
+  }
 
   const layers = !mapData.params.includes(currentData)
     ? [new GeoJsonLayer({
@@ -120,7 +143,10 @@ export default function MainMap() {
       new GeoJsonLayer({
         id: "choropleth",
         data: currentMapGeography,
-        getFillColor: (d) => mapData.data[d.properties[currentId]]?.color,
+        getFillColor: (d) => [
+          ...(mapData.data[d.properties[currentId]]?.color||[0,0,0]),
+          itemIsInFilter(d.properties[currentId])*255
+        ],
         getLineColor: (d) => [
           0,
           0,
@@ -141,11 +167,8 @@ export default function MainMap() {
         onHover: handleMapHover,
         // onClick: handleMapClick,
         updateTriggers: {
-          getFillColor: mapData.params,
+          getFillColor: [mapData.params, mapFilters, boxFilteredGeoids.length],
           getLineColor: [mapData.params, currentHoverId]
-        },
-        transitions: {
-          getFillColor: dataParams.nIndex === undefined ? 250 : 0
         }
       })];
 
@@ -187,6 +210,7 @@ export default function MainMap() {
       <MapControls
         deck={deckRef}
       />
+      <MapSelection />
     </div>
   );
 }

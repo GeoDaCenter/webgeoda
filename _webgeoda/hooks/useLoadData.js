@@ -34,8 +34,8 @@ const lisaBins = {
     'Not significant',
     'High-High',
     'Low-Low',
-    'High-Low',
     'Low-High',
+    'High-Low',
     'Undefined',
     'Isolated'
   ],
@@ -43,8 +43,8 @@ const lisaBins = {
     'Not significant',
     'High-High',
     'Low-Low',
-    'High-Low',
     'Low-High',
+    'High-Low',
     'Undefined',
     'Isolated'
   ]
@@ -88,43 +88,37 @@ const lisaColors = [
   ]
 ]
 
-export default function useLoadData(dateLists = {}) {
+export default function useLoadData() {
   const geoda = useContext(GeodaContext);
-  const currentData = useSelector((state) => state.currentData);
-  const datasetToLoad = useSelector((state) => state.datasetToLoad);
+  const currentData = useSelector((state) => state.currentData); // Current map data
+  const datasetToLoad = useSelector((state) => state.datasetToLoad); // Set when map data needs to be loaded
+  const cachedVariables = useSelector((state) => state.cachedVariables);
   const dataPresets = useSelector((state) => state.dataPresets);
   const dataParams = useSelector((state) => state.dataParams);
-  const [shouldRetryLoadGeoJSON, setShouldRetryLoadGeoJSON] = useState(false)
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (datasetToLoad) { loadData(dataPresets, datasetToLoad) }
+    if (datasetToLoad) {
+      loadDataForMap(dataPresets, datasetToLoad).then(() => {
+        dispatch({ type: "CHANGE_MAP_DATASET", payload: null });
+        // TODO: Get rid of datasetToLoad. CHANGE_MAP_DATASET should
+        // probably change currentData directly, and useLoadData should
+        // listen for updates to currentData and load approriately (if not already loaded) to match
+        // what's happening for widget datasets
+      });
+    }
   },[datasetToLoad])
 
-  useEffect(() => {
-    if (shouldRetryLoadGeoJSON) {
-      setTimeout(() => {
-        attemptGeojsonLoad();
-      }, 10000)
-    }
-  },[shouldRetryLoadGeoJSON])
 
-  useEffect(() => {
-    loadData(dataPresets, dataPresets.data[0].geodata)
-  },[])
+  useEffect(() => loadDataForMap(dataPresets, currentData), [])
 
-  const attemptGeojsonLoad = async () => {
-    const currentDataPreset = find(
-      dataPresets.data,
-      (o) => o.geodata === currentData
-    )
-    alert(`${window.location.origin}/geojson/${currentDataPreset.geodata}`)
-    const secondMapId = await geoda.attemptSecondGeojsonLoad(`${window.location.origin}/geojson/${currentDataPreset.geodata}`) 
-    alert(secondMapId)
-    setShouldRetryLoadGeoJSON(false)
-  }
-
-  const loadData = async (dataPresets, datasetToLoad) => {
+  /**
+   * @async
+   * @function loadDataForMap - Performs an initial load of a default variable and geospatial data
+   * @param  {Object} dataPresets - A collection of data presets, typically found in the state or loaded in from config
+   * @param  {String} datasetToLoad - a name of a geojson or geodata dataset to load
+   */
+  const loadDataForMap = async (dataPresets, datasetToLoad) => {
     if (geoda === undefined) location.reload();
     const notTiles = !datasetToLoad.includes('tiles')
     const currentDataPreset = find(dataPresets.data, f => f.geodata === datasetToLoad);
@@ -152,30 +146,32 @@ export default function useLoadData(dateLists = {}) {
     if (mapId === null) setShouldRetryLoadGeoJSON(true)
 
     const geojsonProperties = notTiles 
-    ? indexGeoProps(geojsonData,currentDataPreset.id)
-    : false;
+      ? indexGeoProps(geojsonData,currentDataPreset.id)
+      : false;
 
     const geojsonOrder = notTiles 
-    ? getIdOrder(geojsonData.features,currentDataPreset.id) 
-    : false;
+      ? getIdOrder(geojsonData.features,currentDataPreset.id) 
+      : false;
+    
+    const tempParams = {
+      ...dataParams,
+      [dataParams.nIndex === null && 'nIndex']: numeratorData?.dateIndices?.length-1
+    }
 
-    const bounds = mapId === null
-      ? [-180,180,-70,80]
-      : currentDataPreset.bounds 
-      ? currentDataPreset.bounds 
-      : await geoda.getBounds(mapId);
+    const storedGeojson = {
+      [datasetToLoad]: {
+        data: geojsonData,
+        properties: geojsonProperties,
+        order: geojsonOrder,
+        id: mapId,
+        weights: {}
+      },
+    };
 
-    let initialViewState =
-      window !== undefined
-        ? fitBounds({
-            width: window.innerWidth,
-            height: window.innerHeight,
-            bounds: [
-              [bounds[0], bounds[2]],
-              [bounds[1], bounds[3]],
-            ],
-          })
-        : null;
+    const storedData = {
+      [numeratorTable?.file] : numeratorData,
+      [denominatorTable?.file] : denominatorData 
+    };
 
     if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
     
@@ -184,12 +180,12 @@ export default function useLoadData(dateLists = {}) {
       : dataParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
-        dataParams)
+        tempParams)
       : parseColumnData({
-        numeratorData: dataParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
-        denominatorData: dataParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
-        dataParams,
-        geojsonOrder
+        numeratorData: tempParams.numerator === "properties" ? geojsonProperties : numeratorData.data,
+        denominatorData: tempParams.denominator === "properties" ? geojsonProperties : denominatorData.data,
+        dataParams: tempParams,
+        fixedOrder: geojsonOrder
     });
 
     const bins = dataParams.fixedScale 
@@ -198,7 +194,7 @@ export default function useLoadData(dateLists = {}) {
       ? lisaBins
       : await getBins({
         geoda,
-        dataParams,
+        dataParams: tempParams,
         binData
       })    
       
@@ -207,88 +203,94 @@ export default function useLoadData(dateLists = {}) {
       : dataParams.lisa  
       ? lisaColors
       : getColorScale({
-        dataParams,
+        dataParams: tempParams,
         bins
       })
+
+    const bounds = mapId === null
+      ? [-180,180,-70,80]
+      : currentDataPreset.bounds 
+      ? currentDataPreset.bounds 
+      : await geoda.getBounds(mapId);
+
+    let initialViewState = window !== undefined
+      ? fitBounds({
+          width: window.innerWidth,
+          height: window.innerHeight,
+          bounds: [
+            [bounds[0], bounds[2]],
+            [bounds[1], bounds[3]],
+          ],
+        })
+      : null;
+
+    if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
+
     dispatch({
       type: "INITIAL_LOAD",
       payload: {
+        storedGeojson,
+        storedData,
         currentData: datasetToLoad,
         currentTable: {
           numerator: dataParams.numerator === "properties" ? "properties" : numeratorTable,
           denominator: dataParams.numerator === "properties" ? "properties" : denominatorTable,
         },
         currentTiles: currentDataPreset.tiles,
-        storedGeojson: {
-          [datasetToLoad]: {
-            data: geojsonData,
-            properties: geojsonProperties,
-            order: geojsonOrder,
-            id: mapId,
-            weights: {}
-          },
-        },
-        storedData: {
-          [numeratorTable?.file] : numeratorData,
-          [denominatorTable?.file] : denominatorData 
-        },
         mapParams: {
           bins,
           colorScale: colorScale || colors.colorbrewer.YlGnBu[5],
         },
-        variableParams: dataParams,
+        variableParams: tempParams,
         initialViewState,
         id: currentDataPreset.id,
-      },
+        cachedVariable: {
+          variable: dataParams.variable,
+          data: binData,
+          geoidOrder: geojsonOrder
+        }
+      }
     });
-
-    loadTables(dataPresets, datasetToLoad, dateLists, mapId);
-    // loadWidgets(dataPresets);
   };
 
-  const loadTables = async (dataPresets, datasetToLoad, dateLists) => {
+  /**
+   * @async
+   * @function loadTables - loads all tables associated with a particular dataset
+   * @param  {Object} dataPresets - A collection of data presets, typically found in the state or loaded in from config
+   * @param  {String} datasetToLoad - a name of a geojson or geodata dataset to load
+   */
+   const loadTables = async (dataPresets, datasetToLoad) => {
     const currentDataPreset = find(
       dataPresets.data,
       (o) => o.geodata === datasetToLoad
     )
     const tablesToFetch = currentDataPreset.tables;
-
-    const tableNames = Object.keys(tablesToFetch);
     const tableDetails = Object.values(tablesToFetch);
-    const tablePromises = tableDetails.map((table) =>
-      handleLoadData(table, dateLists)
-    );
-    const tableData = await Promise.all(tablePromises);
+    for (let i=0; i<tableDetails; i++){ // intentionally lazy load
+      const tableData = await handleLoadData(tableDetails[i])
+      dispatch({
+        type: "ADD_TABLES",
+        payload: {
+          [tableDetails[i].file]: tableData
+        },
+      });
+    }
+  };
 
-    const dataCollection = {};
-    for (let i = 0; i < tableNames.length; i++)
-      dataCollection[tableDetails[i].file] = tableData[i];
-
+  /**
+   * @async
+   * @function loadTable - load a table
+   * @param  {Object} tableInfo - the file name, join column, and type of data to be loaded into the state
+   */
+  const loadTable = async (tableInfo) => {
+    const tableData = await handleLoadData(tableInfo)
     dispatch({
       type: "ADD_TABLES",
-      payload: dataCollection,
+      payload: {
+        [tableInfo.file]: tableData
+      },
     });
   };
 
-  const loadWidgets = async (dataPresets) => {
-    const widgetSpecs = dataPresets.widgets.map((widget, i) => {
-      let variable;
-      if(widget.type == 'scatter' || widget.type == 'scatter3d'){
-        variable = [widget.xVariable, widget.yVariable];
-      } else {
-        variable = widget.variable;
-      }
-      return {
-        id: i,
-        type: widget.type,
-        variable
-      };
-    });
-    dispatch({
-      type: "FORMAT_WIDGET_DATA",
-      payload: {widgetSpecs}
-    });
-  };
-
-  return [loadData];
+  return [loadDataForMap, loadTable];
 }
