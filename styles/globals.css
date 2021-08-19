@@ -60,6 +60,11 @@ div [data-reach-menu-items] {
   background: hsla(0, 0%, 100%, 0.6);
   backdrop-filter: blur(5px) brightness(90%) contrast(100%);
 }
+
+* [data-reach-listbox-popover] {
+  z-index:5;
+}
+
 div [data-reach-menu-list] {
   padding: 0;
   border-radius: 0.25em;
@@ -98,4 +103,8 @@ button.unstyled {
   margin: 0;
   border: 0;
   background: none;
+}
+
+reach-portal {
+  z-index:5;
 }

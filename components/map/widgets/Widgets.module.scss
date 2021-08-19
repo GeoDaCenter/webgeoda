@@ -130,7 +130,7 @@ $WIDGET_COLUMN_WIDTH: 400px;
     position: absolute;
     overflow: hidden;
     right: 0px;
-    top: 150px;
+    top: 178px; // todo- fix other positioning for widgets container
     border-top-left-radius: 5em;
     border-bottom-left-radius: 5em;
     transition: left 0.5s, right 0.5s;
