@@ -28,7 +28,6 @@
     "@reach/tooltip": "^0.15.0",
     "@turf/bbox": "^6.3.0",
     "axios": "^0.21.1",
-    "canvas": "^2.8.0",
     "chart.js": "^3.3.2",
     "chartjs-plugin-boxselect": "https://github.com/yummypasta/chartjs-plugin-boxselect.git",
     "chartjs-plugin-zoom": "^1.1.1",
@@ -49,7 +48,6 @@
     "sass": "^1.35.2",
     "simple-statistics": "^7.7.0",
     "vega": "^5.20.2",
-    "vega-canvas": "^1.2.6",
     "vega-lite": "^5.1.0"
   },
   "devDependencies": {
