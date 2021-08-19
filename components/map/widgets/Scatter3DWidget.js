@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import {hexToRgb} from '@webgeoda/utils/map';
 import DeckGL from '@deck.gl/react';

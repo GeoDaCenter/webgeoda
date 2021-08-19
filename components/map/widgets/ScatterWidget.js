@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import {useRef} from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import {Scatter} from 'react-chartjs-2';
 import pluginBoxSelect from './chartjs-plugins/boxselect';
 import useGetScatterData from '@webgeoda/hooks/useGetScatterData';

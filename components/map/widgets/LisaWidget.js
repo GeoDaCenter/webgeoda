@@ -1,29 +1,12 @@
 import React from 'react';
-import { useContext, useEffect, useMemo } from "react";
-import PropTypes from 'prop-types';
 import { useSelector } from "react-redux";
-import useLisa from '@webgeoda/hooks/useLisa';
 import * as ss from 'simple-statistics';
-import { getLisaResults } from '@webgeoda/utils/geoda-helpers';
-import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
-import { standardize } from '@webgeoda/utils/stats';
-import { geoda } from '@webgeoda/utils/colors';
-import { GeodaContext } from '@webgeoda/contexts';
-import { getColumnData } from '@webgeoda/utils/widgets';
 import useGetLisa from '@webgeoda/hooks/useGetLisa';
 
 function LisaWidget(props) {
-    const geoda = useContext(GeodaContext)
-    const currentHoverTarget = useSelector((state) => state.currentHoverTarget);
     const currentHoverId = useSelector ((state) => state.currentHoverId)
-    const dataParams = useSelector((state) => state.dataParams);
-    // const storedGeojson = useSelector((state) => state.storedGeojson);
-    // const storedData = useSelector((state) => state.storedData)
-    // const currentData = useSelector((state) => state.currentData)
     const lisaVariable = useSelector((state) => state.lisaVariable)
-  //const cachedVariables = useSelector((state) => state.cachedVariables[state.currentData])
-  
-
+ 
     const lisaData = useGetLisa({
       variable: lisaVariable,
       getScatterPlot: true,

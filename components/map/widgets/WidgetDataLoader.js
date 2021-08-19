@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import useFetchData from "@webgeoda/hooks/useFetchData";
 import loaderStyles from "../../layout/Loader.module.css";
@@ -7,7 +7,7 @@ import styles from "./Widgets.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-function WidgetDataLoader(props){
+function WidgetDataLoader(){
     const dispatch = useDispatch();
     const fetchData = useFetchData();
     const datasetFetchQueue = useSelector(state => state.datasetFetchQueue);

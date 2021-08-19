@@ -1,4 +1,4 @@
-import { Vega, View } from 'react-vega';
+import { Vega } from 'react-vega';
 import * as vega from 'vega';
 import { useSelector } from 'react-redux';
 import {useState, useEffect, useRef, useMemo} from 'react';

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as ss from 'simple-statistics';
 
 function SummaryWidget(props) {
 

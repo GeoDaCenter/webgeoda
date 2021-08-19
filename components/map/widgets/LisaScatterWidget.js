@@ -1,20 +1,11 @@
-import React, { Suspense, useEffect, useMemo } from 'react';
-import PropTypes from 'prop-types';
-// import styles from './Widgets.module.css';
+import React, { useMemo } from 'react';
 import { useSelector } from "react-redux";
 import { Scatter, Chart } from 'react-chartjs-2';
-import pluginBoxSelect from './chartjs-plugins/boxselect';
-import useLisa from '@webgeoda/hooks/useLisa';
-import useGetScatterplotLisa from '@webgeoda/hooks/useGetScatterplotLisa';
 import useGetLisa from '@webgeoda/hooks/useGetLisa';
 import { useDispatch } from 'react-redux';
 import Loader from '../../layout/Loader';
 import usePanMap from '@webgeoda/hooks/usePanMap';
 import * as ss from 'simple-statistics';
-import { getVarId } from '@webgeoda/utils/data';
-import dynamic from 'next/dynamic';
-
-
 
 function LisaScatterWidget(props) {
 
@@ -72,13 +63,12 @@ function LisaScatterWidget(props) {
 
             //Axes lines
             const minX = ss.min(arrayXData)
-            const minY = ss.min(arrayYData)
+            // const minY = ss.min(arrayYData)
             const maxX = ss.max(arrayXData)
-            const maxY = ss.max(arrayYData)
+            // const maxY = ss.max(arrayYData)
 
 
             let fittedLine = null;
-            let fittedLineEquation = null;
 
             const bestFitInfo = ss.linearRegression(statisticsFormattedData);
             const bestFit = ss.linearRegressionLine(bestFitInfo);
@@ -86,7 +76,7 @@ function LisaScatterWidget(props) {
                 { x: minX - 2, y: bestFit(minX - 2) },
                 { x: maxX + 2, y: bestFit(maxX + 2) }
             ];
-            fittedLineEquation = `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
+            // let fittedLineEquation = `y = ${bestFitInfo.m.toFixed(4)}x + ${bestFitInfo.b.toFixed(4)}`
 
             dataProp.datasets.push({
                 type: "line",
@@ -125,7 +115,7 @@ function LisaScatterWidget(props) {
                         payload: 0
                     });
                     return;
-                };
+                }
                 dispatch({
                     type: "SET_HOVER_ID",
                     payload: items[0].element.$context.raw.id
@@ -216,15 +206,5 @@ function LisaScatterWidget(props) {
         </div>
     );
 }
-
-// LisaScatterWidgetUnwrapped.propTypes = {
-//     options: PropTypes.object.isRequired,
-//     data: PropTypes.object.isRequired,
-//     id: PropTypes.number.isRequired,
-//     fullWidgetConfig: PropTypes.object.isRequired,
-//     activeFilters: PropTypes.array.isRequired
-// };
-
-// const LisaScatterWidget = React.memo(LisaScatterWidgetUnwrapped);
 
 export default LisaScatterWidget;
