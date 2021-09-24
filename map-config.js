@@ -91,7 +91,7 @@ const widgets = [
     display: "tray",
     type: "scatter",
     xVariable: "Median Household Income",
-    yVariable: "Median Age",
+    yVariable: "Median House Value",
     aggregate:"scale",
     options: {
       regssion:false
