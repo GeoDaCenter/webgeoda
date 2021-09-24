@@ -65,7 +65,11 @@ export default function MainMap() {
   }, [initialViewState]);
 
   // const handleMapClick = (e) => e.object && panToGeoid(e.object?.properties[currentId])
-
+  const handleMapClick = (e) => {
+    // console.log(e.object)
+    // console.log(mapData.data[e.object.properties[currentId]]?.color||[0,0,0])
+  }
+  // console.log(mapData.data[81259632001])
   const handleMapHover = (e) => {
     if (e.object) {
       dispatch({
@@ -143,10 +147,12 @@ export default function MainMap() {
       new GeoJsonLayer({
         id: "choropleth",
         data: currentMapGeography,
-        getFillColor: (d) => [
-          ...(mapData.data[d.properties[currentId]]?.color||[0,0,0]),
-          itemIsInFilter(d.properties[currentId])*255+40
-        ],
+        getFillColor: (d) => {
+          const color = (mapData.data[d.properties[currentId]]?.color||[0,0,0])
+          return color.length === 4
+            ? color :
+            [...color,itemIsInFilter(d.properties[currentId])*255+40]
+        },
         getLineColor: (d) => [
           0,
           0,
@@ -165,7 +171,7 @@ export default function MainMap() {
         // opacity: mapParams.vizType === 'dotDensity' ? mapParams.dotDensityParams.backgroundTransparency : 0.8,
         material: false,
         onHover: handleMapHover,
-        // onClick: handleMapClick,
+        onClick: handleMapClick,
         updateTriggers: {
           getFillColor: [mapData.params, mapFilters, boxFilteredGeoids.length],
           getLineColor: [mapData.params, currentHoverId]

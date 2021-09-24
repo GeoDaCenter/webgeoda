@@ -14,7 +14,7 @@ export const getCartogramCenter = (cartogramData) => {
 };
 
 function mapFn(val, bins, colors) {
-  if (val === null) return [0, 0, 0, 0];
+  if (val === null  || val === undefined || isNaN(val)) return [0, 0, 0, 0];
   for (let i = 0; i < bins.length; i++) {
     if (val < bins[i]) {
       return colors[i];
@@ -172,8 +172,7 @@ export const generateMapData = (state) => {
       getTable(idList[i], "denominator", denominatorTable),
       tempParams
     );
-
-    const color = isNaN(tempVal)
+    const color = isNaN(tempVal) || tempVal === null || tempVal === undefined
       ? [0,0,0,0]
       : getColor(
           tempVal,
@@ -187,7 +186,7 @@ export const generateMapData = (state) => {
           idList[i],
           mapFn
         );
-    
+
     const height = getHeight(tempVal, tempParams);
 
     if (color === null) {
@@ -196,7 +195,6 @@ export const generateMapData = (state) => {
     }
     returnObj[idList[i]] = { color, height };
   }
-
   return {
     params: getVarId(state.currentData, tempParams, state.mapParams),
     data: returnObj,

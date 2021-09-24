@@ -8,6 +8,16 @@ $WIDGET_COLUMN_WIDTH: 400px;
   top: 50px;
 }
 
+.widgetTitle {
+  position:absolute;
+  top:0;
+  width:100%;
+  text-align:center;
+  padding:0;
+  margin:0;
+  font-size:0.75rem;
+}
+
 .widgetsContainer {
   position: relative;
   width: 100%;
@@ -15,8 +25,17 @@ $WIDGET_COLUMN_WIDTH: 400px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  overflow-x:hidden;
+  @media (max-width:960px){
+    float:right;
+    width:400px;
+    margin-right:1em;
+  }
 }
 
+.leftColumn {
+  background:red;
+}
 @mixin widget-active() {
   opacity: 1;
   visibility: visible;
@@ -65,14 +84,13 @@ $WIDGET_COLUMN_WIDTH: 400px;
     margin: 0;
     font-size: 13px;
     text-align: center;
-    text-transform: uppercase;
   }
   .widgetSettingsHeader {
     height: 10%;
     margin: 0;
     font-size: 13px;
     text-align: center;
-    text-transform: uppercase;
+    text-transform: capitalize;
   }
   &.showSettings {
     animation: cardFlip 1s;
@@ -92,6 +110,7 @@ $WIDGET_COLUMN_WIDTH: 400px;
   }
 }
 
+
 .widgetDropdownHandle {
   display: flex;
   flex-direction: row;
@@ -102,10 +121,14 @@ $WIDGET_COLUMN_WIDTH: 400px;
   border: none;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   text-align: center;
-  width: 135px;
+  width: auto;
   height: 50px;
   cursor: pointer;
   transition: width 0.5s;
+  padding-right:2em;
+  img {
+    max-height:90%;
+  }
   p {
     font-size: 15px;
   }
@@ -125,15 +148,19 @@ $WIDGET_COLUMN_WIDTH: 400px;
     .caret {
       right: 20px;
     }
+    @media (max-width:960px){
+      display:none;
+    }
   }
   &#dropdownHandleRight { // Right
     position: absolute;
     overflow: hidden;
     right: 0px;
-    top: 150px;
+    top: 50%;
     border-top-left-radius: 5em;
     border-bottom-left-radius: 5em;
     transition: left 0.5s, right 0.5s;
+    padding-left:4em;
     p {
       margin-left: 20px;
     }
@@ -153,6 +180,16 @@ $WIDGET_COLUMN_WIDTH: 400px;
       }
       &:hover .caret {
         left: 15px;
+      }
+    }
+    @media (max-width:760px){
+      position: fixed;
+      top: 50%;
+      right:0em; 
+      z-index:5;
+      padding-left:1em;
+      .caret {
+        display:none;
       }
     }
   }
@@ -238,7 +275,7 @@ $WIDGET_COLUMN_WIDTH: 400px;
     }
     #hidingMenuTitle {
       text-align: center;
-      text-transform: uppercase;
+      text-transform: capitalize;
       font-size: 13px;
       color: #777777;
       .caret {
@@ -299,4 +336,25 @@ $WIDGET_COLUMN_WIDTH: 400px;
     color: #0099FF;
     opacity: 100% !important;
   }
+}
+
+.widgetHelperText {
+  position:absolute;
+  z-index:2;
+  width:400px;
+  background:rgba(255,255,255,0.7);
+  text-align: center;
+  padding:0.5em 0;
+  border-radius: 0.5em;
+  margin:0 0 0 0.5em;
+  user-select: none;
+  opacity:0;
+  transition: 250ms all;
+  transition-delay:1s all;
+}
+
+.active .widgetHelperText {
+  opacity: 1;
+  transition: 250ms all;
+  transition-delay:1s all;
 }

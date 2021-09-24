@@ -85,6 +85,10 @@ div#view-default-view {
   z-index:5;
 }
 
+* [data-reach-popover], * [data-reach-listbox-popover] {
+  z-index:500;
+}
+
 .hideScrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;

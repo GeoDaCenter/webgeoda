@@ -1,178 +1,74 @@
 import * as colors from "@webgeoda/utils/colors";
 const data = [
   {
-    name: 'Texas Block Groups', // Plain english name for dataset
-    geodata: 'tx.geojson', // geospatial data to join to
+    name: 'Colorado Block Groups', // Plain english name for dataset
+    geodata: 'colorado_cbgs.geojson', // geospatial data to join to
     id: 'GEOID', // fid / geoid join column
     tables: {
-      // any additional tabular data
-      acs_data: {
-        file: 'texas_acs.csv',
-        type: 'characteristic',
-        join: 'FIPS',
-      },
-      income_data: {
-        file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
-        type:'characteristic',
-        join: 'FIPS'
-      },
-      household_data: {
-        file: 'texas_heating.csv',
-        type:'characteristic',
-        join: 'FIPS'
-      },
-    },
-  },
-  {
-    name: 'US States', // Plain english name for dataset
-    geodata: 'states.geojson', // geospatial data to join to
-    id: 'GEOID', // fid / geoid join column
-    bounds: [-125.109215,-66.925621,25.043926,49.295128],
-    tables: {
-      acs_data: {
-        file: 'state_acs.csv',
-        type: 'characteristic',
-        join: 'FIPS',
-      },
-      household_data: {
-        file: 'texas_heating.csv',
-        type:'characteristic',
-        join: 'FIPS'
-      },
-      covid_data: {
-        file: 'nyt_covid_state.csv',
-        type: 'time-series',
-        join: 'fips',
+      acsData: {
+        file:'colorado-acs-cbg.csv',
+        join:'FIPS',
+        type:'characteristic'
       }
     },
   },
-  // {
-  //   name: 'US States', // Plain english name for dataset
-  //   geodata: 'states.geojson', // geospatial data to join to
-  //   id: 'GEOID', // fid / geoid join column
-  //   bounds: [-125.109215,-66.925621,25.043926,49.295128],
-  //   tables: {
-  //     acs_data: {
-  //       file: 'state_acs.csv',
-  //       type: 'characteristic',
-  //       join: 'FIPS',
-  //     },
-  //     household_data: {
-  //       file: 'texas_heating.csv',
-  //       type:'characteristic',
-  //       join: 'FIPS'
-  //     },
-  //     income_data: {
-  //       file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbtTg_m2TfwpmiZo7ylZKxt6cx79kny9plIqp4PSxUgnV6XvQBrTWcSPHH7b5_WE8IL1o_YJ95cOuJ/pub?output=csv',
-  //       type:'characteristic',
-  //       join: 'FIPS'
-  //     },
-  //     covid_data: {
-  //       file: 'nyt_covid_state.csv',
-  //       type: 'time-series',
-  //       join: 'fips',
-  //     }
-  //   },
-  // },
   {
-    name: 'US Tracts',
-    geodata: 'US Tracts [tiles]',
-    tiles: `csds-hiplab.3ezoql1c`,
-    id: 'GEOID',
-    bounds: [-125.109215,-66.925621,25.043926,49.295128],
+    name: 'Colorado Counties', // Plain english name for dataset
+    geodata: 'colorado_counties.geojson', // geospatial data to join to
+    id: 'GEOID', // fid / geoid join column
     tables: {
-      acs_data: {
-        file: 'tract_acs.csv',
-        type: 'characteristic',
-        join: 'FIPS',
+      acsData:{
+        file:'colorado-acs-county.csv',
+        join:'FIPS',
+        type:'characteristic'
       }
+
     },
-  }
+  },
+  
 ];
 
 const variables = [
   {
-    variable: "Total Population",
-    numerator: "acs_data",
-    nProperty: "Total Population",
-    binning: "naturalBreaks",
+    variable: "Population Density",
+    numerator: "acsData",
+    nProperty: "Population",
+    denominator: "acsData",
+    dProperty: "Land Area",
+    binning: "percentileBreaks",
+    colorScale: colors.colorbrewer.YlGnBu,
+  },
+  {
+    variable: "Median Age",
+    numerator: "acsData",
+    nProperty: "Median Age",
+    binning: "quantileBreaks",
     numberOfBins: 8,
-    colorScale: colors.colorbrewer.Greens,
-  },
-  {
-    variable: "Covid April",
-    numerator: "covid_data",
-    nIndex: null,
-    nRange: 7,
-    binning: "naturalBreaks",
-    numberOfBins: 5,
-    colorScale: colors.colorbrewer.YlOrBr,
-  },
-  {
-    variable: "Median age",
-    numerator: "properties",
-    nProperty: "Median age",
-    binning: "naturalBreaks",
-    numberOfBins: 7,
-    colorScale: colors.colorbrewer.Purples,
+    colorScale: colors.colorbrewer.RdYlBu,
   },
   {
     variable: "Median Household Income",
-    numerator: "income_data",
-    nProperty: "Median Household Income",
+    numerator: "acsData",
+    nProperty: "Median HH",
     binning: "naturalBreaks",
-    numberOfBins: 5,
-    colorScale: colors.colorbrewer.YlGn,
+    numberOfBins: 8,
+    colorScale: colors.colorbrewer.PiYG,
   },
   {
-    variable: "Median Gross Rent",
-    numerator: "income_data",
-    nProperty: "Median Gross Rent",
-    binning: "hinge15Breaks",
-    numberOfBins: 5,
-    colorScale: colors.colorbrewer.YlOrRd,
+    variable: "Median Structure Year Built",
+    numerator: "acsData",
+    nProperty: "Median Structure Year",
+    binning: "quantileBreaks",
+    numberOfBins: 8,
+    colorScale: colors.colorbrewer.PuBuGn,
   },
   {
-    variable: "GEOID",
-    numerator: "properties",
-    nProperty: "GEOID",
-    binning: "naturalBreaks",
-    colorScale: colors.colorbrewer.Pastel2,
-  },
-  {
-    variable: "Population Density",
-    numerator: "acs_data",
-    nProperty: "Total Population",
-    denominator: "acs_data",
-    dProperty: "Area Land",
-    binning: "percentileBreaks",
-    numberOfBins: 6,
-    colorScale: colors.colorbrewer.Oranges,
-  },
-  {
-    variable: "Count No Internet Access",
-    numerator: "acs_data",
-    nProperty: "No Internet Access",
+    variable: "Median House Value",
+    numerator: "acsData",
+    nProperty: "Median Value",
     binning: "stddev_breaks",
-    numberOfBins: 6,
-    colorScale: colors.colorbrewer.Reds,
-  },
-  {
-    variable: "Hotspot: Pct No Internet",
-    numerator: "acs_data",
-    nProperty: "No Internet Access",
-    denominator: "acs_data",
-    dProperty: "Internet Total",
-    scale: 100,    
-    lisa: true
-  },
-  {
-    variable: "Most Common Heating Fuel",
-    numerator: "household_data",
-    nProperty: "Fuel Type",
-    categorical: true,
-    colorScale: colors.colorbrewer.Dark2,
-  },
+    colorScale: colors.colorbrewer.Greens,
+  }
 ];
 
 const mapModes = {
@@ -182,106 +78,40 @@ const mapModes = {
 };
 
 const widgets = [
-  // {
-  //   display:"tray",
-  //   type:"line",
-  //   variable:"Covid April",
-  //   options: {
-  //     header: "test"
-  //   }
-  // },
-  // {
-  //   display: "tray",
-  //   type: "histogram",
-  //   variable: "Median age",
-  //   options: {
-  //     header: "Median Age",
-  //     foregroundColor: "#FF00FF",
-  //     yAxisLabel: "Median Age"
-  //   }
-  // },
-  // {
-  //   display: "pinned",
-  //   type: "histogram",
-  //   variable: "Median Household Income",
-  //   options: {
-  //     header: "Median Household Income",
-  //     foregroundColor: "#FF00FF",
-  //     yAxisLabel: "Median Household Income"
-  //   }
-  // },
-  // {
-  //   display: "tray",
-  //   type: "heatmap",
-  //   xVariable: "Median Household Income",
-  //   yVariable: "Median Gross Rent",
-  //   options: {
-  //     header: "Median Gross Rent vs Median Household Income",
-  //     foregroundColor: "#000000",
-  //     pointSize: .2,
-  //     xAxisLabel: "Median Gross Rent",
-  //     yAxisLabel: "Median Household Income",
-  //     removeZeroValues: true
-  //   }
-  // },
   {
     display: "tray",
     type: "scatter",
     xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
-    options: {}
+    yVariable: "Median House Value",
+    options: {
+      regression:true
+    }
   },
   {
     display: "tray",
     type: "scatter",
     xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
-    aggregate:'scale',
-    options: {}
+    yVariable: "Median Age",
+    aggregate:"scale",
+    options: {
+      regssion:false
+    }
   },
   {
-    display: "tray",
-    type: "scatter",
-    xVariable: "Median Household Income",
-    yVariable: "Median Gross Rent",
-    aggregate:'heatmap',
-    options: {}
-  },
-  // {
-  //   display: "tray",
-  //   type: "heatmap",
-  //   xVariable: "Median Household Income",
-  //   yVariable: "Median Gross Rent",
-  //   options: {
-  //     header: "Household Income vs. Gross Rent",
-  //     foregroundColor: "#777",
-  //     pointSize: .2,
-  //     xAxisLabel: "Median Household Income",
-  //     yAxisLabel: "Median Gross Rent",
-  //     removeZeroValues: true,
-  //     regression:true
-  //   }
-  // },
-  // {
-  //   display: "hidden",
-  //   type: "scatter3d",
-  //   xVariable: "Median Household Income",
-  //   yVariable: "Median Gross Rent",
-  //   zVariable: "Median age",
-  //   options: {
-  //     foregroundColor: "#00AAFF",
-  //     xAxisLabel: "Median Household Income",
-  //     yAxisLabel: "Median Gross Rent",
-  //     zAxisLabel: "Median Age",
-  //     gridlinesInterval: [50000, 500, 5]
-  //   }
-  // }
+    display:"tray",
+    type:"histogram",
+    variable:"Population Density",
+    options: {
+      xAxisLabel: 'People Per Square Mile',
+      yAxisLabel: 'Count of Geographies'
+    }
+  }
 ];
 
-// const style = {
-//   mapboxStyle: 'mapbox://styles/dhalpern/ckpkalk6o2me517kvlgz1eo7r',
-//   underLayerId: 'hillshade copy'
-// }
+const style = {
+  mapboxStyle: 'mapbox://styles/dhalpern/cktkfleo714bm18qqzjhpbsaw?fresh=true',
+  underLayerId: 'waterway-shadow'
+}
 
 // 🦺 exports below -- you can safely ignore! 🦺 //
 export const dataPresets = {
@@ -289,5 +119,5 @@ export const dataPresets = {
   variables,
   mapModes,
   widgets,
-  // style
+  style
 };

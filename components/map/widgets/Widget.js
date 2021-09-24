@@ -42,11 +42,11 @@ function Widget(props) {
     <Draggable draggableId={props.id.toString()} index={props.index}>
       {(provided, snapshot) => (
         <div className={`${styles.widget} ${showSettings ? styles.showSettings : ""} ${snapshot.isDragging ? styles.dragging : ""} ${hasActiveFilter ? styles.filter : ""}`} ref={provided.innerRef} {...provided.draggableProps}>
-          <button className={`${styles.floatingButton} ${styles.settingsButton}`} onClick={() => {
+          {/* <button className={`${styles.floatingButton} ${styles.settingsButton}`} onClick={() => {
             setShowSettings(true);
           }}>
             <FontAwesomeIcon icon={faCog} />
-          </button>
+          </button> */}
           {
             hasActiveFilter ? (
               <button className={`${styles.floatingButton} ${styles.clearFilterButton}`} onClick={() => {
@@ -70,9 +70,13 @@ function Widget(props) {
           {
             <h3 className={styles.widgetHeader} {...provided.dragHandleProps}>
               {
-                props.options.header == null ? 
-                  <FontAwesomeIcon icon={faGripLines} style={{color: "#00000055"}} /> :
-                  props.options.header
+                props.options?.header === null || props.options?.header === undefined
+                  ? props.type === 'scatter'
+                    ? `${props.config.xVariable} x ${props.config.yVariable}`
+                    : props.type === 'scatter3d'
+                      ? `${props.config.xVariable} x ${props.config.yVariable} x ${props.config.zVariable}`
+                      : `${props.config.variable}`
+                  : props.options?.header
               }
             </h3>
           }
@@ -85,11 +89,11 @@ function Widget(props) {
               activeFilters={activeFilters}
             />
           </div>
-          <div className={styles.widgetSettings}>
+          {/* <div className={styles.widgetSettings}>
             <WidgetSettings config={props.config} id={props.id} onSave={() => {
               setShowSettings(false);
             }} />
-          </div>
+          </div> */}
         </div>
       )}
     </Draggable>

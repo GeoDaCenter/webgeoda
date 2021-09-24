@@ -3,9 +3,10 @@ import * as vega from 'vega';
 import { useSelector, useDispatch } from 'react-redux';
 import {useState, useEffect, useRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
-// import styles from './Widgets.module.css';
+import styles from './Widgets.module.scss';
 import useGetScatterData from '@webgeoda/hooks/useGetScatterData';
 import usePanMap from '@webgeoda/hooks/usePanMap';
+import Loader from '@components/layout/Loader';
 
 const renderVega = (
     chartRef,
@@ -37,7 +38,6 @@ export default function ScatterWidget(props) {
     const panToGeoid = usePanMap();
     const mapFilters = useSelector((state) => state.mapFilters);
     const currFilters = mapFilters.filter(f => f.source === props.config.id);
-    
     const {
         chartData
     } = useGetScatterData({
@@ -559,7 +559,7 @@ export default function ScatterWidget(props) {
     const signalListeners = { 
         click: handleClick,
         endDrag: handleDragEnd,
-        tempDrag: (e, target) => console.log(e, target)
+        // tempDrag: (e, target) => console.log(e, target)
     };
     
     const vegaChart = useMemo(() => renderVega(
@@ -568,11 +568,14 @@ export default function ScatterWidget(props) {
         scatterData,
         signalListeners,
         setView
-    ), [chartData.length])
+    ), [chartData.length, JSON.stringify(props)])
     
     return (
-        <div>
-            {chartData.length && vegaChart}   
+        <div>  
+            {chartData.length 
+                ? vegaChart
+                : <Loader />
+            }   
         </div>
     );
 }

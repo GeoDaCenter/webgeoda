@@ -76,7 +76,7 @@ export default function HeatmapWidget(props) {
         // view && updateGraph();
     }, [view, currFilters]);
     try {
-        console.log(view.data('table'))
+        // console.log(view.data('table'))
     } catch{}
     const spec = {
         "$schema": "https://vega.github.io/schema/vega/v5.json",

@@ -97,7 +97,7 @@ export const formatWidgetData = (variableName, state, widgetType, options) => {
             (o) => o.variable === variableName[0]
         )
         if (!variableSpec) return []
-        console.log(getColumnData(variableSpec, state, false, true))
+        // console.log(getColumnData(variableSpec, state, false, true))
         const {data, dataset} = getColumnData(variableSpec, state, false, true);
         if (!data) return []
         const binned = d3bin().thresholds(options.thresholds || 40)(data)

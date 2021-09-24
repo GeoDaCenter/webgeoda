@@ -14,7 +14,7 @@ export default function WidgetTrayHandle(){ //props
     return (
         <button id={styles.dropdownHandleRight} className={`${styles.widgetDropdownHandle} ${showWidgetTray || widgetIsDragging ? "" : styles.hidden}`} onClick={handleWidgetTrayClick}>
             <FontAwesomeIcon icon={faAngleRight} className={styles.caret} />
-            <p>Widgets</p>
+            <img src="images/noun_widget_4166442.png" alt="Widgets and Charts" />
         </button>
     );
 }

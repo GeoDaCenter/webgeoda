@@ -179,9 +179,47 @@ export default function HistogramWidget(props) {
           }
         ],
       
+
+    //     "axes": [
+    //         {
+    //             "scale": "xscale",
+    //             "orient": "top",
+    //             "offset": {"signal": "xoffset+10"},
+    //             "labelOverlap": false,
+    //             "grid":true,
+    //             "format": ".2s",
+    //             "title":props.config.xVariable,
+    //             "tickCount":5,
+    //             "tickColor":"#fff",
+    //             "titleY":10
+    //         },
+    //         {
+    //             "scale": "yscale",
+    //             "orient": "right",
+    //             "offset": {"signal": "yoffset+10"},
+    //             "title":props.config.yVariable,
+    //             "labelOverlap": false,
+    //             "grid":true,
+    //             "format": ".2s",
+    //             "tickCount":3,
+    //             "tickColor":"#fff",
+    //             "titleX":-10
+    //         }
+    // ],
         "axes": [
-          {"orient": "bottom", "scale": "xscale", "zindex": 1},
-          {"orient": "left", "scale": "yscale", "tickCount": 5, "zindex": 1}
+            {
+              "orient": "bottom", 
+              "scale": "xscale", 
+              "zindex": 1,
+              "title":props.options.xAxisLabel || props.variable,
+            },
+            {
+                "orient": "left", 
+                "scale": "yscale", 
+                "tickCount": 5, 
+                "zindex": 1,
+                "title": props.options.yAxisLabel || 'Count of Geographies'
+            }
         ],
       
         "marks": [
