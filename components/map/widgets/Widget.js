@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './Widgets.module.scss';
 import { Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGripLines, faCog, faFilter, faSlash } from "@fortawesome/free-solid-svg-icons";
-import WidgetSettings from './WidgetSettings';
+import { faFilter, faSlash } from "@fortawesome/free-solid-svg-icons"; // faGripLines, faCog, 
+// import WidgetSettings from './WidgetSettings';
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';
 import Scatter3DWidget from './Scatter3DWidget';
-import HeatmapWidget from './HeatmapWidget';
+// import HeatmapWidget from './HeatmapWidget';
 import LineWidget from './LineWidget';
 // As defined in CSS
 export const WIDGET_WIDTH = 400;
@@ -18,7 +18,7 @@ const widgetTypes = {
   'histogram': HistogramWidget,
   'scatter': ScatterWidget,
   'scatter3d': Scatter3DWidget,
-  'heatmap':HeatmapWidget,
+  // 'heatmap':HeatmapWidget,
   'line': LineWidget
 }
 
@@ -34,7 +34,8 @@ const ParentWidget = (props) => {
 function Widget(props) {
   const dispatch = useDispatch();
   const mapFilters = useSelector(state => state.mapFilters);
-  const [showSettings, setShowSettings] = React.useState(false);
+  const showSettings = false; // temp disable
+  // const [showSettings, setShowSettings] = React.useState(false);
   const activeFilters = mapFilters.filter(i => i.source == props.id);
   const hasActiveFilter = activeFilters.length > 0;
 
@@ -102,7 +103,7 @@ function Widget(props) {
 }
 
 Widget.propTypes = {
-  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d", "heatmap","vegaHistogram","vegaScatter"]).isRequired,
+  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d","vegaHistogram","vegaScatter"]).isRequired,
   options: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,

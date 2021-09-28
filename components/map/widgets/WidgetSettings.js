@@ -156,6 +156,7 @@ function WidgetSettings(props){
                         }
                     </select>
                 )
+                break;
             }
             case "aggregation": {
                 elem = (

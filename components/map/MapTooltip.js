@@ -3,9 +3,9 @@ import { useSelector } from "react-redux";
 
 export default function MapTooltip() {
   const currentHoverTarget = useSelector((state) => state.currentHoverTarget);
-  const widgetLocations = useSelector(state => state.widgetLocations);
+  // const widgetLocations = useSelector(state => state.widgetLocations);
   const showWidgetTray = useSelector((state) => state.showWidgetTray);
-  const widgetsOnRight = widgetLocations.some(o => o.side === "right");
+  // const widgetsOnRight = widgetLocations.some(o => o.side === "right");
   
   if (!(typeof window) || !currentHoverTarget.data) return null;
 

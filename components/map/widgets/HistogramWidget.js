@@ -1,8 +1,8 @@
-import { Vega, View } from 'react-vega';
+import { Vega } from 'react-vega';
 import * as vega from 'vega';
 import { useSelector, useDispatch } from 'react-redux';
 import {useState, useEffect, useRef, useMemo} from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import useGetColumnarData from '@webgeoda/hooks/useGetColumnarData';
 

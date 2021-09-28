@@ -3,7 +3,7 @@ import * as vega from 'vega';
 import { useSelector, useDispatch } from 'react-redux';
 import {useState, useEffect, useRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
-import styles from './Widgets.module.scss';
+// import styles from './Widgets.module.scss';
 import useGetScatterData from '@webgeoda/hooks/useGetScatterData';
 import usePanMap from '@webgeoda/hooks/usePanMap';
 import Loader from '@components/layout/Loader';
@@ -553,7 +553,9 @@ export default function ScatterWidget(props) {
     function handleClick(e, target){
         try {
             panToGeoid(target.datum.id, 500)
-        } catch {}
+        } catch(e){
+            console.log(e)
+        }
     }
 
     const signalListeners = { 

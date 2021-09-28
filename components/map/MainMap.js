@@ -65,7 +65,7 @@ export default function MainMap() {
   }, [initialViewState]);
 
   // const handleMapClick = (e) => e.object && panToGeoid(e.object?.properties[currentId])
-  const handleMapClick = (e) => {
+  const handleMapClick = () => {
     // console.log(e.object)
     // console.log(mapData.data[e.object.properties[currentId]]?.color||[0,0,0])
   }

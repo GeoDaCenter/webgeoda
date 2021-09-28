@@ -5,7 +5,7 @@ import "@reach/tooltip/styles.css";
 
 export default function MapSelection(){
     const boxSelect = useSelector((state) => state.boxSelect);
-    const showWidgetTray = useSelector((state) => state.showWidgetTray);
+    // const showWidgetTray = useSelector((state) => state.showWidgetTray);
     const dispatch = useDispatch();
     
     const changeDims = (props) => dispatch({
