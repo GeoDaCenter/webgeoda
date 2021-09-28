@@ -61,6 +61,8 @@ export default function MainMap() {
         longitude: initialViewState.longitude,
         latitude: initialViewState.latitude,
         zoom: initialViewState.zoom * 0.9,
+        bearing:0,
+        pitch:0
       });
   }, [initialViewState]);
 
