@@ -1,3 +1,4 @@
 [build]
   command = "CI=false npm run build"
   publish = "out"
+  NODE_VERSION = 14

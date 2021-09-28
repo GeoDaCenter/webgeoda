@@ -351,6 +351,8 @@ $WIDGET_COLUMN_WIDTH: 400px;
   opacity:0;
   transition: 250ms all;
   transition-delay:1s all;
+  user-select: none;
+  pointer-events: none;
 }
 
 .active .widgetHelperText {

@@ -366,7 +366,7 @@ export default function reducer(state = INITIAL_STATE, action) {
         (o) => o.variable === action.payload
     )
       const {data} = getColumnData(variableSpec, state);
-      console.log(data)
+      // console.log(data)
       return {...state, 
         lisaVariable: action.payload,
         cachedVariables: {

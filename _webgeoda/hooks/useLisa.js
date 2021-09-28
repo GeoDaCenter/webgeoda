@@ -92,7 +92,7 @@ export default function useLisa() {
         }
             return { weights, lisaResults, lisaData, scatterPlotData, scatterPlotDataStan};
     }
-    console.log(dataParams)
+    // console.log(dataParams)
     const cacheLisa = async ({
         dataParams,
         geographyName=currentData,

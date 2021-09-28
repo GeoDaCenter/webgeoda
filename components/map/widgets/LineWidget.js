@@ -19,7 +19,7 @@ const renderVega = (
 export default function LineWidget(props){
   const [view, setView] = useState({});
   // const dispatch = useDispatch();
-  console.log(view)
+  // console.log(view)
   const chartData = useGetTimeSeriesData({
     variable: props.config.variable,
     dataset: 'states.geojson'

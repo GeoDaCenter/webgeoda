@@ -11,10 +11,13 @@ export default function MapSelection(){
     const changeDims = (props) => dispatch({
         type: "MOVE_SELECT",
         payload: {
+            width: props.width,
+            height: props.height,
             left: props.left, 
             top: props.top
         }
     })
+
     const resizeListener = (e) => changeDims({
         width: e.clientX - boxSelect.left,
         height: e.clientY - 60 - boxSelect.top
