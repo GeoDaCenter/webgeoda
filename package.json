@@ -46,6 +46,7 @@
     "sass": "^1.35.2",
     "simple-statistics": "^7.7.0",
     "vega": "^5.20.2",
+    "vega-canvas": "^1.2.6",
     "vega-lite": "^5.1.1"
   },
   "devDependencies": {
