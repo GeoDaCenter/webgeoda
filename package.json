@@ -52,9 +52,11 @@
   },
   "devDependencies": {
     "asciify-image": "^0.1.6",
+    "canvas": "^2.8.0",
     "eslint": "^7.28.0",
     "eslint-config-next": "^11.0.1",
     "eslint-plugin-react": "^7.24.0",
+    "node-canvas": "^2.7.0",
     "prettier": "2.3.1",
     "workbox-build": "^6.1.5"
   }

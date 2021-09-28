@@ -34,3 +34,6 @@ yarn-error.log*
 .vercel
 pacakge-lock.json
 yarn.lock
+
+# Local Netlify folder
+.netlify
