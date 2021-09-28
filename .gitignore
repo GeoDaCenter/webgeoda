@@ -34,3 +34,4 @@ yarn-error.log*
 .vercel
 pacakge-lock.json
 yarn.lock
+.netlify
