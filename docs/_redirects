@@ -1,5 +1,0 @@
-# Next-on-Netlify Redirects
-/api/datasets  /.netlify/functions/next_api_datasets  200
-/api/hello  /.netlify/functions/next_api_hello  200
-/_next/image*  url=:url w=:width q=:quality  /nextimg/:url/:width/:quality  301!
-/nextimg/*  /.netlify/functions/next_image  200
