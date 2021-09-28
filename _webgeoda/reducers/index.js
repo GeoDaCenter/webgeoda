@@ -1,5 +1,6 @@
 import { INITIAL_STATE } from "../constants/defaults";
 import {getWidgetSpec} from "../utils/widgets";
+import { getColumnData } from "../utils/widgets";
 
 import {
   mapFnNb,
@@ -349,10 +350,50 @@ export default function reducer(state = INITIAL_STATE, action) {
         currentHoverId: action.payload.layer?.includes("tiles") ? null : +action.payload.id
       };
     }
+
+    case "SET_HOVER_ID": {
+      return {...state, currentHoverId: action.payload};
+    }
+
     case "SET_WIDGET_CONFIG": {
       const widgetConfig = [...state.widgetConfig];
       widgetConfig[action.payload.widgetIndex] = action.payload.newConfig;
       return {...state, widgetConfig};
+    }
+    case "SET_LISA_VARIABLE": {
+      const variableSpec = find(
+        state.dataPresets.variables,
+        (o) => o.variable === action.payload
+    )
+      const {data} = getColumnData(variableSpec, state);
+      console.log(data)
+      return {...state, 
+        lisaVariable: action.payload,
+        cachedVariables: {
+          ...state.cachedVariables,
+          [state.currentData]: {
+              ...state.cachedVariables[state.currentData],
+              [action.payload]: zip(
+                state.storedGeojson[state.currentData].order, 
+                data
+            )
+          }
+        }
+      };
+    }
+
+    case "SET_CACHED_VARIABLE": {
+      const {data, keys} = getColumnData(action.payload.cachedVariable.variable, state, true);
+      return {...state, cachedVariables: {
+        ...state.cachedVariables,
+        [state.currentData]: {
+            ...state.cachedVariables[state.currentData],
+            [action.payload.cachedVariable.variable]: zip(
+              keys, 
+              data
+          )
+        }
+      }};
     }
     case "FORMAT_WIDGET_DATA": {
       let cachedVariables = {...state.cachedVariables}
@@ -455,20 +496,20 @@ export default function reducer(state = INITIAL_STATE, action) {
         cachedTimeSeries
       }
     }
-    case "ADD_ACTIVE_DATASETS": {
-      const activeDatasets = [...state.activeDatasets];
+    case "PUSH_DATA_QUEUE": {
+      const datasetFetchQueue = [...state.datasetFetchQueue];
       for(const i of action.payload.datasets){
-        if(!activeDatasets.includes(i)) activeDatasets.push(i);
+        if(!datasetFetchQueue.includes(i)) datasetFetchQueue.push(i);
       }
-      return {...state, activeDatasets};
+      return {...state, datasetFetchQueue};
     }
-    case "REMOVE_ACTIVE_DATASETS": {
-      const activeDatasets = [...state.activeDatasets];
+    case "REMOVE_FROM_DATA_QUEUE": {
+      const datasetFetchQueue = [...state.datasetFetchQueue];
       for(const i of action.payload.datasets){
-        const index = activeDatasets.indexOf(i);
-        if(index >= 0) activeDatasets.splice(index, 1);
+        const index = datasetFetchQueue.indexOf(i);
+        if(index >= 0) datasetFetchQueue.splice(index, 1);
       }
-      return {...state, activeDatasets};
+      return {...state, datasetFetchQueue};
     }
     case "CACHE_VARIABLE": {
       const cachedVariables = {

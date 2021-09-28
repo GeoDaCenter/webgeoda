@@ -34,8 +34,8 @@ const lisaBins = {
     'Not significant',
     'High-High',
     'Low-Low',
-    'High-Low',
     'Low-High',
+    'High-Low',
     'Undefined',
     'Isolated'
   ],
@@ -43,8 +43,8 @@ const lisaBins = {
     'Not significant',
     'High-High',
     'Low-Low',
-    'High-Low',
     'Low-High',
+    'High-Low',
     'Undefined',
     'Isolated'
   ]
@@ -95,9 +95,6 @@ export default function useLoadData() {
   const cachedVariables = useSelector((state) => state.cachedVariables);
   const dataPresets = useSelector((state) => state.dataPresets);
   const dataParams = useSelector((state) => state.dataParams);
-  const activeDatasets = useSelector((state) => state.activeDatasets);
-  const storedData = useSelector((state) => state.storedData);
-  const storedGeojson = useSelector((state) => state.storedGeojson);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -114,14 +111,6 @@ export default function useLoadData() {
 
 
   useEffect(() => loadDataForMap(dataPresets, currentData), [])
-
-  // useEffect(() => {
-  //   for(const dataset of activeDatasets){
-  //     if(!(dataset in storedData) || !(dataset in storedGeojson)){
-  //       loadTable(activeDatasets[dataset]);
-  //     }
-  //   }
-  // }, [activeDatasets]);
 
   /**
    * @async
@@ -184,10 +173,11 @@ export default function useLoadData() {
       [denominatorTable?.file] : denominatorData 
     };
 
-    const binData = cachedVariables.hasOwnProperty(currentData) && 
-        cachedVariables[currentData].hasOwnProperty(tempParams.variable)
-      ? Object.values(cachedVariables[currentData][tempParams.variable])
-      : tempParams.categorical 
+    if (!notTiles && initialViewState.zoom < 4) initialViewState.zoom = 4;
+    
+    const binData = dataParams.fixedScale 
+      ? null
+      : dataParams.categorical 
       ? getUniqueVals(
         numeratorData || geojsonProperties,
         tempParams)
@@ -197,14 +187,20 @@ export default function useLoadData() {
         dataParams: tempParams,
         fixedOrder: geojsonOrder
     });
-    const bins = tempParams.lisa 
+
+    const bins = dataParams.fixedScale 
+      ? {bins:dataParams.fixedLabels || dataParams.fixedScale, breaks:dataParams.fixedScale}
+      : dataParams.lisa 
       ? lisaBins
       : await getBins({
         geoda,
         dataParams: tempParams,
         binData
-      })
-    const colorScale = tempParams.lisa 
+      })    
+      
+    const colorScale = dataParams.fixedScale && dataParams.colorScale.length
+      ? dataParams.colorScale
+      : dataParams.lisa  
       ? lisaColors
       : getColorScale({
         dataParams: tempParams,

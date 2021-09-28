@@ -5,6 +5,7 @@ import Widget from "./Widget";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faAngleRight, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import WidgetDataLoader from './WidgetDataLoader';
 
 const mapWidgets = ({widgets, widgetLocations, side}) => widgets
   .map((elem, index) => ({elem, index}))
@@ -82,6 +83,7 @@ export default function WidgetLayer(){
   }
   return (
     <div className={styles.widgetLayer}>
+      <WidgetDataLoader />
       <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
         <div className={styles.widgetsContainer}>
           {shouldShowLeftSide && <Droppable droppableId="widgets-left" className={styles.leftColumn}>

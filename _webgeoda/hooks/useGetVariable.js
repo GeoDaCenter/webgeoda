@@ -7,7 +7,8 @@ import useFetchData from "./useFetchData";
 export default function useGetVariable({
     dataset=false,
     variable=false,
-    geoids=[]
+    geoids=[],
+    priority=true
 }){
     const currentData = useSelector((state) => state.currentData);
     const storedGeojson = useSelector((state) => state.storedGeojson);
@@ -18,9 +19,9 @@ export default function useGetVariable({
     const {numerator, denominator} = useGetTables({
         dataset,
         variable,
-        geoids
+        geoids,
+        priority
     });
-
     const [data, setData] = useState([]); 
 
     const getColumn = async (

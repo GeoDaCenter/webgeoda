@@ -4,7 +4,8 @@ import { GeodaContext } from "../contexts";
 
 import {
   parseColumnData,
-  findTable
+  findTable,
+  getVarId
 } from "../utils/data";
 
 import {
@@ -35,10 +36,9 @@ export default function useLisa() {
     const getLisa = async ({
         dataParams,
         geographyName=currentData,
-        getScatterPlot=false
     }) => {
-        if (!storedGeojson[geographyName]) return;
-        // TODO: load data if missing
+
+        if (!storedGeojson[geographyName]) {return;}
         const numeratorTable = findTable(
             dataPresets.data,
             geographyName,
@@ -69,10 +69,11 @@ export default function useLisa() {
             lisaData
         })
 
-        if (getScatterPlot) {
             let scatterPlotData = [];
+            let scatterPlotDataStan = [];
             const standardizedVals = standardize(lisaData);
-            const spatialLags = await geoda.spatialLag(weights, standardizedVals);
+            const spatialLags = await geoda.spatialLag(weights, lisaData);
+            const spatialLagsStandardized = await geoda.spatialLag(weights, standardizedVals);
             for (let i=0; i<lisaData.length; i++){
                 scatterPlotData.push({
                     x: lisaData[i],
@@ -81,15 +82,37 @@ export default function useLisa() {
                     id: storedGeojson[geographyName].order[i]
                 })
             }
-            return { weights, lisaResults, scatterPlotData};
+            for (let i=0; i<lisaData.length; i++){
+                scatterPlotDataStan.push({
+                    x: standardizedVals[i],
+                    y: spatialLagsStandardized[i],
+                    cluster: lisaResults.clusters[i],
+                    id: storedGeojson[geographyName].order[i]
+            })
         }
-
-        return { weights, lisaResults, lisaData }
+            return { weights, lisaResults, lisaData, scatterPlotData, scatterPlotDataStan};
     }
-
+    console.log(dataParams)
+    const cacheLisa = async ({
+        dataParams,
+        geographyName=currentData,
+        getScatterPlot=true
+    }) => {
+        const lisaResults = await getLisa ({
+            dataParams,
+            geographyName: currentData,
+        })
+        dispatch({
+            type: "CACHE_SCATTERPLOT_LISA",
+            payload: {
+                data: lisaResults,
+                id: getVarId(geographyName, dataParams)
+            }
+        });
+    }
   const updateLisa = async () => {
 
-    const { weights, lisaResults, lisaData } = await getLisa ({
+    const { weights, lisaResults, lisaData} = await getLisa ({
         geographyName: currentData,
         dataParams
     })
@@ -109,5 +132,5 @@ export default function useLisa() {
     });
   };
 
-  return [getLisa, updateLisa];
+  return [getLisa, cacheLisa, updateLisa];
 }

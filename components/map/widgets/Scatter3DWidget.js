@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 // import styles from './Widgets.module.css';
 import {hexToRgb} from '@webgeoda/utils/map';
 import DeckGL from '@deck.gl/react';
@@ -181,10 +181,10 @@ function Scatter3DWidgetUnwrapped(props) {
   )
 }
 
-Scatter3DWidgetUnwrapped.propTypes = {
-  options: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
-};
+// Scatter3DWidgetUnwrapped.propTypes = {
+//   options: PropTypes.object.isRequired,
+//   data: PropTypes.object.isRequired
+// };
 
 const Scatter3DWidget = React.memo(Scatter3DWidgetUnwrapped);
 

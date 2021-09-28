@@ -21,7 +21,7 @@ export const INITIAL_STATE = {
   cachedTimeSeries: {},
   currentData: dataPresets.data[0].geodata,
   datasetToLoad: null,
-  activeDatasets: [],
+  datasetFetchQueue: [],
   currentMethod: "natural_breaks",
   currentOverlay: "",
   currentResource: "",
@@ -38,10 +38,11 @@ export const INITIAL_STATE = {
   initialViewState: {},
   dataParams: {
     ...dataPresets.variables[0],
-    colorScale:
-      dataPresets.variables[0].colorScale[
-        dataPresets.variables[0].numberOfBins || 5
-      ],
+    colorScale: dataPresets.variables[0].colorScale?.length
+      ? dataPresets.variables[0].colorScale
+      : dataPresets.variables[0].colorScale[
+          dataPresets.variables[0].numberOfBins || 5
+        ]
   },
   dataPresets: dataPresets,
   mapParams: {
@@ -98,5 +99,10 @@ export const INITIAL_STATE = {
   showWidgetTray: true,
   widgetLocations: generateWidgetPresets(dataPresets.widgets),
   cachedLisaScatterplotData: {},
-  isLoading: true
+  isLoading: true,
+  lisaVariable: "Total Population", // TODO: should be blank
+  currentHoverId: 0,
+  weights:{},
+  lisaResults: {},
+  lisaData: []
 };
