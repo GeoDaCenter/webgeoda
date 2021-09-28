@@ -1,3 +1,4 @@
 [build]
-  command = "CI=false npm run build"
+  command = "CI=false npm rebuild && npm run build"
   publish = "out"
+  NODE_VERSION="14.0.0"
