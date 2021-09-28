@@ -57,7 +57,7 @@ export default function Home() {
             <a
               className={styles.docsLink}
               target="_blank"
-              href="https://dhalpern.gitbook.io/webgeoda-templates/data/importing-data" rel="noreferrer"
+              href="https://docs.webgeoda.org/webgeoda-templates/data/importing-data" rel="noreferrer"
             >
               Read More 🗺️
             </a>
@@ -72,7 +72,7 @@ export default function Home() {
             <a
               className={styles.docsLink}
               target="_blank"
-              href="https://dhalpern.gitbook.io/webgeoda-templates/pages/adding-and-customizing-pages" rel="noreferrer"
+              href="https://docs.webgeoda.org/pages/adding-and-customizing-pages" rel="noreferrer"
             >
               Read More 📝{" "}
             </a>
@@ -87,7 +87,7 @@ export default function Home() {
             <a
               className={styles.docsLink}
               target="_blank"
-              href="https://dhalpern.gitbook.io/webgeoda-templates/deploy/vercel" rel="noreferrer"
+              href="https://docs.webgeoda.org/webgeoda-templates/deploy/vercel" rel="noreferrer"
             >
               Read More 🌐
             </a>
