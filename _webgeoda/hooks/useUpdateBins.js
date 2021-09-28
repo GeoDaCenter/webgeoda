@@ -20,10 +20,11 @@ export default function useUpdateBins() {
   const updateBins = async () => {
     if (!storedGeojson[currentData]) return;
     
-    const {bins, colorScale} = dataParams.fixedScale
+    const {bins, binData, colorScale} = dataParams.fixedScale
     ? () => { return {
       bins: {
         bins: dataParams.fixedLabels || dataParams.fixedScale,
+        binData: null,
         breaks: dataParams.fixedScale
       }, 
       colorScale: dataParams.colorScale.length ? dataParams.colorScale : dataParams.colorScale[dataParams.numberOfBins]
@@ -34,7 +35,8 @@ export default function useUpdateBins() {
         currentData,
         dataParams, 
         storedData,
-        storedGeojson 
+        storedGeojson,
+        cachedVariables
       })
 
     if (!bins) return;
