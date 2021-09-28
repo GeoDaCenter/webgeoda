@@ -1,9 +1,0 @@
-{
-  "/about": "pages/about.html",
-  "/api/datasets": "pages/api/datasets.js",
-  "/api/hello": "pages/api/hello.js",
-  "/": "pages/index.html",
-  "/map": "pages/map.html",
-  "/_error": "pages/_error.js",
-  "/404": "pages/404.html"
-}
