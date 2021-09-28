@@ -1,5 +1,5 @@
 import { Vega } from 'react-vega';
-import React, {useState, useMemo} from "react";
+import React, { useMemo} from "react";
 // import { useDispatch } from 'react-redux';
 import PropTypes from "prop-types";
 import useGetTimeSeriesData from "@webgeoda/hooks/useGetTimeSeriesData";
@@ -8,16 +8,16 @@ const renderVega = (
   spec,
   data,
   signalListeners,
-  setView
+  // setView
 ) => <Vega 
   spec={spec} 
   data={data} 
   signalListeners={signalListeners} 
-  onNewView={(view) => setView(view)}
+  // onNewView={(view) => setView(view)}
   />  
 
 export default function LineWidget(props){
-  const [view, setView] = useState({});
+  // const [view, setView] = useState({});
   // const dispatch = useDispatch();
   // console.log(view)
   const chartData = useGetTimeSeriesData({
@@ -85,7 +85,7 @@ export default function LineWidget(props){
     spec,
     lineData,
     {},
-    setView
+    // setView
   ), [chartData.length])
 
   return <div>{chartData.length && vegaChart}</div>
