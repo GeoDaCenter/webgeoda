@@ -99,12 +99,19 @@ const WIDGET_OPTION_TYPES = [
     //     set: (w, v) => { w.options.zAxisLabel = v }
     // },
     {
-        displayName: "Point Size",
-        datatype: "number",
-        supportedTypes: ["scatter", "scatter3d"],
-        get: (w) => w.options.pointSize,
-        set: (w, v) => { w.options.pointSize = v }
+        displayName: "Aggregation",
+        datatype: "aggregation",
+        supportedTypes: ["scatter"],
+        get: (w) => w.aggregate,
+        set: (w, v) => { w.aggregate = v }
     },
+    // {
+    //     displayName: "Regression",
+    //     datatype: "regression",
+    //     supportedTypes: ["scatter"],
+    //     get: (w) => w.options.regression||false,
+    //     set: (w, v) => { w.options.regression = v }
+    // }
 ]
 
 function WidgetSettings(props){
@@ -213,6 +220,35 @@ function WidgetSettings(props){
             case "number": {
                 elem = <input type="number" value={i.get(data)} onChange={(e) => modifyData(data, i.set, e.target.value)} />;
                 break;
+            }
+            case "regression": {
+                elem = (
+                    <select value={i.get(data)} onChange={(e) => {
+                        modifyData(data, i.set, e.target.value);
+                        setDoesWidgetNeedRefresh(true);
+                    }}>
+                        {
+                            [true, false].map(v => (
+                                <option value={v} key={`bool-choice-${v}`}>{v ? 'Show Line of Best Fit' : 'Do Not Show Line of Best Fit'}</option>
+                            ))
+                        }
+                    </select>
+                )
+                break;
+            }
+            case "aggregation": {
+                elem = (
+                    <select value={i.get(data)} onChange={(e) => {
+                        modifyData(data, i.set, e.target.value);
+                        setDoesWidgetNeedRefresh(true);
+                    }}>
+                        {
+                            [undefined, 'scale', 'heatmap'].map(v => (
+                                <option value={v} key={`agg-choice-${v}`}>{v === undefined ? 'None' : `${v.toUpperCase()}`}</option>
+                            ))
+                        }
+                    </select>
+                )
             }
         }
         return (

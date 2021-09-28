@@ -25,7 +25,18 @@ export default function WidgetLayer(){
   const showWidgetTray = useSelector(state => state.showWidgetTray);
   const dispatch = useDispatch();
   const [columnLeftActive, setColumnLeftActive] = React.useState(false);
+  const [shouldShowLeftSide, setShouldShowLeftSide] = React.useState(typeof window === undefined ? false : window.innerWidth > 760 ? true : false)
   
+  const checkLeft = () => {
+    setShouldShowLeftSide(typeof window === undefined ? false : window.innerWidth > 760 ? true : false)
+  }
+
+  React.useEffect(() => {
+    checkLeft()
+    if (typeof window !== undefined){
+      window.addEventListener('resize', checkLeft)
+    }
+  },[window])
   const widgets = widgetConfig.map((widget, trueIndex) => {
     return renderWidget(widget, trueIndex, widgetLocations[trueIndex].index);
   });
@@ -70,26 +81,26 @@ export default function WidgetLayer(){
       payload: newWidgetLocations
     });
   }
-
   return (
     <div className={styles.widgetLayer}>
       <WidgetDataLoader />
       <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
         <div className={styles.widgetsContainer}>
-          <Droppable droppableId="widgets-left">
+          {shouldShowLeftSide && <Droppable droppableId="widgets-left" className={styles.leftColumn}>
             {(provided, snapshot) => (
               <div {...provided.droppableProps} ref={provided.innerRef} className={`${styles.widgetColumn} ${snapshot.isDraggingOver ? styles.dropping : ""} ${columnLeftActive ? styles.active : ""}`} id={styles.columnLeft}>
                 <button className={styles.widgetDropdownHandle} onClick={() => {
                   setColumnLeftActive(!columnLeftActive);
                 }}>
                   <FontAwesomeIcon icon={faAngleRight} className={styles.caret} />
-                  <p>Pinned</p>
+                  <img src="images/noun_Pin_865881.png" alt="Pinned Widgets" />
                 </button>
                 {/* {provided.placeholder} */}
                 {widgetElementsLeft}
+                {widgetElementsLeft.length === 0 && <p className={styles.widgetHelperText}>Drag widgets here to pin them to the map</p>}
               </div>
             )}
-          </Droppable>
+          </Droppable>}
           <div id={styles.widgetTray}>
             <div id={styles.widgetTrayContent} className={"hideScrollbar"}>
               <Droppable droppableId="widgets-right">

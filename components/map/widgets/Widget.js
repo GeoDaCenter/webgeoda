@@ -4,32 +4,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './Widgets.module.scss';
 import { Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGripLines, faCog, faFilter, faSlash } from "@fortawesome/free-solid-svg-icons";
-import WidgetSettings from './WidgetSettings';
+import { faFilter, faSlash } from "@fortawesome/free-solid-svg-icons"; // faGripLines, faCog, 
+// import WidgetSettings from './WidgetSettings';
 import HistogramWidget from './HistogramWidget';
 import ScatterWidget from './ScatterWidget';
 import Scatter3DWidget from './Scatter3DWidget';
-import HeatmapWidget from './HeatmapWidget';
+// import HeatmapWidget from './HeatmapWidget';
 import LineWidget from './LineWidget';
-import SummaryWidget from './SummaryWidget';
-import LisaWidget from './LisaWidget';
-import LisaScatterWidget from './LisaScatterWidget';
-// import VegaScatter from './VegaScatter';
-
 // As defined in CSS
-//TODO: fix heatmap placement div
 export const WIDGET_WIDTH = 400;
 
 const widgetTypes = {
   'histogram': HistogramWidget,
   'scatter': ScatterWidget,
   'scatter3d': Scatter3DWidget,
-  'heatmap':HeatmapWidget,
-  'line': LineWidget,
-  // 'vegaScatter': VegaScatter,
-  'summary': SummaryWidget,
-  'lisaW': LisaWidget,
-  'lisaScatter': LisaScatterWidget, 
+  // 'heatmap':HeatmapWidget,
+  'line': LineWidget
 }
 
 const ParentWidget = (props) => {
@@ -44,27 +34,20 @@ const ParentWidget = (props) => {
 function Widget(props) {
   const dispatch = useDispatch();
   const mapFilters = useSelector(state => state.mapFilters);
-  const lisaVariable = useSelector(state => state.lisaVariable)
-  const [showSettings, setShowSettings] = React.useState(false);
+  const showSettings = false; // temp disable
+  // const [showSettings, setShowSettings] = React.useState(false);
   const activeFilters = mapFilters.filter(i => i.source == props.id);
   const hasActiveFilter = activeFilters.length > 0;
-  let header = '';
-  if (props.type=='lisaW' || props.type=='lisaScatter'){
-    header = lisaVariable + " LISA"
-  }
-  else {
-    header = props.options.header
-  }
 
   return (
     <Draggable draggableId={props.id.toString()} index={props.index}>
       {(provided, snapshot) => (
         <div className={`${styles.widget} ${showSettings ? styles.showSettings : ""} ${snapshot.isDragging ? styles.dragging : ""} ${hasActiveFilter ? styles.filter : ""}`} ref={provided.innerRef} {...provided.draggableProps}>
-          <button className={`${styles.floatingButton} ${styles.settingsButton}`} onClick={() => {
+          {/* <button className={`${styles.floatingButton} ${styles.settingsButton}`} onClick={() => {
             setShowSettings(true);
           }}>
             <FontAwesomeIcon icon={faCog} />
-          </button>
+          </button> */}
           {
             hasActiveFilter ? (
               <button className={`${styles.floatingButton} ${styles.clearFilterButton}`} onClick={() => {
@@ -83,19 +66,22 @@ function Widget(props) {
                   <FontAwesomeIcon icon={faFilter} />
                 </span>
               </button>
-              
             ) : null
           }
           {
-                  <h3 className={styles.widgetHeader} {...provided.dragHandleProps}>
+            <h3 className={styles.widgetHeader} {...provided.dragHandleProps}>
               {
-                header == null ? 
-                  <FontAwesomeIcon icon={faGripLines} style={{color: "#00000055"}} /> :
-                  header
-                }
-                </h3>
+                props.options?.header === null || props.options?.header === undefined
+                  ? props.type === 'scatter'
+                    ? `${props.config.xVariable} x ${props.config.yVariable}`
+                    : props.type === 'scatter3d'
+                      ? `${props.config.xVariable} x ${props.config.yVariable} x ${props.config.zVariable}`
+                      : `${props.config.variable}`
+                  : props.options?.header
+              }
+            </h3>
           }
-          <div id='myDiv' className={styles.widgetContent}> 
+          <div id='myDiv' className={styles.widgetContent}>
             <ParentWidget 
               type={props.type}
               options={props.options}
@@ -104,11 +90,11 @@ function Widget(props) {
               activeFilters={activeFilters}
             />
           </div>
-          <div className={styles.widgetSettings}>
+          {/* <div className={styles.widgetSettings}>
             <WidgetSettings config={props.config} id={props.id} onSave={() => {
               setShowSettings(false);
             }} />
-          </div>
+          </div> */}
         </div>
       )}
     </Draggable>
@@ -117,7 +103,7 @@ function Widget(props) {
 }
 
 Widget.propTypes = {
-  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d","summary", "lisaW", "lisaScatter", "heatmap"]).isRequired,
+  type: PropTypes.oneOf(["histogram", "line", "scatter", "scatter3d","vegaHistogram","vegaScatter"]).isRequired,
   options: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,
