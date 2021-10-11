@@ -78,34 +78,34 @@ const mapModes = {
 };
 
 const widgets = [
-  {
-    display: "tray",
-    type: "scatter",
-    xVariable: "Median Household Income",
-    yVariable: "Median House Value",
-    options: {
-      regression:true
-    }
-  },
-  {
-    display: "tray",
-    type: "scatter",
-    xVariable: "Median Household Income",
-    yVariable: "Median House Value",
-    aggregate:"scale",
-    options: {
-      regssion:false
-    }
-  },
-  {
-    display:"tray",
-    type:"histogram",
-    variable:"Population Density",
-    options: {
-      xAxisLabel: 'People Per Square Mile',
-      yAxisLabel: 'Count of Geographies'
-    }
-  }
+  // {
+  //   display: "tray",
+  //   type: "scatter",
+  //   xVariable: "Median Household Income",
+  //   yVariable: "Median House Value",
+  //   options: {
+  //     regression:true
+  //   }
+  // },
+  // {
+  //   display: "tray",
+  //   type: "scatter",
+  //   xVariable: "Median Household Income",
+  //   yVariable: "Median House Value",
+  //   aggregate:"scale",
+  //   options: {
+  //     regssion:false
+  //   }
+  // },
+  // {
+  //   display:"tray",
+  //   type:"histogram",
+  //   variable:"Population Density",
+  //   options: {
+  //     xAxisLabel: 'People Per Square Mile',
+  //     yAxisLabel: 'Count of Geographies'
+  //   }
+  // }
 ];
 
 const style = {

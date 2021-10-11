@@ -14,6 +14,7 @@ import Loader from "../layout/Loader";
 import { useViewport, useSetViewport } from '@webgeoda/contexts';
 import useLoadData from "@webgeoda/hooks/useLoadData";
 import useUpdateMap from "@webgeoda/hooks/useUpdateMap";
+import useGetMapData from "@webgeoda/hooks/useGetMapData";
 // import useGetLisa from "../../_webgeoda/hooks/useGetLisa";
 // import usePanMap from "@webgeoda/hooks/usePanMap";
 
@@ -29,12 +30,14 @@ export default function MainMap() {
   const mapParams = useSelector((state) => state.mapParams);
   const currentData = useSelector((state) => state.currentData);
   const cachedVariables = useSelector((state) => state.cachedVariables);
-  const currentTiles = useSelector((state) => state.currentTiles);
   const currentId = useSelector((state) => state.currentId);
   const currentHoverId = useSelector((state) => state.currentHoverId);
+  
+  const currentTiles = useSelector((state) => state.currentTiles);
   const storedGeojson = useSelector((state) => state.storedGeojson);
   const currentMapGeography = storedGeojson[currentData]?.data || [];
   const mapData = useSelector((state) => state.mapData);
+
   const mapStyle = useSelector((state) => state.mapStyle);
   const isLoading = useSelector((state) => state.isLoading);
   const mapFilters = useSelector((state) => state.mapFilters);
@@ -42,10 +45,19 @@ export default function MainMap() {
   const dispatch = useDispatch();
   // const panToGeoid = usePanMap();
 
+  const {
+    // currentTiles,
+    // currentMapGeography,
+    // mapData
+  } = useGetMapData({
+    currentData,
+    dataParams,
+    mapParams
+  })
   // eslint-disable-next-line no-empty-pattern
-  const [] = useLoadData();
-  // eslint-disable-next-line no-empty-pattern
-  const [] = useUpdateMap();
+  // const [] = useLoadData();
+  // // eslint-disable-next-line no-empty-pattern
+  // const [] = useUpdateMap();
   // eslint-disable-next-line no-empty-pattern
   const viewport = useViewport();
   // eslint-disable-next-line no-empty-pattern
