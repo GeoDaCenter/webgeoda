@@ -20,6 +20,7 @@ export const INITIAL_STATE = {
   cachedVariables: {},
   cachedTimeSeries: {},
   currentData: dataPresets.data[0].geodata,
+  currentId: dataPresets.data[0].id,
   datasetToLoad: null,
   datasetFetchQueue: [],
   currentMethod: "natural_breaks",

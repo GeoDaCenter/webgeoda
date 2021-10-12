@@ -4,8 +4,8 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 // deck GL and helper function import
 import DeckGL from "@deck.gl/react";
 import { GeoJsonLayer } from "@deck.gl/layers";
-import {MVTLayer} from '@deck.gl/geo-layers';
-import {MapboxLayer} from '@deck.gl/mapbox';
+import { MVTLayer } from '@deck.gl/geo-layers';
+import { MapboxLayer } from '@deck.gl/mapbox';
 import MapboxGLMap from "react-map-gl";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -32,11 +32,11 @@ export default function MainMap() {
   const cachedVariables = useSelector((state) => state.cachedVariables);
   const currentId = useSelector((state) => state.currentId);
   const currentHoverId = useSelector((state) => state.currentHoverId);
-  
-  const currentTiles = useSelector((state) => state.currentTiles);
-  const storedGeojson = useSelector((state) => state.storedGeojson);
-  const currentMapGeography = storedGeojson[currentData]?.data || [];
-  const mapData = useSelector((state) => state.mapData);
+
+  // const currentTiles = useSelector((state) => state.currentTiles);
+  // const storedGeojson = useSelector((state) => state.storedGeojson);
+  // const currentMapGeography = storedGeojson[currentData]?.data || [];
+  // const mapData = useSelector((state) => state.mapData);
 
   const mapStyle = useSelector((state) => state.mapStyle);
   const isLoading = useSelector((state) => state.isLoading);
@@ -46,19 +46,16 @@ export default function MainMap() {
   // const panToGeoid = usePanMap();
 
   const {
-    // currentTiles,
-    // currentMapGeography,
-    // mapData
+    binning,
+    currentMapGeography,
+    currentTiles,
+    mapData
   } = useGetMapData({
     currentData,
     dataParams,
     mapParams
   })
-  // eslint-disable-next-line no-empty-pattern
-  // const [] = useLoadData();
-  // // eslint-disable-next-line no-empty-pattern
-  // const [] = useUpdateMap();
-  // eslint-disable-next-line no-empty-pattern
+
   const viewport = useViewport();
   // eslint-disable-next-line no-empty-pattern
   const setViewport = useSetViewport();
@@ -73,8 +70,8 @@ export default function MainMap() {
         longitude: initialViewState.longitude,
         latitude: initialViewState.latitude,
         zoom: initialViewState.zoom * 0.9,
-        bearing:0,
-        pitch:0
+        bearing: 0,
+        pitch: 0
       });
   }, [initialViewState]);
 
@@ -83,7 +80,6 @@ export default function MainMap() {
     // console.log(e.object)
     // console.log(mapData.data[e.object.properties[currentId]]?.color||[0,0,0])
   }
-  // console.log(mapData.data[81259632001])
   const handleMapHover = (e) => {
     if (e.object) {
       dispatch({
@@ -110,7 +106,7 @@ export default function MainMap() {
   const onMapLoad = useCallback(() => {
     const map = mapRef.current.getMap();
     const deck = deckRef.current.deck;
-    
+
     map.addLayer(
       new MapboxLayer({ id: "choropleth", deck }),
       mapStyle.underLayerId
@@ -128,13 +124,13 @@ export default function MainMap() {
     // TODO: Instead of currentData, store `dataset` index with filter, use here
     const cachedData = cachedVariables[currentData];
     if (boxFilteredGeoids.length && !boxFilteredGeoids.includes(id)) return false;
-    if(cachedData === null) return false;
-    for(const filter of mapFilters){
-      if(filter.type === "set"){
-        if(!filter.values.includes(cachedData[filter.field][id])) return false;
-      } else if(filter.type === "range"){
+    if (cachedData === null) return false;
+    for (const filter of mapFilters) {
+      if (filter.type === "set") {
+        if (!filter.values.includes(cachedData[filter.field][id])) return false;
+      } else if (filter.type === "range") {
         const val = cachedData[filter.field][id];
-        if(!(val >= filter.from && val <= filter.to)) return false;
+        if (!(val >= filter.from && val <= filter.to)) return false;
       }
     }
     return true;
@@ -146,64 +142,64 @@ export default function MainMap() {
       data: null
     })]
     : currentData.includes('tiles')
-    ? [new MVTLayer({
+      ? [new MVTLayer({
         id: "tiles layer",
         // eslint-disable-next-line no-undef 
         data: `https://api.mapbox.com/v4/${currentTiles}/{z}/{x}/{y}.mvt?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
-        getFillColor: (d) => mapData.data[d.properties[currentId]]?.color||[0,0,0,0],
+        getFillColor: (d) => mapData.data[d.properties[currentId]]?.color || [0, 0, 0, 0],
         pickable: true,
         onHover: handleMapHover,
         updateTriggers: {
           getFillColor: mapData.params,
         },
-      })]  
-    : [
-      new GeoJsonLayer({
-        id: "choropleth",
-        data: currentMapGeography,
-        getFillColor: (d) => {
-          const color = (mapData.data[d.properties[currentId]]?.color||[0,0,0])
-          return color.length === 4
-            ? color :
-            [...color,itemIsInFilter(d.properties[currentId])*255+40]
-        },
-        getLineColor: (d) => [
-          0,
-          0,
-          0,
-          255 * (+d.properties[currentId] === currentHoverId),
-        ],
-        // getElevation: d => currentMapData[d.properties.GEOID].height,
-        pickable: true,
-        stroked: true,
-        filled: true,
-        lineWidthScale: 1,
-        lineWidthMinPixels: 1,
-        getLineWidth: 5,
-        // wireframe: mapParams.vizType === '3D',
-        // extruded: mapParams.vizType === '3D',
-        // opacity: mapParams.vizType === 'dotDensity' ? mapParams.dotDensityParams.backgroundTransparency : 0.8,
-        material: false,
-        onHover: handleMapHover,
-        onClick: handleMapClick,
-        updateTriggers: {
-          getFillColor: [mapData.params, mapFilters, boxFilteredGeoids.length],
-          getLineColor: [mapData.params, currentHoverId]
-        }
-      })];
+      })]
+      : [
+        new GeoJsonLayer({
+          id: "choropleth",
+          data: currentMapGeography,
+          getFillColor: (d) => {
+            const color = (mapData.data[d.properties[currentId]]?.color || [0, 0, 0])
+            return color.length === 4
+              ? color :
+              [...color, itemIsInFilter(d.properties[currentId]) * 255 + 40]
+          },
+          getLineColor: (d) => [
+            0,
+            0,
+            0,
+            255 * (+d.properties[currentId] === currentHoverId),
+          ],
+          // getElevation: d => currentMapData[d.properties.GEOID].height,
+          pickable: true,
+          stroked: true,
+          filled: true,
+          lineWidthScale: 1,
+          lineWidthMinPixels: 1,
+          getLineWidth: 5,
+          // wireframe: mapParams.vizType === '3D',
+          // extruded: mapParams.vizType === '3D',
+          // opacity: mapParams.vizType === 'dotDensity' ? mapParams.dotDensityParams.backgroundTransparency : 0.8,
+          material: false,
+          onHover: handleMapHover,
+          onClick: handleMapClick,
+          updateTriggers: {
+            getFillColor: [Object.keys(mapData.data).length, mapData.params, mapFilters, boxFilteredGeoids.length],
+            getLineColor: [mapData.params, currentHoverId]
+          }
+        })];
 
-    // h
+  // h
   return (
     <div className={styles.mapContainer}>
-      
-      {isLoading && <div className={styles.preLoader}><Loader globe={true} /></div>}
+
+      {/* {isLoading && <div className={styles.preLoader}><Loader globe={true} /></div>} */}
       <DeckGL
         layers={layers}
         ref={deckRef}
         initialViewState={viewport}
         controller={true}
         pickingRadius={20}
-        onViewStateChange={({viewState}) => setViewport(viewState)}
+        onViewStateChange={({ viewState }) => setViewport(viewState)}
         onWebGLInitialized={setGLContext}
         glOptions={{
           /* To render vector tile polygons correctly */
@@ -222,10 +218,10 @@ export default function MainMap() {
         ></MapboxGLMap>
       </DeckGL>
       <Legend
-        bins={mapParams.bins.bins}
-        colors={mapParams.colorScale}
+        bins={binning.bins.bins}
+        colors={binning.colorScale}
         variableName={dataParams.variable}
-        ordinal={dataParams.categorical||dataParams.lisa}
+        ordinal={dataParams.categorical || dataParams.lisa}
       />
       <MapControls
         deck={deckRef}

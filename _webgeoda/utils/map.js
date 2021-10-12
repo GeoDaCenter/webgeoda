@@ -111,53 +111,6 @@ export const generateMapData = (state) => {
 
   let tempParams = { ...state.dataParams };
 
-  if (state.mapParams.vizType === "cartogram") {
-    for (let i = 0; i < state.storedCartogramData.length; i++) {
-      const currGeoid =
-        state.storedGeojson[state.currentData].indices.indexOrder[
-          state.storedCartogramData[i].properties.id
-        ];
-
-      const color = getColor(
-        state.storedCartogramData[i].value,
-        state.mapParams.bins.breaks,
-        state.mapParams.colorScale,
-        state.mapParams.mapType,
-        tempParams.numerator,
-        state.storedLisaData,
-        state.storedGeojson,
-        state.currentData,
-        state.storedGeojson[state.currentData].properties[currGeoid],
-        mapFn
-      );
-
-      if (color === null) {
-        returnObj[currGeoid] = { color: [0, 0, 0, 0] };
-        continue;
-      }
-
-      returnObj[currGeoid] = {
-        ...state.storedCartogramData[i],
-        color,
-      };
-    }
-    return {
-      params: getVarId(state.currentData, tempParams, state.mapParams),
-      data: returnObj,
-    };
-  }  
-    
-  const currentTables = find(
-    state.dataPresets.data,
-    (o) => o.geodata === state.currentData
-  )?.tables;
-  
-  const [numeratorTable, denominatorTable]
-    = [
-      currentTables[state.dataParams.numerator]?.file,
-      currentTables[state.dataParams.denominator]?.file,
-    ]
-
   const idList = state.currentData.includes('tiles') 
   ? Object.keys(state.storedData[numeratorTable].data)
   : state.storedGeojson[state.currentData].order
@@ -200,6 +153,58 @@ export const generateMapData = (state) => {
     data: returnObj,
   };
 };
+
+export const getMapData = ({
+  currentData,
+  dataParams,
+  mapParams,
+  variableData,
+  storedGeojson,
+  storedLisaData
+}) => {
+  let returnObj = {};
+  const colorType = dataParams.binning === "LISA" ? 'LISA' : dataParams.categorical ? 'categorical' : 'breaks'
+  const getColor = colorFunctions[colorType]
+
+  const idList = currentData.includes('tiles') || !dataParams.lisa
+    ? Object.keys(variableData)
+    : storedGeojson[currentData].order
+  
+  for (
+    let i = 0;
+    i < idList.length;
+    i++
+  ) {
+    const val = variableData[idList[i]]
+    const color = (isNaN(val) && typeof val !== 'string') || val === null || val === undefined
+      ? [0,0,0,0]
+      : getColor(
+          val,
+          mapParams.bins.breaks,
+          mapParams.colorScale,
+          mapParams.mapType,
+          dataParams.numerator,
+          storedLisaData,
+          storedGeojson,
+          currentData,
+          val,
+          mapFn
+        );
+
+    const height = getHeight(val, dataParams);
+
+    if (color === null) {
+      returnObj[idList[i]] = { color: [0, 0, 0, 0], height: 0 };
+      continue;
+    }
+    returnObj[idList[i]] = { color, height };
+  }
+  return {
+    params: getVarId(currentData, dataParams, mapParams),
+    data: returnObj,
+  };
+
+}
 
 export const hexToRgb = (hex) => {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
